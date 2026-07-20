@@ -4,6 +4,10 @@ sensor_geometry:
   type: pandas.ParquetDataset
   filepath: data/05_model_input/sensor_geometry.parquet
 
+measurement_times:
+  type: pandas.CSVDataset
+  filepath: data/01_raw/measurement_times.csv
+
 
 synthetic_dataset:
   type: pandas.ParquetDataset

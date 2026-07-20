@@ -3,6 +3,8 @@ import pandas as pd
 
 def generate_measurement_times(parameters):
 
+    #parameters = parameters["timing"]
+
     days = parameters["simulation_days"]
 
     interval = parameters["sampling_seconds"]
