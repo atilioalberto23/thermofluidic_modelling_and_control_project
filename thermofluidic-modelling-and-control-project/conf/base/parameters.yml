@@ -1,6 +1,7 @@
 synthetic_data:
 
 
+
   timing:
 
     simulation_days: 3
@@ -38,3 +39,18 @@ synthetic_data:
       BACK_WALL:
         width: 1.12
         height: 2.05
+
+  temperature:
+
+    base: 35
+    daily_amplitude: 5
+
+  dht:
+    temperature_offset: -1.5
+    temperature_noise: 0.10
+
+  humidity:
+    base: 55
+    daily_amplitude: 15
+    temperature_factor: 0.8
+    noise: 1.0

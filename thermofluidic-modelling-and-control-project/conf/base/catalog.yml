@@ -8,8 +8,24 @@ measurement_times:
   type: pandas.CSVDataset
   filepath: data/01_raw/measurement_times.csv
 
+synthetic_measurement_grid:
+  type: pandas.ParquetDataset
+  filepath: data/02_intermediate/synthetic_measurement_grid.parquet
 
-synthetic_dataset:
+synthetic_temperature_data:
+  type: pandas.ParquetDataset
+  filepath: data/02_intermediate/synthetic_temperature_data.parquet
+
+synthetic_dht_temperature_data:
+  type: pandas.ParquetDataset
+  filepath: data/02_intermediate/synthetic_dht_temperature_data.parquet
+
+synthetic_humidity_data:
+  type: pandas.ParquetDataset
+  filepath: data/02_intermediate/synthetic_humidity_data.parquet
+
+synthetic_final_data:
   type: pandas.ParquetDataset
   filepath: s3://thermofluidic-modelling-and-control-project/synthetic_data/synthetic_dataset.parquet
+
 

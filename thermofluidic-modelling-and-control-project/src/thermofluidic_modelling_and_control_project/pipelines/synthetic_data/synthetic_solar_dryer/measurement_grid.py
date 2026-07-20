@@ -35,3 +35,52 @@ def create_measurement_grid(
             "SENSOR_POSITION",
         ]
     ]
+
+def add_previous_measurements(df):
+
+    data = df.copy()
+
+
+    sensor_keys = [
+        "SURFACE",
+        "NODE_ID",
+        "SENSOR_POSITION",
+    ]
+
+
+    data = data.sort_values(
+        sensor_keys + ["TIMESTAMP"]
+    )
+
+
+    data[
+        "DS_TEMP_ANT"
+    ] = (
+        data
+        .groupby(sensor_keys)
+        ["DS_TEMPERATURE"]
+        .shift(1)
+    )
+
+
+    data[
+        "DHT_TEMP_ANT"
+    ] = (
+        data
+        .groupby(sensor_keys)
+        ["DHT_TEMPERATURE"]
+        .shift(1)
+    )
+
+
+    data[
+        "DHT_HUMIDITY_ANT"
+    ] = (
+        data
+        .groupby(sensor_keys)
+        ["DHT_HUMIDITY"]
+        .shift(1)
+    )
+
+
+    return data

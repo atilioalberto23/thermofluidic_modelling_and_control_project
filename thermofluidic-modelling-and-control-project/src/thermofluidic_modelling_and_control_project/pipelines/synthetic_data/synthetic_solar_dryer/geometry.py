@@ -212,8 +212,7 @@ COLUMNS = [
 ]
 
 
-def create_empty_synthetic_dataset() -> pd.DataFrame:
-    return pd.DataFrame(columns=COLUMNS)
+
 
 
 
