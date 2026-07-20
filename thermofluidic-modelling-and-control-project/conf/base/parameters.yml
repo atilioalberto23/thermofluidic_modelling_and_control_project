@@ -1,0 +1,40 @@
+synthetic_data:
+
+
+  timing:
+
+    simulation_days: 3
+    sampling_seconds: 20
+
+  geometry:
+
+    cable_length: 0.98
+    cable_angle_deg: 19.09
+
+    surfaces:
+
+      LEFT_WALL:
+        width: 5.55
+        height: 1.90
+
+        nodes:
+          N1: [0.925, 0.32]
+          N2: [0.925, 1.58]
+          N3: [4.625, 0.32]
+          N4: [4.625, 1.58]
+
+
+      RIGHT_WALL:
+        width: 5.55
+        height: 1.90
+
+        nodes:
+          N1: [0.925, 0.32]
+          N2: [0.925, 1.58]
+          N3: [4.625, 0.32]
+          N4: [4.625, 1.58]
+
+
+      BACK_WALL:
+        width: 1.12
+        height: 2.05

@@ -1,0 +1,11 @@
+
+
+sensor_geometry:
+  type: pandas.ParquetDataset
+  filepath: data/05_model_input/sensor_geometry.parquet
+
+
+synthetic_dataset:
+  type: pandas.ParquetDataset
+  filepath: s3://thermofluidic-modelling-and-control-project/synthetic_data/synthetic_dataset.parquet
+
