@@ -24,7 +24,7 @@ def generate_dht_temperature(
         +
         offset
         +
-        np.random.normal(
+        np.random.default_rng(parameters["random_seed"]).normal(
             0,
             noise,
             len(data)
@@ -93,7 +93,7 @@ def generate_dht_humidity(
             data["DHT_TEMPERATURE"] - 35
         )
         +
-        np.random.normal(
+        np.random.default_rng(parameters["random_seed"] + 1).normal(
             0,
             noise,
             len(data)

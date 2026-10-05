@@ -26,6 +26,49 @@ synthetic_humidity_data:
 
 synthetic_final_data:
   type: pandas.ParquetDataset
-  filepath: s3://thermofluidic-modelling-and-control-project/synthetic_data/synthetic_dataset.parquet
+  filepath: data/03_primary/synthetic_final_data.parquet
+
+measurement_derived:
+  type: pandas.ParquetDataset
+  filepath: data/04_feature/measurement_results/derived.parquet
+
+measurement_audit:
+  type: json.JSONDataset
+  filepath: data/08_reporting/measurement_results/audit.json
+
+measurement_temporal:
+  type: pandas.CSVDataset
+  filepath: data/08_reporting/measurement_results/temporal.csv
+  save_args:
+    index: false
+
+measurement_coverage:
+  type: pandas.CSVDataset
+  filepath: data/08_reporting/measurement_results/coverage.csv
+  save_args:
+    index: false
+
+measurement_spatial:
+  type: pandas.CSVDataset
+  filepath: data/08_reporting/measurement_results/spatial.csv
+  save_args:
+    index: false
+
+measurement_concordance:
+  type: pandas.CSVDataset
+  filepath: data/08_reporting/measurement_results/concordance.csv
+  save_args:
+    index: false
+
+measurement_psychrometrics:
+  type: pandas.ParquetDataset
+  filepath: data/04_feature/measurement_results/psychrometrics.parquet
+
+measurement_figures:
+  type: matplotlib.MatplotlibDataset
+  filepath: data/08_reporting/measurement_results/figures
+  save_args:
+    dpi: 180
+    bbox_inches: tight
 
 

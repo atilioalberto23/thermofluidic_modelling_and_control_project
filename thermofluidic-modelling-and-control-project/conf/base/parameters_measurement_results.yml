@@ -1,0 +1,15 @@
+measurement_results:
+  input_path: data/03_primary/synthetic_final_data.parquet
+  source_class: synthetic
+  nominal_seconds: 20
+  max_gap_seconds: 60
+  interval_tolerance_seconds: 0.01
+  summary_frequency: 1h
+  episode_column: null
+  temperature_unit: null
+  temperature_limits: null
+  psychrometrics:
+    pressure_pa: null
+    pressure_provenance: null
+    pressure_uncertainty_pa: null
+    temperature_compatible: false
