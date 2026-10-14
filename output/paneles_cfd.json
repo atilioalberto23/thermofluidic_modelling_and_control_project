@@ -1,0 +1,62 @@
+{
+  "dominio": {
+    "title": "Dominio y seis superficies",
+    "file": "cfd_dominio.eps",
+    "box": [
+      48,
+      150,
+      1504,
+      555
+    ]
+  },
+  "regiones": {
+    "title": "Regiones y fronteras",
+    "file": "cfd_regiones.eps",
+    "box": [
+      48,
+      735,
+      728,
+      475
+    ]
+  },
+  "malla": {
+    "title": "Discretización del dominio",
+    "file": "cfd_malla.eps",
+    "box": [
+      824,
+      735,
+      728,
+      475
+    ]
+  },
+  "refinamiento": {
+    "title": "Refinamiento cerca de pared",
+    "file": "cfd_refinamiento.eps",
+    "box": [
+      48,
+      1240,
+      728,
+      495
+    ]
+  },
+  "iniciales": {
+    "title": "Condiciones iniciales",
+    "file": "cfd_condiciones_iniciales.eps",
+    "box": [
+      824,
+      1240,
+      728,
+      495
+    ]
+  },
+  "metodologia": {
+    "title": "Flujo SALOME a OpenFOAM",
+    "file": "cfd_metodologia.eps",
+    "box": [
+      48,
+      1770,
+      1504,
+      405
+    ]
+  }
+}

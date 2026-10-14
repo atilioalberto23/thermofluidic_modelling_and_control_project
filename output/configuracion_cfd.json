@@ -1,0 +1,51 @@
+{
+  "longitud_m": 5.55,
+  "anchura_m": 1.12,
+  "altura_m": null,
+  "altura_solo_para_dibujo_m": 2.05,
+  "forma": "prisma de referencia; confirmar geometría CAD y techo",
+  "regiones_confirmadas": [],
+  "material_fluido": null,
+  "algoritmo_salome": null,
+  "formato_exportacion_malla": null,
+  "numero_celdas": null,
+  "capas_prismaticas": null,
+  "velocidad_inicial_m_s": null,
+  "temperatura_inicial_K": null,
+  "campo_presion": null,
+  "presion_inicial": null,
+  "unidades_presion": null,
+  "solver_openfoam": null,
+  "condiciones_frontera": {
+    "izquierda": {
+      "velocidad": null,
+      "temperatura": null,
+      "presion": null
+    },
+    "derecha": {
+      "velocidad": null,
+      "temperatura": null,
+      "presion": null
+    },
+    "posterior": {
+      "velocidad": null,
+      "temperatura": null,
+      "presion": null
+    },
+    "frontal": {
+      "velocidad": null,
+      "temperatura": null,
+      "presion": null
+    },
+    "techo": {
+      "velocidad": null,
+      "temperatura": null,
+      "presion": null
+    },
+    "suelo": {
+      "velocidad": null,
+      "temperatura": null,
+      "presion": null
+    }
+  }
+}
