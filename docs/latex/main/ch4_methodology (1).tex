@@ -411,7 +411,7 @@ Las temperaturas de sólidos se proyectan con masa y capacidad térmica; la temp
 
 La red de seis estados no produce por sí sola gradientes ni máximos locales. Si el control utiliza uniformidad o temperatura máxima del producto, se incorpora un cierre espacial adicional identificado con CFD y observaciones distribuidas, y se evalúa su error de manera separada. La precisión de la temperatura media no acredita la de ese cierre.
 
-Los operadores se versionan y se aplican de forma idéntica a datos sintéticos y experimentales. Esta correspondencia establece qué salidas tridimensionales y reducidas pueden compartir una tarea predictiva y cuáles responden a problemas distintos.
+Los operadores se versionan y se aplican de forma idéntica a datos de simulación y experimentales. Esta correspondencia establece qué salidas tridimensionales y reducidas pueden compartir una tarea predictiva y cuáles responden a problemas distintos.
 
 \section{Verificación física y validación experimental}
 \label{met:validacion}
@@ -494,7 +494,7 @@ El conjunto de prueba final permanece cerrado durante identificación física, s
 
 Las ventanas de entrenamiento y validación se depuran para que no compartan entradas históricas ni objetivos futuros. Si una muestra utiliza una historia de duración $L_{\mathrm{hist}}$ y un horizonte $H_p\Delta t_c$, se reserva una separación temporal que impida el solapamiento de esos soportes, aplicando como regla conservadora $L_{\mathrm{hist}}+H_p\Delta t_c$ en fronteras dentro de una serie.
 
-Cada partición interna vuelve a estimar escaladores, imputaciones permitidas, selección de variables, parámetros físicos ajustados y generador sintético utilizando solo su porción de entrenamiento. La generación de datos con un modelo calibrado sobre el bloque que después se evalúa produciría filtración de información, aunque las muestras resultantes se denominen sintéticas.
+Cada partición interna vuelve a estimar escaladores, imputaciones permitidas, selección de variables, parámetros físicos ajustados y modelo de simulación utilizando solo su porción de entrenamiento. La generación de datos con un modelo calibrado sobre el bloque que después se evalúa produciría filtración de información, incluso al utilizar esas simulaciones para enriquecimiento.
 
 El conjunto final se evalúa después de congelar estructura, parámetros, versiones y criterios. Sus resultados no orientan una nueva iteración del mismo contraste. Una revisión posterior constituye una versión nueva y requiere otra evidencia reservada para evaluar su generalización.
 
@@ -647,7 +647,7 @@ Para control se mide el ciclo completo con estimación de estado y optimización
 
 El marco híbrido física--datos, HPDF, utiliza simulaciones para ampliar la información disponible sobre Coffee Solutions dentro de condiciones justificadas. Se distinguen observaciones experimentales, proyecciones del CFD y trayectorias de la red reducida. La cavidad bidimensional conserva su función de contraste de mecanismos y no se incorpora como supervisión directa de secado.
 
-Una muestra sintética incluye fuente, caso, geometría, carga, condiciones iniciales, secuencia de acciones, perturbaciones, parámetros, incertidumbre numérica y operador de observación. Las salidas se convierten a la misma magnitud, unidad, resolución temporal y soporte espacial que el objetivo experimental. Un promedio de recinto no recibe la etiqueta de una temperatura superficial del grano.
+Una muestra de simulación incluye fuente, caso, geometría, carga, condiciones iniciales, secuencia de acciones, perturbaciones, parámetros, incertidumbre numérica y operador de observación. Las salidas se convierten a la misma magnitud, unidad, resolución temporal y soporte espacial que el objetivo experimental. Un promedio de recinto no recibe la etiqueta de una temperatura superficial del grano.
 
 Los parámetros y generadores usados dentro de una partición se ajustan solo con su entrenamiento. Se conserva el identificador de trayectoria para impedir que ventanas de la misma simulación se distribuyan entre entrenamiento y validación como si fueran casos independientes. Las simulaciones derivadas de episodios reservados para prueba no participan en el enriquecimiento.
 
@@ -672,7 +672,7 @@ El CFD se prioriza cuando la heterogeneidad espacial, los chorros o una configur
 
 \subsection{Ponderación equilibrada y restricciones}
 
-La pérdida se normaliza por fuente y trayectoria para que la cantidad de registros sintéticos no determine por sí sola su influencia:
+La pérdida se normaliza por fuente y trayectoria para que la cantidad de registros de simulación no determine por sí sola su influencia:
 \begin{equation}
 \mathcal L_{\mathrm{HPDF}}=
 \sum_{s\in\mathcal S}
@@ -685,7 +685,7 @@ La pérdida se normaliza por fuente y trayectoria para que la cantidad de regist
 \sum_{s\in\mathcal S}\lambda_s=1.
 \label{met:perdida_hpdf}
 \end{equation}
-La fuente experimental mantiene una contribución explícita. Las ponderaciones sintéticas se seleccionan considerando discrepancia, incertidumbre y desempeño sobre observaciones reales. Se registra también la estrategia de muestreo por episodio y variable.
+La fuente experimental mantiene una contribución explícita. Las ponderaciones de simulación se seleccionan considerando discrepancia, incertidumbre y desempeño sobre observaciones reales. Se registra también la estrategia de muestreo por episodio y variable.
 
 Para modelos por árboles, los residuales físicos se evalúan sobre trayectorias y balances integrados. No se interpreta la derivada temporal de una función constante por hojas como una derivada física. Para modelos diferenciables puede añadirse un residual diferencial, comprobando su consistencia con las variables y entradas de la tarea.
 
@@ -712,7 +712,7 @@ La contribución de cada componente se compara mediante variantes: entrenamiento
 
 La diferencia de desempeño se calcula emparejando episodios y utilizando intervalos por bloques o lotes. Se exige una mejora relevante frente a su incertidumbre, sin deterioro crítico en variables del producto, conservación o tiempo de ejecución. La conclusión identifica dónde el enriquecimiento ayuda, dónde no cambia la referencia y dónde aumenta error.
 
-Después de elegir la versión se congelan transformaciones, pesos, generadores, modelos y parámetros. Solo entonces se realiza la prueba final. El resultado acredita el procedimiento dentro de la cobertura contrastada; los escenarios sintéticos adicionales se mantienen como evaluación de sensibilidad o estrés.
+Después de elegir la versión se congelan transformaciones, pesos, generadores, modelos y parámetros. Solo entonces se realiza la prueba final. El resultado acredita el procedimiento dentro de la cobertura contrastada; los escenarios simulados adicionales se mantienen como evaluación de sensibilidad o estrés.
 
 \section{Caracterización de actuadores y patrones de flujo}
 \label{met:actuadores}
@@ -992,7 +992,7 @@ La decisión sobre una estrategia se sustenta en límites del producto, humedad 
 
 El expediente de cada episodio relaciona datos originales, calibraciones, mapa de sensores, geometría, carga, eventos manuales y comandos. El de cada simulación relaciona caso de entrada, versión del solucionador, malla, propiedades, fronteras, paso temporal, convergencia, balances y operadores de proyección. El de cada predictor o controlador relaciona particiones, transformaciones, parámetros, semillas, criterios de selección y resultados de ejecución.
 
-Se conserva un manifiesto que permite reconstruir qué información intervino en cada versión. La identificación de un modelo generador, una trayectoria sintética y una observación experimental permanece disponible después de unir tablas. El resultado final distingue incertidumbre metrológica, numérica, paramétrica y predictiva, con su procedimiento de estimación.
+Se conserva un manifiesto que permite reconstruir qué información intervino en cada versión. La identificación de un modelo generador, una trayectoria simulada y una observación experimental permanece disponible después de unir tablas. El resultado final distingue incertidumbre metrológica, numérica, paramétrica y predictiva, con su procedimiento de estimación.
 
 Las cantidades aún no disponibles se cierran mediante el levantamiento o ensayo correspondiente: dimensiones y coordenadas definitivas, cantidad y ubicación de sensores, variante de instrumentos, propiedades de carga, fechas y número de episodios, curvas de actuación, parámetros identificados, configuración numérica y tolerancias. No se sustituyen por cifras de otras instalaciones. Esos valores se incorporan a las fichas y a los resultados antes de atribuir ejecución completa al protocolo.
 

@@ -913,7 +913,7 @@ sin exigir una inclusión universal de un conjunto en el otro. La cobertura de s
 
 El dominio comprende combinaciones de estados, perturbaciones, carga, configuración y acciones. No se describe adecuadamente mediante intervalos marginales independientes si algunas combinaciones nunca se han observado o son físicamente imposibles. También debe distinguirse cobertura de condiciones individuales y cobertura de trayectorias dinámicas.
 
-Extrapolar implica aplicar una relación fuera de la región respaldada por la evidencia utilizada. La conservación y las restricciones físicas pueden descartar respuestas imposibles, pero no garantizan exactitud en esa región. Del mismo modo, aumentar la cantidad de datos sintéticos mejora la descripción del modelo generador y no necesariamente la del secador real.
+Extrapolar implica aplicar una relación fuera de la región respaldada por la evidencia utilizada. La conservación y las restricciones físicas pueden descartar respuestas imposibles, pero no garantizan exactitud en esa región. Del mismo modo, aumentar la cantidad de datos de simulación mejora la descripción del modelo generador y no necesariamente la del secador real.
 
 \section{Aprendizaje automático y modelos híbridos}
 \label{sec:ml_procesos_termicos}
@@ -1033,7 +1033,7 @@ Una PINN puede aproximar la solución de un problema específico o una familia p
 
 La formulación física tampoco garantiza que las ecuaciones utilizadas representen todos los mecanismos de la planta. Un residuo pequeño de un modelo sin evaporación, carga o renovación de aire describe consistencia con ese modelo limitado. La evaluación física requiere relacionar los residuos con balances integrales y con observaciones del sistema real.
 
-\subsection{Datos sintéticos, generalización y efecto de las acciones}
+\subsection{Datos de simulación, generalización y efecto de las acciones}
 
 Los datos numéricos pueden ampliar la exploración de escenarios, pero contienen los supuestos y sesgos del generador. Una pérdida conjunta puede representarse como
 \begin{equation}
@@ -1043,7 +1043,7 @@ Los datos numéricos pueden ampliar la exploración de escenarios, pero contiene
 +\lambda_p\mathcal L_{\mathrm{fis}},
 \label{eq:perdida_datos_hibridos}
 \end{equation}
-donde $\mathcal D_e$ y $\mathcal D_s$ contienen datos experimentales y sintéticos. Normalizar por conjunto evita que su tamaño determine por sí solo la contribución relativa. Los pesos expresan decisiones sobre representatividad y fidelidad; no convierten los datos sintéticos en evidencia experimental adicional.
+donde $\mathcal D_e$ y $\mathcal D_s$ contienen datos experimentales y de simulación. Normalizar por conjunto evita que su tamaño determine por sí solo la contribución relativa. Los pesos expresan decisiones sobre representatividad y fidelidad; no convierten los datos de simulación en evidencia experimental adicional.
 
 Las mediciones y las simulaciones pueden representar magnitudes diferentes: un sensor tiene volumen de sensibilidad, un campo numérico posee una resolución y un nodo reducido representa un agregado. La relación entre esas magnitudes debe definirse mediante operadores de observación o proyección antes de interpretar sus discrepancias como error del aprendizaje.
 

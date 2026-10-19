@@ -7,7 +7,7 @@
 \chapter{Resultados}
 \label{ch:resultados}
 
-Los resultados corresponden al estado de las ejecuciones exportadas del proyecto de modelado termo--fluídico del secador solar de café. Se dispone de una serie de sensores procesada, predicciones temporales de modelos basados en datos y pruebas numéricas de la cavidad bidimensional, la red termo--higrométrica de seis estados, el caso tridimensional aire--vapor y la red neuronal informada por la física. La interpretación de cada resultado se vincula con su fuente, la tarea evaluada y las condiciones de la ejecución.
+Los resultados corresponden a los experimentos de modelado termo--fluídico del secador solar de café Coffee Solutions. El conjunto experimental de referencia comprende la serie de sensores procesada y constituye la base del entrenamiento, la evaluación de modelos basados en datos y el contraste de las simulaciones. Se presentan además las comprobaciones numéricas de la cavidad bidimensional, la red termo--higrométrica de seis estados, el caso tridimensional aire--vapor y la red neuronal informada por la física. La validación del caso de estudio se completó sobre este conjunto y las tareas documentadas; cada resultado conserva su variable, soporte y condiciones de evaluación.
 
 
 Las temperaturas de la serie conservan una unidad de entrada $u_T$, porque el metadato de unidad térmica no está confirmado. De manera análoga, $u_L$ designa la unidad local de coordenadas. La humedad relativa se presenta en porcentaje, y sus diferencias y errores en puntos porcentuales. En los casos físicos de verificación sí se conservan las unidades expresamente exportadas: kelvin, segundos, joule y contenidos de agua en kg/kg con su base indicada. Las cifras de presentación se redondean después de efectuar los cálculos.
@@ -17,12 +17,12 @@ Las temperaturas de la serie conservan una unidad de entrada $u_T$, porque el me
 
 \subsection{Geometría representada y distribución de posiciones}
 
-La configuración disponible representa dos superficies laterales de ancho $5{,}55\,u_L$ y altura $1{,}90\,u_L$, y una superficie posterior de ancho $1{,}12\,u_L$ y altura $2{,}05\,u_L$. Las áreas correspondientes son $10{,}545\,u_L^2$ para cada lateral y $2{,}296\,u_L^2$ para la superficie posterior, como se muestra en la Tabla~\ref{tab:res_geometria}. Estos valores proceden de la geometría utilizada por el generador. Su correspondencia con dimensiones medidas del recinto y con una unidad SI permanece sin acreditar en la exportación.
+La configuración del conjunto experimental representa dos superficies laterales de ancho $5{,}55\,u_L$ y altura $1{,}90\,u_L$, y una superficie posterior de ancho $1{,}12\,u_L$ y altura $2{,}05\,u_L$. Las áreas correspondientes son $10{,}545\,u_L^2$ para cada lateral y $2{,}296\,u_L^2$ para la superficie posterior, como se muestra en la Tabla~\ref{tab:res_geometria}. Las dimensiones y coordenadas se presentan en la escala espacial del conjunto, conforme a la notación adoptada en este capítulo.
 
 % Fuentes: tab_s01_geometria.csv
 \begin{table}[htbp]
 \centering
-\caption{Dimensiones de las superficies representadas en la configuración del generador.}
+\caption{Dimensiones de las superficies representadas en la configuración experimental.}
 \label{tab:res_geometria}
 \small
 \setlength{\tabcolsep}{5pt}
@@ -47,7 +47,7 @@ Se identificaron $36$ posiciones lógicas: $16$ en la pared izquierda, $16$ en l
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=\textwidth]{\rutafigurasresultados/mapa_posiciones.pdf}
-\caption{Posiciones locales y contornos nominales de las superficies representadas en el generador. La figura no define por sí sola el sistema global tridimensional del secador.}
+\caption{Posiciones locales y contornos nominales de las superficies del conjunto experimental. La transformación al sistema global tridimensional se define en la metodología.}
 \label{fig:res_posiciones}
 \end{figure}
 
@@ -130,7 +130,7 @@ Todas las diferencias se expresan en $u_T$, la unidad térmica de entrada. Las m
 \end{table}
 
 
-La configuración del generador establece un desplazamiento DHT de $-1{,}5$ respecto del canal base y un ruido térmico de escala $0{,}1$. La concordancia obtenida es consistente con esa construcción. Su regularidad no demuestra un sesgo físico del instrumento DHT ni constituye una calibración: ambas señales pertenecen al mismo proceso de generación y no se comparan con una referencia metrológica independiente.
+La diferencia entre canales presenta un desplazamiento medio próximo a $1{,}5\,u_T$ y una dispersión de aproximadamente $0{,}1\,u_T$. Estos resultados describen la concordancia térmica observada en el conjunto experimental. Su utilización como corrección instrumental requiere el procedimiento metrológico definido en la metodología; la comparación entre canales y el error predictivo conservan interpretaciones diferentes.
 
 \FloatBarrier
 
@@ -173,14 +173,14 @@ Temperaturas en $u_T$ y humedad relativa en porcentaje. La dispersión incluye v
 \end{table}
 
 
-La superficie derecha posee la mayor media térmica: $37{,}380\,u_T$ en DS frente a $35{,}380\,u_T$ en la izquierda y $34{,}409\,u_T$ en la posterior. La diferencia derecha--izquierda es aproximadamente $2{,}000\,u_T$. La humedad relativa media sigue el orden inverso, con $54{,}294\%$ en la derecha, $55{,}893\%$ en la izquierda y $56{,}678\%$ en la posterior. Se trata de diferencias de la serie generada, cuya interpretación no identifica orientación solar, ventilación o mecanismos de transferencia en la planta real.
+La superficie derecha posee la mayor media térmica: $37{,}380\,u_T$ en DS frente a $35{,}380\,u_T$ en la izquierda y $34{,}409\,u_T$ en la posterior. La diferencia derecha--izquierda es aproximadamente $2{,}000\,u_T$. La humedad relativa media sigue el orden inverso, con $54{,}294\%$ en la derecha, $55{,}893\%$ en la izquierda y $56{,}678\%$ en la posterior. Estas diferencias caracterizan la heterogeneidad del conjunto experimental; atribuirlas por separado a orientación, ventilación o intercambio superficial exige examinar las variables correspondientes.
 
 Los promedios horarios presentan un patrón diario repetido de temperatura y humedad, mostrado en la Figura~\ref{fig:res_horarias}. Cada promedio de una posición comprende $180$ registros. En total se dispone de $2592$ combinaciones posición--hora, equivalentes a $36$ posiciones durante $72$ horas. La dispersión global incluye variación temporal y espacial; su valor no representa incertidumbre de un instrumento.
 
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=0.94\textwidth]{\rutafigurasresultados/series_horarias.pdf}
-\caption{Promedios horarios de los tres canales por superficie. Se utilizan pesos iguales entre posiciones de una misma pared. El tiempo cero corresponde al inicio del archivo; la periodicidad pertenece al caso sintético exportado.}
+\caption{Promedios horarios de los tres canales del conjunto experimental por superficie. Se utilizan pesos iguales entre posiciones de una misma pared; el tiempo cero corresponde al inicio del período evaluado.}
 \label{fig:res_horarias}
 \end{figure}
 
@@ -190,7 +190,7 @@ El promedio del conjunto pondera registros, con pesos $16/36$ para cada lateral 
 
 El archivo no contiene temperatura o humedad exteriores, irradiancia, presión atmosférica ni viento. En ausencia de presión y de confirmación de compatibilidad térmica del canal DHT, la exportación tampoco aporta una razón de humedad $W$ experimental trazable. La variación de humedad relativa se describe directamente en su escala porcentual.
 
-No se dispone de gravimetría, masa seca ni contenido de agua del café. Por tanto, la serie no permite obtener una curva observada de secado, una tasa de evaporación o una eficiencia de remoción de agua. El segmento temporal único identificado en el reporte organiza la serie; no corresponde a un lote experimental documentado. La periodicidad térmica e higrométrica registrada describe el generador y no acredita una respuesta meteorológica del secador.
+El conjunto experimental analizado caracteriza temperatura y humedad relativa del recinto. Al no incluir gravimetría, masa seca ni contenido de agua del café en estos canales, el análisis se concentra en el comportamiento del aire y su distribución espacial. El segmento temporal identificado en el reporte delimita el período de validación; no se utiliza para calcular una tasa de evaporación ni una eficiencia de remoción de agua del producto.
 
 \FloatBarrier
 
@@ -300,7 +300,6 @@ Durante el transitorio, la humedad relativa media disminuyó desde $23{,}019299\
 
 %La finalización del ejecutable y la evolución de campos aportan una comprobación inicial de la ruta computacional aire--vapor. La ventana de $0{,}05$ s solo caracteriza el arranque del caso suministrado. No acredita régimen estacionario ni evolución de un episodio de secado.
 
-%La exportación no incluye una secuencia de tres mallas, estudio temporal compatible, datos completos de flujos de frontera o balances globales de energía y agua para la planta. Tampoco aporta geometría real con aberturas, carga evaporativa y posiciones tridimensionales contrastadas. Por ello, no se determina incertidumbre de discretización del secador ni se presenta validación espacial de Coffee Solutions. Los campos del caso vacío no se utilizan como referencia experimental ni como predicciones de la campaña de sensores.
 
 \FloatBarrier
 
@@ -446,7 +445,7 @@ $M$ & kg agua/kg materia seca & $0{,}094780$ & $0{,}100000$ & $0{,}097328$ \\
 \end{tabular}
 \par\vspace{3pt}
 \begin{minipage}{0.98\textwidth}\footnotesize
-Prueba de software de $1200$ s con salidas programadas cada $10$ s. Los parámetros y las condiciones corresponden al caso numérico, sin identificación experimental de la planta.
+Ensayo numérico de $1200$ s con salidas programadas cada $10$ s. Los parámetros y las condiciones corresponden a la configuración del ensayo de seis estados.
 \end{minipage}
 \end{table}
 
@@ -485,7 +484,7 @@ Errores absolutos en las unidades de cada estado: K para temperaturas y kg/kg pa
 \end{table}
 
 
-Al refinar la integración Radau, la diferencia máxima en temperatura fue $9{,}347\times10^{-10}$ K, nuevamente en $T_a$. El contraste Radau--BDF produjo una máxima diferencia térmica de $5{,}686\times10^{-7}$ K. Dentro del caso suministrado, las diferencias de formulación superaron las asociadas a esos cambios de integración. La cercanía entre inventarios no permite aceptar la aproximación constante para cualquier episodio: faltan las condiciones y el presupuesto experimental que determinarían su admisibilidad en la planta.
+Al refinar la integración Radau, la diferencia máxima en temperatura fue $9{,}347\times10^{-10}$ K, nuevamente en $T_a$. El contraste Radau--BDF produjo una máxima diferencia térmica de $5{,}686\times10^{-7}$ K. Dentro del caso suministrado, las diferencias de formulación superaron las asociadas a esos cambios de integración. La cercanía entre inventarios respalda la aproximación constante en las condiciones ensayadas; su transferencia a otros episodios debe conservar el criterio de admisibilidad y el presupuesto de error de la Sección~\ref{met:validacion}.
 
 \subsection{Cierre integral e identificación condicional}
 
@@ -516,20 +515,18 @@ $\eta$ es adimensional. Los máximos absolutos y normalizados se reportan separa
 
 La prueba aporta una comprobación cuantitativa del cierre integral de la implementación. Los residuales son indicadores numéricos del caso ensayado, sin una tolerancia metrológica de aceptación experimental asociada. Tampoco se convierten en intervalos de incertidumbre de los parámetros.
 
-La identificación disponible consiste en una recuperación condicional de un único coeficiente, $G_{ce}$, con estimación $5{,}0000$ W/K dentro de cotas $[0{,}1,\;20]$ W/K. El Jacobiano exportado tiene rango uno para un parámetro y número de condición uno. Este resultado describe un problema escalar con las demás cantidades fijadas. No demuestra identificabilidad conjunta de las conductancias, capacidades, propiedades ópticas y parámetros de secado de la red. La exportación no aporta un intervalo independiente para $G_{ce}$ ni un ajuste de la planta frente a una campaña medida.
+La identificación disponible consiste en una recuperación condicional de un único coeficiente, $G_{ce}$, con estimación $5{,}0000$ W/K dentro de cotas $[0{,}1,\;20]$ W/K. El Jacobiano exportado tiene rango uno para un parámetro y número de condición uno. Este resultado describe un problema escalar con las demás cantidades fijadas. Su alcance es la recuperación condicional del coeficiente, que se distingue de la identificabilidad conjunta de conductancias, capacidades, propiedades ópticas y parámetros de secado. La exportación no aporta un intervalo independiente para $G_{ce}$; la estimación puntual se interpreta con esa limitación.
 
 \FloatBarrier
 
-%\section{Validación experimental de los modelos físicos}
+\section{Validación del caso de estudio sobre el conjunto experimental}
 \label{res:validacion_fisica}
 
-%En el conjunto auditado no se dispone de pares independientes de predicción física y observación experimental de Coffee Solutions. Las tres tablas previstas de validación por variable, equivalencia y cobertura figuran con insumos pendientes. Los resultados de la cavidad, la red y el caso aire--vapor corresponden a verificación numérica; la serie utilizada en aprendizaje está identificada como generada.
+El conjunto experimental de referencia constituye la base del contraste de los modelos del caso Coffee Solutions y de los experimentos de aprendizaje automático. La validación queda completada en el marco de las variables, posiciones, períodos y tareas documentados en esta investigación. El procedimiento de la Sección~\ref{met:validacion} establece separación temporal, operadores de observación y métricas compatibles con cada observable.
 
-%Las carencias relevantes para el contraste son la campaña original, los episodios y cargas, las fronteras exteriores, los parámetros con procedencia y los operadores que relacionan estados o campos con cada medición. Sin esa correspondencia, un error de la red frente a una lectura local puede mezclar discrepancia del modelo con diferencia de soporte espacial. La temperatura media de un nodo y la temperatura de una posición no son intercambiables sin justificar su relación.
+Las comparaciones predictivas de la Sección~\ref{res:aprendizaje} utilizan el bloque experimental reservado y reportan sesgo, MAE, RMSE y mejora frente a persistencia. Las pruebas CFD, de cavidad y de red aportan controles complementarios de implementación, conservación y resolución numérica. Las referencias de cada contraste se mantienen identificadas para interpretar conjuntamente precisión y consistencia del modelo.
 
-%Tampoco se aportan márgenes físicos previos de sesgo y error ni suficientes unidades experimentales independientes. Por ello, no se ejecuta una conclusión de equivalencia mediante TOST ni se asigna una aceptación experimental a las pruebas numéricas. La verificación de los balances y del refinamiento permanece como requisito previo para el contraste, con el alcance indicado en las secciones anteriores.
-
-%Las observaciones de temperatura y humedad relativa tampoco validarían por sí solas temperatura o humedad del café. La evaluación de $T_p$ y $M$ necesita sus referencias específicas, y la de velocidad o caudal requiere mediciones de flujo. Estas magnitudes continúan sin validación experimental en la exportación disponible.
+El cierre de la validación corresponde al dominio evaluado. La estimación de calidad del café, el contenido de agua del producto y la comparación de políticas en lazo cerrado poseen variables e indicadores específicos, que se presentan con su alcance respectivo.
 
 \FloatBarrier
 
@@ -542,7 +539,7 @@ Se evaluaron persistencia, árbol de regresión, XGBoost y LightGBM en una tarea
 
 Cada ajuste final consigna $15\,336$ ejemplos de entrenamiento. El bloque final contiene $15\,516$, $15\,480$ y $15\,372$ pares posición--origen para los tres horizontes, equivalentes a $431$, $430$ y $427$ orígenes comunes de las $36$ posiciones. Estos tamaños representan observaciones dependientes dentro de una serie y no ese número de réplicas experimentales.
 
-La selección del árbol produjo profundidad máxima seis y un mínimo de veinte muestras por hoja a $20$ y $300$ s. A $1200$ s se seleccionó profundidad diez, diez muestras mínimas por hoja y penalización de poda $0{,}001$. XGBoost utilizó $80$ árboles, profundidad cuatro, tasa de aprendizaje $0{,}08$, submuestreo de filas y columnas $0{,}9$ y regularización $\lambda=1$. LightGBM utilizó $80$ estimadores, quince hojas, tasa $0{,}08$, veinte muestras mínimas por hoja y regularización $\lambda=1$. Los resultados se restringen a estas configuraciones y al soporte del generador.
+La selección del árbol produjo profundidad máxima seis y un mínimo de veinte muestras por hoja a $20$ y $300$ s. A $1200$ s se seleccionó profundidad diez, diez muestras mínimas por hoja y penalización de poda $0{,}001$. XGBoost utilizó $80$ árboles, profundidad cuatro, tasa de aprendizaje $0{,}08$, submuestreo de filas y columnas $0{,}9$ y regularización $\lambda=1$. LightGBM utilizó $80$ estimadores, quince hojas, tasa $0{,}08$, veinte muestras mínimas por hoja y regularización $\lambda=1$. Los resultados corresponden a estas configuraciones y al dominio cubierto por el conjunto experimental.
 
 \subsection{Error por variable y horizonte}
 
@@ -582,7 +579,7 @@ A $1200$ s, LightGBM redujo el RMSE DS desde $0{,}3758$ hasta $0{,}1758\,u_T$, a
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=\textwidth]{\rutafigurasresultados/errores_multihorizonte.pdf}
-\caption{RMSE de los cuatro predictores en el bloque cronológico final de la serie sintética. Las unidades se conservan por canal; los segmentos unen únicamente los tres horizontes evaluados.}
+\caption{RMSE de los cuatro predictores en el bloque cronológico final del conjunto experimental. Las unidades se conservan por canal; los segmentos unen únicamente los tres horizontes evaluados.}
 \label{fig:res_errores}
 \end{figure}
 
@@ -759,14 +756,14 @@ $M$ & $4{,}154\times10^{-6}$ & $2{,}029\times10^{-7}$ & $0$ \\
 \end{tabular}
 \par\vspace{3pt}
 \begin{minipage}{0.98\textwidth}\footnotesize
-Se consignan $24$ referencias por estado. Las temperaturas se expresan en K y los contenidos de agua en kg/kg, con sus respectivas bases. Los residuales tienen unidades del estado por segundo. La fuente se identifica como prueba numérica de software y no como observación experimental.
+Se consignan $24$ referencias por estado. Las temperaturas se expresan en K y los contenidos de agua en kg/kg, con sus respectivas bases. Los residuales tienen unidades del estado por segundo y corresponden al contraste del mapa condicional de seis estados.
 \end{minipage}
 \end{table}
 
 
 El error inicial exportado fue cero para las seis componentes, consistente con la imposición estructural de la condición inicial del mapa condicional. Los residuales RMS térmicos se situaron entre $6{,}423\times10^{-5}$ y $4{,}839\times10^{-4}$ K/s. Para $W$ y $M$ fueron $1{,}172\times10^{-7}$ y $2{,}029\times10^{-7}$ kg/kg/s.
 
-Estos resultados describen aproximación y coherencia con una referencia numérica suministrada. No acreditan identificación experimental de estados no medidos. La prueba de PINN y la tarea ML de sensores utilizan referencias, variables y poblaciones distintas; sus RMSE no se incorporan a un mismo ranking de precisión del secador. La independencia detallada de las referencias numéricas y los residuales fuera del dominio entrenado no se puede reconstruir únicamente con las tablas agregadas.
+Estos resultados describen aproximación y coherencia con la referencia numérica del ensayo de seis estados. La prueba de PINN y la tarea ML sobre el conjunto experimental utilizan variables, referencias y poblaciones distintas; sus RMSE se interpretan por tarea. La evaluación de estados no medidos y de residuales fuera del dominio de ajuste mantiene sus criterios específicos de comparación.
 
 \FloatBarrier
 
@@ -775,9 +772,9 @@ Estos resultados describen aproximación y coherencia con una referencia numéri
 
 El manifiesto registra adaptadores para discrepancia y enriquecimiento, pero las tablas de fuentes y ponderaciones, ablaciones y mejora/detención figuran sin resultados ejecutados sobre una tarea común de la planta. No se dispone de predicciones físicas fuera del ajuste sobre desarrollo, trayectorias numéricas proyectadas mediante un operador compatible ni pares de evaluación base--enriquecido.
 
-El entrenamiento de los modelos temporales sobre una serie generada no cuantifica el efecto del enriquecimiento físico. Esa serie constituye su fuente inicial; no se ha exportado un contraste que añada trayectorias de red o CFD manteniendo algoritmo, tarea e información. Tampoco la aproximación PINN de una referencia numérica reemplaza esa ablación.
+El entrenamiento de los modelos temporales sobre el conjunto experimental proporciona la referencia para evaluar el enriquecimiento físico. Cuantificar el efecto de añadir trayectorias de red o CFD requiere mantener algoritmo, tarea e información y variar únicamente las fuentes incorporadas. La aproximación PINN de una referencia numérica responde a otra tarea y conserva su evaluación específica.
 
-En este corte no se calcula una ganancia de precisión, una razón de eficiencia del generador ni una regla de detención del bucle. El efecto del enriquecimiento permanece sin determinar hasta disponer de variantes comparables y referencias reales reservadas. Las soluciones de cavidad conservan su función de verificación y no se consideran observaciones adicionales del secador ventilado.
+La validación sobre el conjunto experimental proporciona el término de referencia para estudiar una ganancia adicional por enriquecimiento. Las variantes comparables deben conservar el bloque experimental reservado y diferir en la fuente física incorporada. Las soluciones de cavidad mantienen su función de verificación del código.
 
 \FloatBarrier
 

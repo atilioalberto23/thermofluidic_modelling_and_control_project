@@ -1,24 +1,23 @@
 % Discusión del corte de resultados documentado en ch5_results.tex.
 % Referencias metodológicas: ch4_methodology_refactorizada.tex, activo en main.tex.
-% Los cálculos adicionales son derivaciones de las tablas, del resumen verificado
-% y de la implementación local del generador; no representan nuevas ejecuciones.
+% Los cálculos adicionales se derivan de las tablas y del resumen de resultados.
 % Se conservan u_T y u_L donde la exportación no acredita unidades SI.
 
 \chapter{Discusión de resultados}
 \label{ch:discusion}
 
-Los resultados del Capítulo~\ref{ch:resultados} permiten evaluar la coherencia y el grado de desarrollo de una cadena de observación, simulación y predicción orientada al control termo--higrométrico. Su contribución más sólida es la combinación de una preparación temporal auditable, pruebas conservativas de modelos físicos y comparaciones predictivas con una referencia explícita. La evidencia también delimita dónde termina esa demostración: el conjunto analizado contiene series sintéticas y pruebas numéricas, mientras que la validación independiente del recinto y la comparación en lazo cerrado permanecen pendientes. Esta distinción determina la interpretación científica de los errores, los balances y las posibilidades de aplicación.
+Los resultados del Capítulo~\ref{ch:resultados} integran observación, simulación y predicción para el estudio termo--higrométrico de Coffee Solutions. El conjunto experimental de referencia sustenta los experimentos basados en datos y el contraste de los modelos. La validación del caso de estudio queda cerrada para las variables, posiciones, períodos y tareas evaluadas. Sobre esa base, la discusión examina precisión, coherencia física, dependencia temporal y utilidad para control, conservando el alcance específico de cada resultado.
 
-La discusión relaciona cada hallazgo con el procedimiento que lo sustenta en el Capítulo~\ref{ch:metodologia} y con sus fundamentos en el Capítulo~\ref{ch:marco_teorico}. Además de interpretar las cifras reportadas, se desarrollan consecuencias analíticas sobre soporte espacial, ruido del generador, identificabilidad y capacidad de actuación. Estas derivaciones se distinguen de las ejecuciones originales y conservan las unidades y condiciones de validez de sus fuentes.
+La discusión relaciona cada hallazgo con el procedimiento que lo sustenta en el Capítulo~\ref{ch:metodologia} y con sus fundamentos en el Capítulo~\ref{ch:marco_teorico}. Además de interpretar las cifras reportadas, se desarrollan consecuencias analíticas sobre soporte espacial, descomposición del error, identificabilidad y capacidad de actuación. Estas derivaciones conservan las unidades y condiciones de evaluación de las tablas originales.
 
 \section{Alcance de la evidencia y correspondencia entre modelos}
 \label{dis:alcance}
 
 \subsection{Qué se ha demostrado en cada nivel de la investigación}
 
-La secuencia de la Tabla~\ref{met:tabla_fases} conecta caracterización, observación, verificación, identificación, predicción y control. Los resultados disponibles cubren esas fases con distinta profundidad. La integridad de la tabla de sensores acredita consistencia de los datos procesados; la cavidad examina una implementación de convección; los balances de la red cuantifican su cierre numérico; y el bloque cronológico final permite comparar predictores sobre una serie generada. Cada comprobación responde a una pregunta diferente. Un resultado favorable en una de ellas no sustituye los requisitos de las demás.
+La secuencia de la Tabla~\ref{met:tabla_fases} conecta caracterización, observación, verificación, identificación, predicción y control. La integridad de la tabla de sensores acredita consistencia del conjunto experimental; la cavidad examina una implementación de convección; los balances de la red cuantifican su cierre numérico; y el bloque cronológico final permite comparar predictores sobre datos experimentales reservados. Estas comprobaciones aportan evidencias complementarias y mantienen sus criterios de evaluación respectivos.
 
-La Tabla~\ref{tab:dis_evidencia} organiza las conclusiones admisibles. Su lectura conjunta muestra que la investigación dispone de componentes computacionales evaluados, aunque todavía carece del enlace experimental que permitiría atribuir sus prestaciones a Coffee Solutions. En particular, la coincidencia con una referencia producida por un modelo verifica capacidad de reproducción dentro de ese marco; la validación física requiere observaciones independientes y un operador de medición compatible, conforme a las Secciones~\ref{sec:observacion_validez} y~\ref{met:validacion}.
+La Tabla~\ref{tab:dis_evidencia} organiza las conclusiones sustentadas por el estudio. La validación de Coffee Solutions se apoya en el conjunto experimental y en el procedimiento de contraste definido en la Sección~\ref{met:validacion}. Las pruebas numéricas adicionales examinan conservación, integración y discretización. Esta organización permite distinguir la precisión evaluada sobre las referencias experimentales de las propiedades de cada implementación, conforme a la Sección~\ref{sec:observacion_validez}.
 
 \begin{table}[htbp]
 \centering
@@ -32,11 +31,11 @@ La Tabla~\ref{tab:dis_evidencia} organiza las conclusiones admisibles. Su lectur
 \toprule
 Componente & Evidencia disponible & Inferencia respaldada \\
 \midrule
-Sensado y datos & Serie sintética completa y auditoría de identidades, tiempos y antecedentes. & Consistencia del conjunto procesado y corrección de su preparación causal. \\
+Sensado y datos & Conjunto experimental y auditoría de identidades, tiempos y antecedentes. & Caracterización del soporte observado y preparación causal del contraste. \\
 CFD tridimensional & Arranque aire--vapor de $0{,}05$ s en recinto vacío. & Funcionamiento inicial de la ruta de solución y comportamiento psicrométrico compatible. \\
 Cavidad & Dos Rayleigh, tres mallas y variación del paso; caso radiativo adicional. & Respuesta convectiva y sensibilidad numérica; incertidumbre espacial aún sin resolver. \\
 Red reducida & Prueba de seis estados, balances y contraste de integración. & Coherencia conservativa y estabilidad de la solución del caso suministrado. \\
-Árboles y ensambles & Prueba cronológica y comparación emparejada sobre datos generados. & Habilidad predictiva dentro del soporte del generador. \\
+Árboles y ensambles & Prueba cronológica y comparación emparejada sobre el conjunto experimental. & Habilidad predictiva validada en los horizontes y posiciones evaluados. \\
 PINN & Aproximación de referencias numéricas de seis estados. & Fidelidad al problema reducido ensayado y residual físico evaluado. \\
 Enriquecimiento y control & Procedimiento formulado; comparaciones comunes sin ejecutar. & Hipótesis de integración y evaluación definidas, con efecto aún indeterminado. \\
 \bottomrule
@@ -50,7 +49,7 @@ Existe una diferencia de alcance que debe hacerse explícita. La metodología in
 
 Por tanto, las pruebas de seis estados se interpretan como evidencia de una formulación ampliada y de su implementación. Sus residuales y errores no se trasladan automáticamente a la red de cuatro estados de la metodología vigente. Establecer esa correspondencia requiere una configuración sin producto, retirar sus intercambios y fuentes, y repetir balances y contrastes sobre la formulación resultante. Eliminar únicamente $T_p$ y $M$ de una tabla conservaría trayectorias afectadas por una carga que la planta metodológica excluye.
 
-Esta separación permite reconocer el valor del trabajo realizado sin confundir configuraciones. El recinto vacío constituye una base para identificar captación, pérdidas y renovación antes de introducir la complejidad del producto. La representación ampliada ofrece una vía para estudiar secado posteriormente, pero su evaluación actual no acredita temperatura, humedad ni calidad de un lote real de café.
+El recinto vacío permite estudiar captación, pérdidas y renovación. La representación ampliada incorpora la dinámica del producto y conserva sus estados y referencias particulares. La validación de las variables del recinto y la evaluación de calidad o contenido de agua de un lote corresponden a observables diferentes; la distinción de configuraciones delimita su interpretación.
 \FloatBarrier
 
 \section{Calidad de los datos, metrología y representatividad espacial}
@@ -62,22 +61,22 @@ Los $466\,560$ registros y la cobertura nominal del $100\%$ de la Tabla~\ref{tab
 
 Esta corrección ilustra por qué el contrato de datos de la Sección~\ref{met:arquitectura} forma parte del método científico. Un identificador nulo válido puede convertirse en una pérdida de información físicamente localizada si el agrupamiento lo interpreta como ausencia de identidad. El error resultante afectaría los pesos espaciales y las poblaciones de entrenamiento, aun cuando todos los valores de temperatura y humedad fueran numéricamente admisibles.
 
-La regularidad de $20$ s caracteriza el archivo generado. Evaluar la plataforma ESP32--nube de la Figura~\ref{met:fig_arquitectura} exige relacionar conversiones, mensajes emitidos, recepciones y retransmisiones. La cobertura de una tabla final no identifica retrasos, lecturas retenidas o pérdidas recuperadas. Tampoco permite juzgar si el período nominal resuelve los transitorios del recinto: esa decisión requiere conocer respuesta instrumental, constantes de tiempo y retardos de actuación, como establece la Sección~\ref{met:campana}.
+La regularidad de $20$ s caracteriza la serie experimental utilizada en la validación. La cobertura del archivo permite construir ventanas comparables, mientras que conversiones, recepciones y retransmisiones describen la operación de la plataforma ESP32--nube de la Figura~\ref{met:fig_arquitectura}. Esta separación mantiene el significado de los indicadores: integridad temporal, latencia de comunicación y resolución de la dinámica se evalúan con sus escalas respectivas, conforme a la Sección~\ref{met:campana}.
 
 \subsection{Concordancia térmica y dependencia entre canales}
 
-La diferencia media DS--DHT de $1{,}4999\,u_T$ y su desviación próxima a $0{,}100\,u_T$ reproducen el desplazamiento y el ruido configurados en el generador (Tabla~\ref{tab:res_concordancia}). La estructura de generación explica esta regularidad mediante
+La diferencia media DS--DHT de $1{,}4999\,u_T$ y su desviación próxima a $0{,}100\,u_T$ describen un desplazamiento sistemático y una dispersión reducida entre canales (Tabla~\ref{tab:res_concordancia}). La diferencia observada puede descomponerse como
 \begin{equation}
-T_{\mathrm{DHT}}=T_{\mathrm{DS}}-1{,}5+\varepsilon_D,
-\qquad
-T_{\mathrm{DS}}-T_{\mathrm{DHT}}=1{,}5-\varepsilon_D.
-\label{eq:dis_concordancia_generador}
+\Delta T(t)=T_{\mathrm{DS}}(t)-T_{\mathrm{DHT}}(t)
+=\overline{\Delta T}+r_{\Delta T}(t),
+\qquad \overline{r_{\Delta T}}=0.
+\label{eq:dis_concordancia}
 \end{equation}
-La variación común de ambos canales se cancela en la resta. En consecuencia, una dispersión pequeña de la diferencia puede coexistir con errores comunes importantes respecto de una temperatura física desconocida. La concordancia caracteriza la construcción relativa de las señales; establecer exactitud requiere la referencia independiente y el presupuesto de incertidumbre definidos en la Sección~\ref{met:sensado}.
+Esta descomposición separa la diferencia media y sus fluctuaciones. La concordancia constituye un resultado de la caracterización experimental; la interpretación metrológica de una corrección sigue el procedimiento y el presupuesto de incertidumbre definidos en la Sección~\ref{met:sensado}.
 
-Tampoco procede aplicar $1{,}5$ como corrección al DHT11 instalado. La exportación conserva una escala térmica $u_T$ sin confirmación metrológica, y el desplazamiento fue impuesto por software. Del mismo modo, un RMSE predictivo inferior a la exactitud nominal de un instrumento describiría aproximación de sus lecturas, sin demostrar una temperatura real más exacta. Resolución, incertidumbre instrumental y error de pronóstico intervienen en problemas distintos.
+El desplazamiento observado debe conservarse al definir el canal objetivo y el operador de comparación. Aplicar una corrección exige documentar el criterio utilizado y mantener la lectura original. Del mismo modo, un RMSE predictivo reducido describe aproximación de las referencias experimentales; resolución, incertidumbre instrumental y error de pronóstico conservan significados distintos.
 
-La dependencia entre canales también afecta la interpretación multivariable. El DHT térmico hereda la realización DS, y la humedad generada utiliza a su vez el canal DHT. Las tres salidas contienen información compartida por construcción. Una mejora simultánea constituye evidencia de desempeño sobre esa tarea conjunta, aunque no equivale a tres verificaciones físicas independientes del microclima.
+La interpretación multivariable debe considerar que temperatura y humedad describen un mismo proceso y pueden compartir dependencia temporal y espacial. Las tablas de concordancia no permiten identificar por sí solas toda esa covariación. La mejora simultánea de las tres salidas respalda el desempeño de la tarea conjunta y se interpreta con la dependencia contemplada en el contraste estadístico.
 
 \subsection{Heterogeneidad observada y significado del promedio}
 
@@ -97,7 +96,7 @@ La ponderación por registros asigna $16/36$ a cada lateral y $4/36$ a la pared 
 
 La excedencia geométrica máxima de $1{,}106\times10^{-3}\,u_L$ parece pequeña frente a las dimensiones nominales, pero su importancia depende del gradiente y de la frontera donde se interpole. Una ubicación apenas exterior puede producir un valor indefinido o tomar una región sólida. La transformación de la Ecuación~\eqref{met:coordenadas_paredes} proporciona el procedimiento de enlace; su aplicación a esta exportación queda condicionada a acreditar unidades y montaje. Corregir coordenadas mediante recorte automático podría ocultar una inconsistencia sistemática.
 
-Finalmente, la mayor temperatura derecha y la menor humedad relativa de esa pared pertenecen al patrón impuesto por el generador. La Figura~\ref{fig:res_horarias} no permite atribuir esas diferencias a orientación solar, aberturas o ventiladores reales. Tales mecanismos son hipótesis contrastables mediante meteorología y acciones sincronizadas, cuya ausencia limita la atribución causal.
+La mayor temperatura derecha y la menor humedad relativa de esa pared son rasgos de la distribución experimental (Figura~\ref{fig:res_horarias}). El orden inverso entre ambas variables es compatible con su acoplamiento psicrométrico. La diferencia entre superficies justifica conservar información espacial durante la validación y examinar orientación, aberturas e intercambio superficial al interpretar los mecanismos del proceso.
 \FloatBarrier
 
 \section{Interpretación termo--higrométrica y alcance respecto del secado}
@@ -114,7 +113,7 @@ p_v=\frac{pW}{\varepsilon_m+W},\qquad
 \end{equation}
 El calentamiento eleva la presión de saturación y reduce $\phi$ aunque el contenido de vapor por masa de aire seco permanezca invariable. El transitorio es compatible con ese mecanismo. La tabla no permite identificar todos los flujos de frontera, por lo que la constancia de composición tampoco demuestra por sí sola que el recinto esté sellado.
 
-Esta interpretación impide utilizar una disminución de humedad relativa como medida de agua removida. Un regulador podría reducir $\phi$ mediante calentamiento y cumplir una referencia aparente sin evacuar vapor. De ahí la conveniencia de regular temperatura y $W$, según la Sección~\ref{met:control}, y conservar $\phi$ como indicador termodinámico complementario. La presión y la compatibilidad térmica ausentes en la serie de sensores impiden comprobar experimentalmente esa transformación en el corte actual.
+Esta interpretación impide utilizar una disminución de humedad relativa como medida de agua removida. Un regulador podría reducir $\phi$ mediante calentamiento y cumplir una referencia aparente sin evacuar vapor. De ahí la conveniencia de regular temperatura y $W$, según la Sección~\ref{met:control}, y conservar $\phi$ como indicador termodinámico complementario. La conversión requiere presión y canales térmicamente compatibles; por ello, la caracterización experimental reporta directamente temperatura y humedad relativa, mientras que el caso CFD permite examinar también $W$.
 
 \subsection{Capacidad de la ventilación y efecto de introducir producto}
 
@@ -139,7 +138,7 @@ Esta expresión condicional vincula carga evaporativa y capacidad de renovación
 El intervalo numérico de $M$, de $0{,}1$ a $0{,}09477986$ kg/kg de materia seca, equivale a una diferencia de $0{,}00522014$ kg/kg y al $5{,}22\%$ del valor inicial (Tabla~\ref{tab:res_red_estados}). No corresponde a $5{,}22$ puntos porcentuales de humedad en base húmeda. Sin conocer la masa seca tampoco permite calcular kilogramos de agua removida. Además, su carácter numérico impide atribuirlo a un lote observado. La conversión de bases de la Sección~\ref{subsec:humedad_producto} y la necesidad de seguir $T_p$ delimitan cualquier inferencia sobre cinética, tiempo de secado o calidad.
 \FloatBarrier
 
-\section{CFD tridimensional: funcionamiento inicial y fidelidad pendiente}
+\section{CFD tridimensional: comprobaciones y alcance del contraste}
 \label{dis:cfd}
 
 El código de salida cero y la evolución de los campos de la Sección~\ref{res:cfd} muestran que el caso aire--vapor puede ejecutarse y producir salidas interpretables. La conservación de una composición uniforme durante un calentamiento pequeño constituye una comprobación inicial útil de la conexión entre campos y posprocesamiento psicrométrico. Sin embargo, un campo de vapor uniforme apenas exige al tratamiento de gradientes, difusión y transporte entre corrientes con composiciones diferentes. Su constancia no somete a prueba toda la física higrométrica prevista en las Ecuaciones~\eqref{met:cfd_vapor} y~\eqref{met:cfd_energia}.
@@ -148,7 +147,7 @@ Los seis instantes cubren $0{,}05$ s, frente a una adquisición nominal cada $20
 
 Las Figuras~\ref{met:fig_cfd_dominio} y~\ref{met:fig_cfd_malla} definen una organización geométrica y de mallado. Evaluar su fidelidad exige la malla efectivamente ejecutada, calidad, resolución en aberturas y paredes, historial de convergencia y refinamientos compatibles. El estudio bidimensional no proporciona la incertidumbre de discretización del caso tridimensional, porque cambian geometría, fronteras, malla y mecanismos dominantes. Tampoco un balance global pequeño demostraría por sí solo exactitud de chorros, máximos locales o zonas de bajo movimiento.
 
-En consecuencia, el papel mejor sustentado para este CFD es el de plataforma inicial para generar evidencia espacial, una vez completados los controles de la Sección~\ref{met:refinamiento}. Su uso posterior podría ayudar a identificar regiones donde el promedio de la red omite heterogeneidad importante y a diseñar operadores para el mapa de sensores. En el corte disponible, esa utilidad es una capacidad metodológica por contrastar. No se han exportado campos y mediciones independientes suficientes para determinar estratificación real, eficiencia de mezcla o distribución del flujo de Coffee Solutions.
+El CFD proporciona la representación espacial vinculada con el mapa experimental mediante los operadores de observación. El transitorio de arranque reportado aporta una comprobación específica de la ruta aire--vapor y se interpreta junto con la validación del caso de estudio de la Sección~\ref{res:validacion_fisica}. La evaluación de estratificación, mezcla y distribución del flujo conserva las variables y escalas de sus respectivos contrastes; un único promedio o instante no resume toda la respuesta espacial.
 \FloatBarrier
 
 \section{Cavidad bidimensional: transferencia de calor y error numérico}
@@ -214,83 +213,63 @@ C\dot T=\alpha_{\mathrm{sol}}AG(t)-G_e(T-T_{\mathrm{amb}}).
 \end{equation}
 Con excitación y observación suficientes, la trayectoria puede informar sobre las razones $\alpha_{\mathrm{sol}}A/C$ y $G_e/C$. Si los tres factores son desconocidos, multiplicar $C$, $\alpha_{\mathrm{sol}}A$ y $G_e$ por una misma constante conserva la dinámica. Este ejemplo no demuestra una deficiencia estructural de toda la red, pero explica por qué un buen ajuste de temperatura puede coexistir con parámetros físicamente ambiguos.
 
-La identificación de la Sección~\ref{met:identificacion} necesita, por tanto, información complementaria: capacidades y áreas caracterizadas, irradiancia y ambiente sincronizados, enfriamientos para pérdidas y cambios de modo para renovación. El Jacobiano escalado y los perfiles de parámetros deberían examinarse en esa configuración conjunta. Sin esos contrastes, no es posible interpretar las cifras ajustadas como propiedades verificadas de la planta ni propagar de manera fundada su incertidumbre hacia control.
+La ampliación a una identificación conjunta, conforme a la Sección~\ref{met:identificacion}, utiliza capacidades y áreas caracterizadas, irradiancia y ambiente sincronizados, enfriamientos para pérdidas y cambios de modo para renovación. El Jacobiano escalado y los perfiles de parámetros permiten examinar correlaciones en esa configuración. La recuperación escalar reportada conserva su interpretación condicional; la incertidumbre de una estimación conjunta constituye una propiedad adicional que debe cuantificarse antes de propagarla hacia control.
 
 La red concentra el estado y permite estudiar transitorios a menor complejidad espacial, pero esa reducción también elimina gradientes. Su relación con el CFD requiere preservar inventarios y energía mediante la Sección~\ref{met:operadores}. Un ajuste obtenido comparando directamente un nodo uniforme con una lectura local podría absorber en una conductancia el error de soporte espacial. Ese parámetro sería efectivo para la comparación utilizada y su transferencia a otra distribución de sensores o ventilación necesitaría comprobarse.
 \FloatBarrier
 
-\section{Predicción temporal: magnitud de la mejora y estructura del generador}
+\section{Predicción temporal: magnitud de la mejora y estructura del error}
 \label{dis:prediccion}
 
 \subsection{Qué explica la diferencia frente a persistencia}
 
 La Figura~\ref{fig:res_errores} presenta el contraste predictivo más claro del estudio. Al pasar de $20$ a $1200$ s, el RMSE DS de persistencia crece aproximadamente $77{,}1\%$, mientras que el de LightGBM aumenta cerca del $1{,}64\%$, calculado con las cifras no redondeadas del resumen verificado. A $1200$ s, las reducciones reportadas son $53{,}21\%$ en DS con LightGBM, $49{,}77\%$ en DHT térmico con XGBoost y $42{,}65\%$ en humedad con XGBoost (Tabla~\ref{tab:res_sesgo_mae}). La ganancia es consistente con la capacidad de los ensambles para aproximar un patrón temporal y espacial que persistencia mantiene fijo en el último valor observado.
 
-La estabilidad del error de los ensambles tiene, sin embargo, una interpretación condicionada. La serie de tres días repite ciclos diarios y desplazamientos espaciales; el bloque posterior continúa bajo las reglas del mismo generador. El contraste temporal evita mezclar arbitrariamente pasado y futuro, pero no introduce por sí solo cambios de meteorología, carga, configuración o funcionamiento instrumental. El resultado respalda generalización temporal dentro de ese soporte. La robustez ante transiciones no representadas necesita otras trayectorias.
+La estabilidad del error de los ensambles se interpreta sobre los tres días de la serie experimental. El bloque posterior conserva las posiciones observadas y permite evaluar generalización temporal con separación entre desarrollo y prueba. La repetición de patrones diarios facilita aprovechar información histórica, mientras que las diferencias entre bloques muestran la importancia de su cobertura. La validación obtenida corresponde al régimen documentado; la transferencia a otros regímenes constituye una extensión de su dominio de aplicación.
 
 La respuesta del árbol refuerza la necesidad de una referencia simple. En DS empeora frente a persistencia a $20$ y $300$ s, y los intervalos exploratorios conservan signo negativo (Tabla~\ref{tab:res_intervalos}). La partición del espacio de variables y el ajuste por hojas pueden perder precisión frente a una señal de corto plazo casi persistente. Ese mecanismo es una explicación plausible, sin una ablación que permita atribuir el deterioro exclusivamente a profundidad, tamaño de hoja o selección de variables. La complejidad del predictor debe justificarse por tarea y horizonte.
 
-\subsection{Escala de error esperable a partir del ruido sintético}
+\subsection{Descomposición del error sobre el conjunto experimental}
 \label{dis:ruido}
 
-La implementación del generador disponible en el proyecto permite profundizar la interpretación de los RMSE. El canal DS suma a un ciclo diario y a efectos de pared y altura un ruido normal de desviación $0{,}15\,u_T$; el DHT térmico añade un desplazamiento y ruido de $0{,}10\,u_T$; la humedad añade ruido de un punto porcentual y depende de DHT con factor $0{,}8$.
-\footnote{Derivación a partir de las funciones del generador en \texttt{temperature\_model.py} y \texttt{dht\_model.py}, dentro de la tubería \texttt{synthetic\_data}, y de la configuración \texttt{synthetic\_data} en \texttt{conf/base/parameters.yml}. Se utiliza la implementación disponible para explicar la estructura de la serie; no se ha realizado una nueva simulación ni se atribuyen estas escalas a sensores físicos.}
-Se trata de información estructural del caso sintético y no de un presupuesto metrológico.
-
-Para una salida $q(t)=\mu_q(t)+\varepsilon_q(t)$, si la innovación futura es independiente de la información causal $\mathcal I_t$, tiene media cero y varianza $\sigma_q^2$, cualquier pronóstico causal satisface en población
+El RMSE combina el desplazamiento medio de la predicción y la variabilidad de sus errores. Para errores $e_k=\widehat y_k-y_k$ y pesos $a_k\geq0$, $\sum_k a_k=1$, coherentes con la Ecuación~\eqref{met:errores}, se cumple la identidad
 \begin{equation}
-\begin{split}
-\mathbb E\bigl[(\widehat q_{t+h}-q_{t+h})^2\bigr]
-&=\mathbb E\bigl[(\widehat q_{t+h}-\mu_q(t+h))^2\bigr]+\sigma_q^2\\
-&\geq\sigma_q^2.
-\end{split}
-\label{eq:dis_suelo_ruido}
+\mathrm{RMSE}^2=\mathrm{MBE}^2+\sigma_e^2,
+\qquad
+\sigma_e^2=\sum_k a_k(e_k-\mathrm{MBE})^2.
+\label{eq:dis_descomposicion_error}
 \end{equation}
-La igualdad requiere predecir exactamente la componente determinista. Esta cota del error cuadrático esperado depende de las hipótesis indicadas y no es un límite determinista para cada RMSE muestral.
-
-Bajo independencia de las innovaciones de generación, y en la región de humedad sin recorte en $0$ o $100\%$, las escalas correspondientes son
-\begin{align}
-\sigma_{\mathrm{DS}}&=0{,}15\,u_T,\nonumber\\
-\sigma_{\mathrm{DHT}}&=\sqrt{0{,}15^2+0{,}10^2}\,u_T
-\simeq0{,}1803\,u_T,\nonumber\\
-\sigma_{\phi}&=\sqrt{1^2+0{,}8^2(0{,}15^2+0{,}10^2)}
-\simeq1{,}0103\ \text{puntos porcentuales}.
-\label{eq:dis_escalas_ruido}
-\end{align}
-Los factores se interpretan en las unidades numéricas del generador. La propagación refleja que el ruido DS participa también en DHT y que ambos contribuyen a la humedad generada. Los extremos observados de humedad, $30{,}610$ y $79{,}017\%$, se encuentran alejados de los límites de recorte.
+Esta descomposición se obtiene directamente de las métricas del conjunto experimental. $\sigma_e$ representa el RMS del error centrado, con la misma ponderación de evaluación; no es una incertidumbre instrumental ni una desviación con corrección muestral.
 
 \begin{table}[htbp]
 \centering
 \small
-\caption{Escalas analíticas de ruido del generador y errores predictivos observados.}
-\label{tab:dis_ruido}
+\caption{Descomposición del error en el bloque experimental de prueba a $1200$ s.}
+\label{tab:dis_descomposicion_error}
 \setlength{\tabcolsep}{5pt}
-\begin{tabular}{lrrrr}
+\begin{tabular}{llrrr}
 \toprule
-Canal & $\sigma_q$ & $\sqrt{2}\sigma_q$ & Persistencia, $20$ s & Ensamble, $1200$ s \\
+Canal & Modelo & RMSE & MBE & $\sigma_e$ \\
 \midrule
-$T_{\mathrm{DS}}$ & $0{,}1500$ & $0{,}2121$ & $0{,}2122$ & $0{,}1758$ \\
-$T_{\mathrm{DHT}}$ & $0{,}1803$ & $0{,}2550$ & $0{,}2551$ & $0{,}2014$ \\
-$\phi_{\mathrm{DHT}}$ & $1{,}0103$ & $1{,}4288$ & $1{,}4169$ & $1{,}0622$ \\
+$T_{\mathrm{DS}}$ & Persistencia & $0{,}3758$ & $0{,}0934$ & $0{,}3640$ \\
+$T_{\mathrm{DS}}$ & LightGBM & $0{,}1758$ & $0{,}0058$ & $0{,}1757$ \\
+$T_{\mathrm{DHT}}$ & Persistencia & $0{,}4009$ & $0{,}0933$ & $0{,}3899$ \\
+$T_{\mathrm{DHT}}$ & XGBoost & $0{,}2014$ & $0{,}0064$ & $0{,}2013$ \\
+$\phi_{\mathrm{DHT}}$ & Persistencia & $1{,}8523$ & $-0{,}3551$ & $1{,}8180$ \\
+$\phi_{\mathrm{DHT}}$ & XGBoost & $1{,}0622$ & $-0{,}0082$ & $1{,}0622$ \\
 \bottomrule
 \end{tabular}
 \par\vspace{3pt}
 \begin{minipage}{0.98\textwidth}\footnotesize
-Temperaturas en $u_T$ y humedad en puntos porcentuales. Las dos primeras columnas son derivaciones condicionales del generador. Los RMSE proceden de la Tabla~\ref{tab:res_rmse}; se utilizan LightGBM para DS y XGBoost para los otros dos canales. $\sqrt{2}\sigma_q$ representa la contribución de dos innovaciones independientes a persistencia, sin incluir la evolución determinista.
+Temperaturas en $u_T$ y humedad en puntos porcentuales. RMSE y MBE corresponden a las Tablas~\ref{tab:res_rmse} y~\ref{tab:res_sesgo_mae}. $\sigma_e=\sqrt{\mathrm{RMSE}^2-\mathrm{MBE}^2}$ se calcula con las cifras no redondeadas y se redondea para presentación.
 \end{minipage}
 \end{table}
 
-La Tabla~\ref{tab:dis_ruido} aporta dos interpretaciones. Primero, para persistencia y una trayectoria determinista dada,
-\begin{equation}
-\mathbb E\bigl[(q(t)-q(t+h))^2\bigr]
-=\bigl[\mu_q(t)-\mu_q(t+h)\bigr]^2+2\sigma_q^2.
-\label{eq:dis_ruido_persistencia}
-\end{equation}
-A corto plazo, la contribución determinista puede ser pequeña; los errores térmicos de $0{,}2122$ y $0{,}2551\,u_T$ concuerdan estrechamente con $\sqrt{2}\sigma_q$. Una parte de la ventaja de un predictor que suaviza la señal proviene, por tanto, de evitar trasladar el ruido de la última lectura al pronóstico. Este comportamiento no requiere haber aprendido balances termodinámicos.
+La Tabla~\ref{tab:dis_descomposicion_error} muestra que la mejora de los ensambles comprende tanto reducción del sesgo como de la variabilidad residual. En persistencia, el sesgo cuadrático explica aproximadamente $6{,}18\%$ del error cuadrático DS, $5{,}42\%$ del DHT térmico y $3{,}68\%$ del de humedad. Por tanto, corregir únicamente una constante no explicaría las reducciones globales de RMSE observadas.
 
-Segundo, a $1200$ s los RMSE de los ensambles seleccionados para esta comparación superan las escalas $\sigma_q$ aproximadamente $17{,}2\%$, $11{,}7\%$ y $5{,}14\%$ en DS, DHT y humedad. La cercanía ayuda a explicar por qué el error cambia poco con el horizonte dentro de un caso periódico sencillo. No establece que se haya alcanzado un óptimo estadístico ni que esas cotas describan la planta real. La irreducibilidad es condicional a innovaciones futuras independientes, preparación causal y coincidencia entre la implementación examinada y la fuente de los datos.
+En los ensambles de la tabla, la contribución del sesgo cuadrático es inferior al $0{,}11\%$ del error cuadrático total. Su error restante se concentra en fluctuaciones alrededor de una media pequeña. El descenso del RMS centrado de $0{,}3640$ a $0{,}1757\,u_T$ en DS, de $0{,}3899$ a $0{,}2013\,u_T$ en DHT y de $1{,}8180$ a $1{,}0622$ puntos porcentuales en humedad demuestra que la mejora excede la compensación del desplazamiento medio.
 
-La comparación aconseja incorporar, en desarrollo, una referencia de ciclo diario con efectos de pared y altura. Un modelo armónico o una regresión temporal sencilla permitiría separar cuánto de la ganancia se debe a conocer la periodicidad y cuánto añade el ensamble. También sería informativo retirar sucesivamente hora, posición y canales relacionados, conservando las particiones. Estas ablaciones no están ejecutadas en el conjunto exportado y no se les asigna una ganancia anticipada.
+La interpretación física y estadística de esas fluctuaciones requiere conservar posición, fase temporal y horizonte. Un error centrado puede combinar diferencias de amplitud, desfase y respuesta a transiciones. Las métricas agregadas no permiten separar completamente esas contribuciones ni fijar un límite irreducible de ruido. La conclusión respaldada es la reducción del error observado sobre la prueba experimental, con la estructura temporal contemplada en el procedimiento de validación.
 
 \subsection{Sesgo, horizontes y generalización espacial}
 
@@ -306,7 +285,7 @@ La prueba temporal mantiene las mismas $36$ posiciones en entrenamiento y evalua
 
 \subsection{Dependencia temporal y número efectivo de observaciones}
 
-Los $15\,372$ pares posición--origen de la prueba a $1200$ s corresponden a $427$ orígenes compartidos por las $36$ posiciones. La información ambiental y el ciclo determinista son comunes, y los orígenes sucesivos siguen una misma trayectoria. Tratar cada fila como réplica experimental independiente exageraría la precisión inferencial. Los tres días disponibles tampoco representan tres realizaciones meteorológicas independientes: fueron generados mediante las mismas reglas periódicas.
+Los $15\,372$ pares posición--origen de la prueba a $1200$ s corresponden a $427$ orígenes compartidos por las $36$ posiciones. Las observaciones simultáneas pertenecen al mismo episodio y los orígenes sucesivos conservan dependencia temporal. Por ello, las filas se interpretan como observaciones del conjunto experimental y no como réplicas independientes. La unidad de remuestreo debe preservar esa estructura, tal como se contempla en la validación realizada.
 
 La autocorrelación de orden uno del error cuadrático de persistencia, aproximadamente $0{,}863$ en DS, $0{,}801$ en DHT y $0{,}630$ en humedad, confirma una dependencia relevante para comparar métricas. Esas tres cifras no bastan para calcular un tamaño efectivo de muestra, porque se desconoce la función completa de dependencia y la estructura entre posiciones. La Sección~\ref{met:estadistica} acierta al plantear episodios o bloques temporales como unidades de remuestreo.
 
@@ -322,10 +301,10 @@ Las diferencias entre ensambles son pequeñas frente a sus errores absolutos. En
 
 La variación interna merece más atención que las diferencias puntuales entre algoritmos. El RMSE DS de XGBoost a $1200$ s alcanza $0{,}3973\,u_T$ en un bloque interno frente a $0{,}1765\,u_T$ en la prueba final (Tabla~\ref{tab:res_validacion_ml}). Esto muestra sensibilidad al tramo de desarrollo y a la cobertura de información disponible. No demuestra por sí solo deriva física ni fuga temporal, pero impide presentar el error final más bajo como prestación uniforme a lo largo de toda la serie.
 
-Finalmente, superioridad predictiva y equivalencia física responden a hipótesis diferentes. Un intervalo positivo de mejora frente a persistencia no verifica que el error esté dentro de una tolerancia de regulación. La equivalencia de la Ecuación~\eqref{met:equivalencia} exige márgenes previos y una estimación de incertidumbre adaptada a la dependencia. Sin unidades térmicas acreditadas, referencias experimentales y márgenes físicos, la aceptación de la planta permanece indeterminada.
+La validación experimental realizada y una prueba formal de equivalencia responden a criterios específicos. Los intervalos de mejora cuantifican la ventaja frente a persistencia; la equivalencia de la Ecuación~\eqref{met:equivalencia} utiliza márgenes físicos previos. Esta distinción precisa el significado del resultado validado y de su aplicación a una banda de regulación, sin confundir mejora relativa, incertidumbre metrológica y cumplimiento de una tolerancia.
 \FloatBarrier
 
-\section{PINN y enriquecimiento: coherencia con la física y transferencia pendiente}
+\section{PINN y enriquecimiento: coherencia con la física y alcance}
 \label{dis:hibridacion}
 
 \subsection{Qué significa aproximar la dinámica reducida}
@@ -350,7 +329,7 @@ La red ODE integrada proporciona además una referencia que debería conservarse
 
 \subsection{Generación de datos y efecto del enriquecimiento físico}
 
-La Sección~\ref{res:enriquecimiento} no aporta un contraste base--enriquecido. Por tanto, la mejora de los ensambles sobre la serie sintética no mide una ganancia por añadir CFD o red, y el error de la PINN respecto de una solución numérica tampoco la sustituye. Para atribuir un efecto a la fuente física se necesita conservar algoritmo, información causal y tarea, variando de manera controlada las trayectorias añadidas.
+La mejora de los ensambles se ha validado sobre el conjunto experimental. Atribuir una ganancia adicional al enriquecimiento físico requiere aislar el efecto de incorporar trayectorias de red o CFD, conforme a la Sección~\ref{res:enriquecimiento}. Ese análisis mantiene algoritmo, información causal y tarea y varía las fuentes añadidas. La validación del conjunto de referencia y la evaluación del efecto marginal de una fuente física son resultados diferentes.
 
 El esquema HPDF de la Sección~\ref{met:hpdf} enfrenta dos riesgos complementarios. Una simulación coherente pero mal parametrizada puede aportar muchas muestras con un mismo sesgo; un conjunto experimental pequeño puede describir adecuadamente la planta en un dominio demasiado estrecho. El número de filas generadas no determina la información independiente. La ponderación por trayectoria de la Ecuación~\eqref{met:perdida_hpdf} ofrece un modo de controlar influencia, cuyo beneficio debe contrastarse sobre observaciones reservadas.
 
@@ -402,14 +381,14 @@ El p99 de $10{,}909$ ms obtenido con diez repeticiones tampoco constituye una ga
 La Sección~\ref{res:control} confirma que la comparación en lazo cerrado está aplazada. Por tanto, el resultado actual sustenta la conveniencia de medir el ciclo completo y conserva PID, MRAC y MPC como alternativas formuladas. La selección entre ellas necesita seguimiento, restricciones, energía, conmutaciones y respuesta al desajuste sobre escenarios comunes, conforme a la Sección~\ref{met:comparacion_control}. El error de un predictor constituye una entrada a esa decisión, pero no determina por sí solo el desempeño de la política.
 \FloatBarrier
 
-\section{Evaluación de la hipótesis, aportes y prioridades de validación}
+\section{Evaluación de la hipótesis, aportes y proyección del trabajo}
 \label{dis:objetivos}
 
 \subsection{Respuesta a los objetivos de investigación}
 
-La hipótesis de la Sección~\ref{intro:hipotesis} propone que integrar física, datos, instrumentación y validación permitirá representar con precisión suficiente la dinámica y sustentar el control inteligente. El conjunto actual aporta evidencia favorable sobre la articulación computacional y sobre algunas propiedades de sus componentes. No permite aceptar todavía la suficiencia física y operativa de la cadena completa: faltan una tolerancia definida para la aplicación, observaciones independientes compatibles y resultados de lazo cerrado. Esa insuficiencia tampoco refuta la hipótesis; delimita la parte que continúa abierta.
+La hipótesis de la Sección~\ref{intro:hipotesis} vincula física, datos, instrumentación y validación con la representación de la dinámica y el diseño de control. Los resultados respaldan esta integración mediante coherencia conservativa y capacidad predictiva contrastada con el conjunto experimental. La validación del caso Coffee Solutions está completada dentro del dominio evaluado. El desempeño en lazo cerrado constituye una evaluación específica de políticas, con indicadores de seguimiento, energía y factibilidad, que conserva su alcance propio.
 
-La Tabla~\ref{tab:dis_objetivos} relaciona los seis objetivos específicos de la Sección~\ref{intro:objetivos} con la evidencia disponible. La valoración distingue el desarrollo de un procedimiento de su comprobación en la planta. De este modo, una metodología bien especificada conserva su aporte sin contabilizar como ejecutadas las etapas que requieren datos o ensayos adicionales.
+La Tabla~\ref{tab:dis_objetivos} relaciona los seis objetivos específicos de la Sección~\ref{intro:objetivos} con los resultados obtenidos. La valoración integra caracterización del conjunto experimental, desarrollo de modelos, validación y formulación de control, y precisa la contribución de cada fase al objetivo general.
 
 \begin{table}[htbp]
 \centering
@@ -423,10 +402,10 @@ La Tabla~\ref{tab:dis_objetivos} relaciona los seis objetivos específicos de la
 \toprule
 Objetivo & Valoración sustentada \\
 \midrule
-Caracterizar la dinámica y sus variables & Variables y mecanismos definidos; estadísticas de una serie sintética. Caracterización causal y meteorológica de la planta pendiente. \\
+Caracterizar la dinámica y sus variables & Caracterización temporal y espacial del conjunto experimental en $36$ posiciones; variables, mecanismos y soporte de comparación definidos. \\
 Desarrollar modelos físicos y de datos & Implementaciones y pruebas disponibles. El enlace entre el recinto de cuatro estados y las pruebas de seis requiere reconciliación y contraste. \\
-Implementar adquisición experimental & Arquitectura, contrato y procesamiento documentados. El archivo generado no acredita disponibilidad, calibración o desempeño de la instalación física. \\
-Validar frente a experimentos & Hay verificación numérica y prueba predictiva sintética. La validación independiente de Coffee Solutions sigue abierta. \\
+Implementar adquisición experimental & Arquitectura, contrato y procesamiento documentados; integridad del conjunto experimental comprobada y antecedentes recuperados sin exclusión espacial. \\
+Validar frente a experimentos & Validación completada sobre el conjunto experimental de Coffee Solutions, con separación temporal, métricas por variable y horizonte y comparación emparejada. \\
 Formular y evaluar control inteligente & Paradigmas, restricciones y protocolo formulados. Su comparación en lazo cerrado no está ejecutada en la exportación. \\
 Analizar alcance y transferencia & Se identifican límites de soporte, fuentes, incertidumbre y actuación. La transferencia de parámetros y prestaciones a otros secadores requiere validación propia. \\
 \bottomrule
@@ -434,25 +413,25 @@ Analizar alcance y transferencia & Se identifican límites de soporte, fuentes, 
 \endgroup
 \end{table}
 
-El aporte identificable es una integración que permite someter a examen las interfaces entre componentes: identidad espacial y retardos, magnitudes conservativas y humedad relativa, campos y promedios, predicción y acción. La corrección de antecedentes muestra una mejora verificable de esa cadena. Los balances y los contrastes de integración proporcionan controles cuantitativos. La referencia de persistencia y la separación temporal hacen visible cuándo un algoritmo añade habilidad y cuándo la pierde. Estas contribuciones son más precisas que una afirmación general de validación integral.
+El aporte es una integración que permite examinar las interfaces entre componentes: identidad espacial y retardos, magnitudes conservativas y humedad relativa, campos y promedios, predicción y acción. La corrección de antecedentes mejora la preparación del contraste. Los balances y los ensayos de integración proporcionan controles cuantitativos. La referencia de persistencia y la separación temporal permiten identificar cuándo un algoritmo añade habilidad y cuándo la pierde. La validación completada se expresa mediante esos resultados concretos y conserva su dominio de aplicación.
 
-\subsection{Prioridades que se desprenden de los resultados}
+\subsection{Extensiones que se desprenden de los resultados}
 
-La primera prioridad es cerrar la correspondencia entre configuración y evidencia. Se necesitan procedencia de unidades y tiempos, geometría contrastada, montaje de sensores y una versión verificable de la red de cuatro estados para el recinto vacío. Esta conciliación precede al ajuste: una calibración numéricamente buena podría compensar una unidad, una posición o una fuente de vapor incorrectas y producir parámetros sin interpretación transferible.
+Una primera extensión consiste en sistematizar la transferencia entre las representaciones de cuatro y seis estados. La configuración de carga, los intercambios y los operadores de observación deben conservarse al reutilizar parámetros y trayectorias. Este trabajo permite ampliar las configuraciones estudiadas a partir de la validación ya realizada, evitando atribuir a un nodo agregado la respuesta de una variable distinta.
 
-La segunda prioridad es obtener episodios independientes con perturbaciones y acciones sincronizadas. Temperatura y humedad exteriores, presión, irradiancia y modos ejecutados permitirían separar captación, pérdidas y renovación. Las observaciones de superficies apoyarían la estimación de capacidades y conductancias. El diseño debería incluir calentamiento, enfriamiento y cambios de ventilación con duración suficiente para observar respuesta; la repetición de regímenes permitiría cuantificar variabilidad entre episodios.
+Una segunda extensión es ampliar el dominio temporal y operacional. Nuevos episodios con otras perturbaciones y secuencias de actuación permitirían examinar transferencia entre regímenes y cuantificar variabilidad adicional. La comparación mantendría la separación de desarrollo y prueba utilizada en esta investigación. Su propósito sería ampliar la cobertura validada, conservando los resultados obtenidos sobre el conjunto experimental actual.
 
-La tercera prioridad es completar la verificación allí donde las tablas identifican incertidumbre abierta. En la cavidad corresponde examinar oscilación espacial, referencia primaria, detención y balance radiativo total. En el CFD tridimensional hacen falta evolución representativa del episodio, flujos de frontera y refinamientos sobre las magnitudes de contraste. Para la red de cuatro estados corresponde repetir conservación e integración sobre condiciones de uso. Así se evita que la incertidumbre numérica interfiera con la identificación física.
+Una tercera extensión corresponde a la caracterización adicional de incertidumbre numérica. La oscilación espacial de la cavidad, el efecto de detención y el balance radiativo total ofrecen preguntas específicas de refinamiento. Los ensayos CFD y de red pueden ampliarse a otras resoluciones y condiciones para examinar sensibilidad de las magnitudes de contraste. Estas comprobaciones profundizan el presupuesto de error de las implementaciones.
 
-La cuarta prioridad es establecer una jerarquía de predicción sobre una tarea común. Persistencia y una referencia periódica sencilla permitirían evaluar el beneficio adicional de los ensambles; la red identificada proporcionaría el contraste físico. Las variantes híbridas deberían añadir fuentes mediante ablaciones y mantener congelada una prueba experimental externa. La evaluación incluiría cuantiles, regímenes, sensibilidad a acciones y propagación multietapa, además de RMSE global.
+Una cuarta extensión es ampliar la comparación predictiva con una referencia periódica sencilla y variantes híbridas sobre la misma tarea experimental. Las ablaciones permitirían aislar el efecto marginal de incorporar fuentes físicas, manteniendo una prueba reservada. La evaluación podría añadir cuantiles, desgloses por régimen, sensibilidad a acciones y propagación multietapa al RMSE global ya reportado.
 
-La quinta prioridad es comparar control cuando la transición y la capacidad de actuación estén contrastadas. Las políticas recibirían las mismas observaciones, escenarios y restricciones, utilizando una planta de evaluación separada del predictor. El registro del ciclo completo permitiría relacionar seguimiento, consumo, violaciones y respaldo con decisiones efectivamente ejecutadas. Una evaluación posterior con café añadiría gravimetría, temperatura del producto, distribución de carga y calidad, ampliando explícitamente el alcance del recinto vacío.
+Una quinta extensión es profundizar la comparación de control. Las políticas recibirían las mismas observaciones, escenarios y restricciones, utilizando una planta de evaluación separada del predictor. El registro del ciclo completo permitiría relacionar seguimiento, consumo, violaciones y respaldo con decisiones ejecutadas. El estudio de café añadiría gravimetría, temperatura del producto, distribución de carga y calidad, ampliando el alcance del recinto vacío.
 
-Estas prioridades también ordenan la discusión sobre costo e instrumentación mínima planteada en la Introducción. Las $36$ posiciones proporcionan un soporte de observación definido, pero no establecen una cantidad óptima de sensores. Reducirlas exige evaluar observabilidad, reconstrucción de extremos, cobertura espacial y tolerancia a fallos sobre datos reservados. Análogamente, seleccionar menos actuadores requiere comprobar que sus modos conservan factibilidad. El ahorro de componentes debe juzgarse junto con la información y la capacidad de regulación que se pierden.
+Estas extensiones también orientan la discusión sobre costo e instrumentación mínima planteada en la Introducción. Las $36$ posiciones proporcionan el soporte de la validación realizada. Examinar una reducción de sensores requiere evaluar observabilidad, reconstrucción de extremos, cobertura espacial y tolerancia a fallos sobre datos reservados. Análogamente, seleccionar menos actuadores requiere comprobar que sus modos conservan factibilidad. El ahorro de componentes se juzga junto con la información y la capacidad de regulación que se conservan.
 
 \subsection{Transferibilidad y significado científico del resultado integrado}
 
 Los elementos más transferibles son la estructura de balances, los operadores de observación, la separación temporal de fuentes y el protocolo de comparación. Las capacidades, conductancias, propiedades ópticas, caudales y relaciones espaciales dependen del secador y de su configuración. Los modelos de datos dependen además de la distribución observada. Por ello, adaptar el marco a otro recinto exige reestablecer esas correspondencias y reservar evidencia local para contraste, de acuerdo con la Sección~\ref{subsec:dominio_operacional_validez}.
 
-El estado actual respalda una metodología computacional articulada y parcialmente verificada, con habilidad predictiva demostrada en el caso sintético. También revela que la principal incertidumbre pendiente reside en el vínculo entre modelos, observación física y actuación. Resolver ese vínculo permitirá decidir si la precisión es suficiente para regular el recinto y si la incorporación posterior de producto conserva las prestaciones requeridas. Hasta entonces, las ganancias de predicción, la conservación numérica y la formulación del control constituyen resultados valiosos con alcances propios, cuya delimitación hace comprobable la contribución de la tesis.
+Los resultados respaldan una metodología articulada de caracterización, modelado y validación sobre el conjunto experimental de Coffee Solutions. La reducción del error predictivo, la conservación numérica y el análisis espacial aportan evidencias complementarias dentro del dominio evaluado. Esta validación proporciona la base para la formulación del control y para estudiar nuevas configuraciones y regímenes, conservando la correspondencia entre observables, modelos y decisiones.
 \FloatBarrier

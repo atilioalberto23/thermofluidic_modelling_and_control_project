@@ -1348,7 +1348,7 @@ Por tanto, la confiabilidad de los modelos basados en datos se evaluó separando
 
 Con el propósito de reducir la dependencia exclusiva de datos experimentales y mejorar la cobertura del dominio operativo de los modelos basados en datos, se desarrolló un marco híbrido de enriquecimiento denominado \textit{Hybrid Physics--Data Framework}.
 
-El marco propuesto integra mediciones experimentales con datos sintéticos generados mediante modelos físicos de diferente nivel de fidelidad. Su objetivo no consiste en sustituir la evidencia experimental, sino en utilizar las ecuaciones gobernantes y las simulaciones previamente verificadas para complementar regiones del espacio de operación donde la disponibilidad de observaciones reales resulta limitada.
+El marco propuesto integra mediciones experimentales con datos de simulación generados mediante modelos físicos de diferente nivel de fidelidad. Su objetivo no consiste en sustituir la evidencia experimental, sino en utilizar las ecuaciones gobernantes y las simulaciones previamente verificadas para complementar regiones del espacio de operación donde la disponibilidad de observaciones reales resulta limitada.
 
 La arquitectura general del proceso puede expresarse como
 
@@ -1388,10 +1388,10 @@ La arquitectura general del proceso puede expresarse como
 Los tres modelos físicos no fueron utilizados de manera redundante. Cada uno proporcionó información correspondiente a una escala y a un propósito específico.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Fuentes físicas de datos sintéticos}
-\label{subsec:fuentes_datos_sinteticos}
+\subsection{Fuentes físicas de datos de simulación}
+\label{subsec:fuentes_datos_simulados}
 
-La generación de datos sintéticos se realizó mediante tres niveles de modelado determinístico:
+La generación de datos de simulación se realizó mediante tres niveles de modelado determinístico:
 
 \begin{enumerate}
     \item simulación CFD tridimensional;
@@ -1427,7 +1427,7 @@ t;
 \mathbf{d},
 \mathbf{u}
 \right),
-\label{eq:campo_cfd_sintetico}
+\label{eq:campo_cfd_simulado}
 \end{equation}
 
 donde $\mathbf{x}$ representa la posición espacial, $\boldsymbol{\theta}$ los parámetros de planta, $\mathbf{d}$ las perturbaciones meteorológicas y $\mathbf{u}$ las acciones de control.
@@ -1479,7 +1479,7 @@ T_{\mathrm{air}}(t) &
 H(t) &
 M(t)
 \end{bmatrix}^{T}.
-\label{eq:estados_lumped_sinteticos}
+\label{eq:estados_lumped_simulados}
 \end{equation}
 
 Estas trayectorias fueron utilizadas para representar:
@@ -1525,10 +1525,10 @@ Re
 \end{equation}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Definición del espacio de generación sintética}
-\label{subsec:espacio_generacion_sintetica}
+\subsection{Definición del espacio de generación de simulaciones}
+\label{subsec:espacio_generacion_simulaciones}
 
-La generación de casos sintéticos se restringió a combinaciones físicamente admisibles de parámetros estructurales, perturbaciones meteorológicas, estados iniciales y acciones de control.
+La generación de casos simulados se restringió a combinaciones físicamente admisibles de parámetros estructurales, perturbaciones meteorológicas, estados iniciales y acciones de control.
 
 Sea
 
@@ -1545,7 +1545,7 @@ Sea
 
 el vector que define un escenario de simulación.
 
-Los casos sintéticos fueron generados sobre un dominio
+Los casos simulados fueron generados sobre un dominio
 
 \begin{equation}
 \mathcal{D}_{\mathrm{syn}}
@@ -1558,7 +1558,7 @@ Los casos sintéticos fueron generados sobre un dominio
 \leq
 \boldsymbol{\xi}_{\max}
 \right\},
-\label{eq:dominio_sintetico}
+\label{eq:dominio_simulado}
 \end{equation}
 
 cuyos límites fueron determinados mediante:
@@ -1647,13 +1647,13 @@ s_i
 \label{eq:etiqueta_fuente}
 \end{equation}
 
-Esta etiqueta permitió evaluar por separado el desempeño del modelo sobre datos reales y sintéticos.
+Esta etiqueta permitió evaluar por separado el desempeño del modelo sobre datos experimentales y de simulación.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Ponderación de datos según su procedencia}
 \label{subsec:ponderacion_fuentes}
 
-Los datos sintéticos no fueron considerados equivalentes a los experimentales. Para evitar que una gran cantidad de simulaciones dominara el entrenamiento, se asignaron pesos diferentes según la fuente y su nivel de confianza.
+Los datos de simulación no fueron considerados equivalentes a los experimentales. Para evitar que una gran cantidad de simulaciones dominara el entrenamiento, se asignaron pesos diferentes según la fuente y su nivel de confianza.
 
 La función de pérdida ponderada se formuló como
 
@@ -1739,7 +1739,7 @@ Se entrenó inicialmente cada algoritmo utilizando únicamente datos experimenta
 \right).
 \end{equation}
 
-Este modelo proporcionó una línea base para cuantificar la contribución real de los datos sintéticos.
+Este modelo proporcionó una línea base para cuantificar la contribución real de los datos de simulación.
 
 \subsubsection*{Etapa 2: identificación de regiones deficientemente representadas}
 
@@ -1880,20 +1880,20 @@ Para reducir el riesgo de sobreajuste se aplicaron:
     \item regularización de los modelos;
     \item validación temporal;
     \item evaluación sobre datos experimentales reservados;
-    \item control de la proporción entre datos reales y sintéticos;
+    \item control de la proporción entre datos experimentales y de simulación;
     \item muestreo equilibrado del dominio;
     \item detección de simulaciones redundantes;
     \item comparación entre error de entrenamiento y error experimental.
 \end{itemize}
 
-La proporción de datos sintéticos se definió como
+La proporción de datos de simulación se definió como
 
 \begin{equation}
 \gamma_{\mathrm{syn}}
 =
 \frac{N_{\mathrm{syn}}}
 {N_{\mathrm{exp}}+N_{\mathrm{syn}}},
-\label{eq:proporcion_sintetica}
+\label{eq:proporcion_simulaciones}
 \end{equation}
 
 y se evaluó experimentalmente para determinar si incrementos adicionales producían mejoras reales o degradaban el desempeño sobre observaciones independientes.
@@ -1992,7 +1992,7 @@ La aplicación del \textit{Hybrid Physics--Data Framework} se sustentó en los s
     
     \item \textbf{Cobertura climática:} las simulaciones permiten estudiar combinaciones meteorológicas escasamente observadas, siempre dentro de rangos físicamente admisibles.
     
-    \item \textbf{Conservación física:} los datos sintéticos deben provenir de modelos que satisfagan balances de masa, energía y humedad dentro de tolerancias previamente establecidas.
+    \item \textbf{Conservación física:} los datos de simulación deben provenir de modelos que satisfagan balances de masa, energía y humedad dentro de tolerancias previamente establecidas.
     
     \item \textbf{Trazabilidad:} cada dato debe conservar información sobre su procedencia, parámetros de generación, versión del modelo y nivel de validación.
     
@@ -2005,13 +2005,13 @@ La aplicación del \textit{Hybrid Physics--Data Framework} se sustentó en los s
 \subsection{Alcance epistemológico}
 \label{subsec:alcance_epistemologico_hybrid}
 
-Los datos sintéticos no fueron considerados equivalentes a observaciones experimentales. Un modelo basado en datos entrenado con simulaciones aprende principalmente el comportamiento del modelo físico que generó dichas simulaciones.
+Los datos de simulación no fueron considerados equivalentes a observaciones experimentales. Un modelo basado en datos entrenado con simulaciones aprende principalmente el comportamiento del modelo físico que generó dichas simulaciones.
 
 En consecuencia,
 
 \begin{equation}
 \boxed{
-\text{Más datos sintéticos}
+\text{Más datos de simulación}
 \not\Rightarrow
 \text{mayor validez experimental automática}.
 }
