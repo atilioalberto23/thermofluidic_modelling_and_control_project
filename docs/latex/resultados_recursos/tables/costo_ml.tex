@@ -1,0 +1,30 @@
+% Fuentes: tab_s09_incertidumbre_costo.csv
+\begin{table}[htbp]
+\centering
+\caption{Tiempos registrados para los predictores temporales.}
+\label{tab:res_costo_ml}
+\small
+\setlength{\tabcolsep}{5pt}
+\begin{tabular}{lrrrrr}
+\toprule
+Modelo & $h$ (s) & Ajuste/pred. (s) & Mediana (ms) & p95 (ms) & p99 (ms) \\
+\midrule
+Persistencia & $20$ & $0{,}021$ & $0{,}295$ & $0{,}486$ & $0{,}562$ \\
+Árbol & $20$ & $0{,}321$ & $4{,}290$ & $5{,}113$ & $5{,}235$ \\
+XGBoost & $20$ & $0{,}416$ & $4{,}761$ & $5{,}378$ & $5{,}566$ \\
+LightGBM & $20$ & $0{,}384$ & $4{,}936$ & $5{,}854$ & $6{,}176$ \\
+Persistencia & $300$ & $0{,}023$ & $0{,}428$ & $0{,}615$ & $0{,}632$ \\
+Árbol & $300$ & $0{,}292$ & $4{,}135$ & $4{,}734$ & $4{,}773$ \\
+XGBoost & $300$ & $0{,}433$ & $5{,}668$ & $6{,}485$ & $6{,}810$ \\
+LightGBM & $300$ & $0{,}347$ & $4{,}709$ & $5{,}738$ & $6{,}132$ \\
+Persistencia & $1\,200$ & $0{,}023$ & $0{,}286$ & $0{,}388$ & $0{,}433$ \\
+Árbol & $1\,200$ & $0{,}409$ & $3{,}703$ & $4{,}401$ & $4{,}441$ \\
+XGBoost & $1\,200$ & $0{,}423$ & $5{,}562$ & $6{,}667$ & $6{,}744$ \\
+LightGBM & $1\,200$ & $0{,}346$ & $5{,}734$ & $10{,}050$ & $10{,}909$ \\
+\bottomrule
+\end{tabular}
+\par\vspace{3pt}
+\begin{minipage}{0.98\textwidth}\footnotesize
+Windows 11, CPU Intel64 Family 6 Model 183 Stepping 1. Latencia para lote de tamaño $1$ y $10$ repeticiones. El campo de ajuste incluye predicción por lotes. Los percentiles altos tienen precisión limitada por el pequeño número de repeticiones y no describen un ciclo de control.
+\end{minipage}
+\end{table}

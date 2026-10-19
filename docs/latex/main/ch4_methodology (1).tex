@@ -1,0 +1,999 @@
+% ============================================================================
+% CAPÍTULO: METODOLOGÍA
+% Incluir desde el documento principal de la tesis.
+% Paquetes: amsmath, amssymb, booktabs y array. Sin figuras externas.
+% Bibliografía compartida: marco_teorico_referencias.bib, versión ampliada.
+% Este capítulo usa referencias al capítulo con etiqueta ch:marco_teorico.
+% Las etiquetas nuevas llevan el prefijo met: para evitar colisiones.
+% Las cifras de instrumentación y placa proceden del material suministrado.
+% Los procedimientos describen el protocolo; su ejecución y sus resultados
+% deben acreditarse con las bitácoras y el capítulo de resultados.
+% ============================================================================
+
+\clearpage
+\chapter{Metodología}
+\label{ch:metodologia}
+
+La investigación se desarrolla sobre el secador solar tipo invernadero de Coffee Solutions, mediante una estrategia que articula medición experimental, modelado físico multiescala, identificación, aprendizaje y evaluación de control. La geometría real y la carga de café establecen el problema físico; la instrumentación distribuida aporta observaciones trazables; las simulaciones permiten estudiar mecanismos y condiciones complementarias; y los modelos reducidos o híbridos suministran predicciones compatibles con decisiones sobre ventilación. El procedimiento utiliza las definiciones y los balances del Capítulo~\ref{ch:marco_teorico}, y especifica cómo construir, contrastar y utilizar cada representación.
+
+El rasgo distintivo del trabajo es la coordinación de tres niveles físicos con una plataforma experimental propia y un bucle dirigido de enriquecimiento. El CFD tridimensional resuelve heterogeneidad espacial; la cavidad bidimensional contrasta mecanismos de flotación e intercambio radiativo; y la red de seis estados representa transitorios prolongados. La integración se realiza mediante operadores de observación y proyección, conservación de agua y energía, separación temporal de datos y comparación experimental. La utilidad de un modelo se determina en función de la pregunta que responde, de su error y de su costo de evaluación.
+
+\section{Diseño metodológico y alcance de la evidencia}
+\label{met:diseno}
+
+\subsection{Unidad experimental y organización del trabajo}
+
+La unidad física es el secador instrumentado en una configuración identificada de cubierta, aberturas, bandejas y actuadores. La unidad experimental para comparar secado y control es un episodio o lote, definido por su carga, estado inicial, configuración, intervalo temporal y secuencia de acciones. Un registro de veinte segundos es una observación dentro de ese episodio; no se considera una repetición experimental independiente.
+
+Se diferencian cuatro tipos de casos: recinto sin producto, secado con carga, ensayos de actuación y escenarios de evaluación de control. Los primeros permiten observar captación y almacenamiento sin confundirlos con evaporación; los segundos incorporan el acoplamiento con el café; los terceros identifican caudal, mezcla y respuesta dinámica; y los últimos comparan políticas bajo condiciones comunes. Las perturbaciones meteorológicas se registran en todos los casos y no se sustituyen por valores medios cuando se estudian respuestas transitorias.
+
+El procedimiento se organiza en fases con productos verificables:
+\begin{table}[htbp]
+\centering
+\small
+\caption{Secuencia de trabajo y evidencia requerida para avanzar entre fases.}
+\label{met:tabla_fases}
+\begin{tabular}{>{\raggedright\arraybackslash}p{0.22\linewidth}>{\raggedright\arraybackslash}p{0.34\linewidth}>{\raggedright\arraybackslash}p{0.33\linewidth}}
+\toprule
+Fase & Procedimiento principal & Producto verificable \\
+\midrule
+Caracterización & Medir geometría, identificar materiales, carga y equipos. & Ficha de planta y mapa de componentes. \\
+Observación & Verificar instrumentos, posiciones, reloj y adquisición. & Inventario de sensores y series con calidad. \\
+Modelado físico & Construir CFD, cavidad y red con cierres compatibles. & Casos ejecutables y balances documentados. \\
+Verificación e identificación & Refinar discretización y ajustar parámetros identificables. & Incertidumbre numérica y calibración reproducible. \\
+Predicción e hibridación & Entrenar, enriquecer y seleccionar con datos de desarrollo. & Modelo congelado y trazabilidad de fuentes. \\
+Actuación y control & Identificar equipos y comparar políticas factibles. & Ensayos de respuesta y evaluación en lazo cerrado. \\
+Contraste final & Evaluar una vez sobre datos y escenarios reservados. & Errores, restricciones y alcance respaldado. \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+
+\subsection{Convenciones comunes y ficha de configuración}
+
+Se emplea $T$ en kelvin en las ecuaciones termodinámicas y radiativas; los grados Celsius se conservan como unidad de lectura y presentación cuando corresponde. La humedad relativa $\phi$ se expresa como fracción, $W$ como razón de humedad por masa de aire seco, $Y$ como fracción másica de vapor en la mezcla y $M$ como contenido de agua por masa seca de café. La velocidad se denota por $\mathbf v$, las acciones por $\mathbf u$ y las perturbaciones por $\mathbf d$.
+
+El estado reducido y las perturbaciones se organizan como
+\begin{equation}
+\mathbf x=[T_c,T_b,T_p,T_a,W,M]^{\mathsf T},
+\qquad
+\mathbf d=[G,T_{\mathrm{amb}},W_{\mathrm{amb}},p,v_{w,x},v_{w,y}]^{\mathsf T}.
+\label{met:estados_entradas}
+\end{equation}
+La precipitación y otros registros disponibles se utilizan como descriptores de régimen o de configuración, por ejemplo para identificar cambios de apertura. Las acciones contienen únicamente dispositivos realmente disponibles y caracterizados; una compuerta motorizada propuesta no se incorpora como actuador instalado.
+
+Antes de cada episodio se cierra una ficha con identificación del lote, procesamiento del café, masa y humedad iniciales, distribución de carga, geometría, propiedades, posición de sensores, estado de aberturas, modo de ventiladores y versiones de adquisición. Se registran las coordenadas geográficas, altitud, orientación y fecha necesarias para reconstruir la carga solar. Los valores no disponibles se identifican como parámetros por medir o estimar, con el procedimiento correspondiente, en lugar de asignarles valores procedentes de otras instalaciones.
+
+\section{Caracterización física de Coffee Solutions y de la carga}
+\label{met:caracterizacion}
+
+\subsection{Levantamiento geométrico y sistema de coordenadas}
+
+Se adopta un sistema cartesiano con $x$ longitudinal, $y$ transversal y $z$ vertical ascendente. El origen se fija en un punto de la base identificable en campo y en el modelo CAD. Se levantan longitud, ancho, altura, pendiente o curvatura de cubierta, espesores, dimensiones y cotas de aberturas, bandejas y obstáculos. Para cada medida se conserva instrumento, resolución, repeticiones e incertidumbre.
+
+El volumen útil de aire se calcula descontando los sólidos explícitamente representados. Las áreas se separan por función: cubierta exterior e interior, base, contacto con producto, bandejas, aberturas y superficies expuestas a radiación. La simplificación prismática se verifica frente a las dimensiones levantadas; no se utiliza para sustituir una sección real diferente sin cuantificar la modificación.
+
+La relación superficie--volumen se usa como descriptor de exposición, manteniendo la capacidad térmica de los materiales como una cantidad independiente. La geometría se simplifica únicamente cuando el detalle eliminado no altera los intercambios de interés: una perforación o una bandeja que introduce resistencia al flujo se conserva explícitamente o mediante una ley equivalente identificada.
+
+Se genera un mapa de regiones y fronteras con nombres estables para CAD, mallado, condiciones de frontera y posprocesamiento. Cada sensor, bandeja, abertura y actuador se ubica mediante coordenadas y un identificador común. Este mapa permite comparar puntos experimentales y numéricos sin seleccionar después de la simulación la celda que mejor coincida con una lectura.
+
+\subsection{Propiedades termofísicas y ópticas}
+
+Para cubierta, base, bandejas y producto se registra densidad, calor específico, conductividad y espesor o volumen. Cada propiedad se acompaña de fuente, intervalo de temperatura, incertidumbre y condición de uso. Se distinguen propiedades medidas, datos de fabricante o literatura y parámetros efectivos identificados. La capacidad de un nodo se calcula con masa y calor específico, sin inferirla exclusivamente de una baja difusividad.
+
+La cubierta se caracteriza separando onda corta solar y onda larga térmica. Se documentan absortancia, reflectancia y transmitancia solares y emisividad infrarroja, incluyendo su dependencia de ángulo cuando la información lo permita. En cada banda se verifica cierre óptico. El producto y las bandejas pueden interceptar radiación antes de que alcance la base; por ello, la distribución de carga solar se calcula para la configuración cargada, no se asigna toda la potencia transmitida al piso.
+
+Los parámetros ópticos no se identifican de manera independiente si la observación solo permite inferir un producto efectivo de transmitancia y absortancia. En ese caso se informa el parámetro compuesto y su dominio, y se evita interpretar el ajuste como medición separada de cada propiedad.
+
+
+\subsection{Nodos modulares y período de adquisición}
+
+La plataforma desarrollada utiliza ESP32 y cuatro interfaces RJ45 por nodo, con puntos de medición basados en DS18B20 y DHT11. Las interfaces se emplean como conectores del sistema de sensado; su forma física no implica comunicación Ethernet. Se documentan asignación de conductores, alimentación, protección, longitud de cables, direccionamiento y versión del firmware.
+
+El período nominal de adquisición es
+\begin{equation}
+\Delta t_s=20\,\mathrm s,
+\qquad
+f_s=\Delta t_s^{-1}=0.05\,\mathrm{Hz}.
+\label{met:muestreo}
+\end{equation}
+Se conserva la hora real de cada conversión, de modo que una transmisión agrupada o retrasada no transforme veinte segundos nominales en una serie ficticiamente uniforme. El tiempo de conversión, los reintentos y el envío se organizan para que el ciclo de adquisición no dependa de la duración de una solicitud a la nube.
+
+El DS18B20 permite identificar cada dispositivo mediante su código de serie; su especificación distingue resolución y exactitud. A doce bits el incremento digital es $0.0625\,^{\circ}\mathrm C$, mientras que la exactitud especificada es $\pm0.5\,^{\circ}\mathrm C$ entre $-10$ y $85\,^{\circ}\mathrm C$ \cite{ds18b20_2019}. El incremento digital no se interpreta como incertidumbre de medición.
+
+Para los DHT11 se archiva la ficha técnica de la variante instalada y se verifica el intervalo de temperatura y humedad, la resolución, el tiempo de respuesta y las limitaciones frente a condensación. Un valor fuera de la especificación se conserva con una marca de calidad y se excluye del contraste cuantitativo que requiera ese rango. Si el proceso excede el intervalo del equipo, la observación necesita un sensor adecuado y caracterizado; un ajuste posterior no amplía por sí solo la especificación del instrumento.
+
+\subsection{Calibración y comprobación de los instrumentos}
+
+Antes y después de la campaña se comparan los sensores con una referencia cuya incertidumbre sea conocida, en puntos que cubran el intervalo operativo esperado. Se registran estabilización, repeticiones y condiciones de comparación. Para temperatura se estima sesgo y, cuando los datos lo justifican, pendiente. Para humedad se examina también la dependencia respecto de la temperatura y la proximidad a saturación.
+
+Una corrección lineal básica se expresa como
+\begin{equation}
+y_{\mathrm{corr}}=a_j+b_jy_{\mathrm{raw}},
+\qquad
+u^2(y_{\mathrm{corr}})=
+\nabla g^{\mathsf T}\Sigma_j\nabla g+u_{\mathrm{rep}}^2,
+\label{met:correccion_sensor}
+\end{equation}
+con covarianza de coeficientes y lectura en $\Sigma_j$. Se usa únicamente dentro del intervalo caracterizado. La tolerancia del fabricante no se convierte automáticamente en una incertidumbre estándar mediante una distribución asumida; se declara la base metrológica utilizada \cite{jcgm2008}.
+
+La colocación conjunta de DS18B20 y DHT11 aporta una comprobación de temperatura, pero ambos dispositivos no constituyen referencias independientes de exactitud por sí solos. Se evalúan desacuerdos persistentes, retardo y exposición radiativa. Los sensores destinados al aire se protegen de radiación directa y de contacto con sólidos sin bloquear la ventilación alrededor del elemento sensible.
+
+Se realizan comprobaciones de comunicación, valores de inicialización, saturación, alimentación y recuperación después de pérdida de conexión. Una lectura repetida por resolución limitada se distingue de un sensor detenido mediante estado de comunicación, comparación con referencias y persistencia temporal.
+
+\subsection{Diseño espacial del sensado}
+
+Las posiciones se seleccionan para observar entrada y salida, extremos longitudinales, niveles verticales, zona central y regiones próximas a bandejas. La distribución se registra en coordenadas normalizadas y dimensionales. La separación de sensores no se iguala a la celda CFD; la pregunta es qué gradientes y zonas de exposición pueden reconstruirse con la red disponible.
+
+El diseño inicial se contrasta con simulaciones exploratorias y con una medición piloto. Cuando se reubica un sensor, se crea una nueva vigencia de posición; sus datos no se fusionan como si procedieran del mismo punto. La densificación se prioriza en regiones con gradientes persistentes o información insuficiente, y se mantiene una referencia común para comparar episodios.
+
+Para cada indicador espacial se fija una ponderación. Los promedios sobre carga utilizan área o masa de café representada por cada punto, mientras que un promedio volumétrico del recinto utiliza otra ponderación. Se informa la cobertura de la red y se distingue el máximo observado del máximo de un campo reconstruido.
+
+\subsection{Meteorología, irradiancia y termografía}
+
+La estación registra temperatura y humedad exteriores, viento y las variables adicionales disponibles, como presión y precipitación. Se documenta exposición, altura y distancia respecto del secador. La dirección del viento se transforma en componentes cartesianas con una convención explícita; no se promedian ángulos mediante una media aritmética que ignore su periodicidad.
+
+La radiometría distingue el sensor de la estación, el plano exterior de referencia y el sensor interior próximo a la base. Se registra modelo, calibración, orientación, sombreado, limpieza y banda espectral. El cociente
+\begin{equation}
+R_G(t)=\frac{G_{\mathrm{int}}(t)}{G_{\mathrm{ext}}(t)}
+\label{met:cociente_radiativo}
+\end{equation}
+se utiliza inicialmente como indicador efectivo de disponibilidad radiativa. Solo se identifica con transmitancia de cubierta si ambos instrumentos son comparables, sus orientaciones y campos de visión corresponden, no existe sombreado por carga u obstáculos y la irradiancia exterior supera un umbral que hace estable el cociente. La transmitancia efectiva se ajusta sobre intervalos y ángulos documentados, propagando la incertidumbre de ambas lecturas.
+
+La termografía se realiza sobre regiones de interés identificadas del producto y superficies. Se registra marca temporal, geometría de observación, emisividad, temperatura reflejada aparente, distancia y condiciones atmosféricas requeridas por el equipo. Se contrasta la temperatura superficial con una referencia de contacto cuando sea viable. Las imágenes a través de la cubierta solo se utilizan si su transmitancia en la banda de la cámara está caracterizada; la transparencia visible no garantiza transparencia infrarroja.
+
+La media, dispersión y máximos de una región se extraen con la misma segmentación en todas las comparaciones. Se informa la fracción visible y se evita atribuir a la imagen temperatura interna o contenido de agua del grano.
+
+\subsection{Arquitectura de datos y control de calidad}
+
+La cadena documentada utiliza API Gateway, una función Lambda de recepción y validación, DynamoDB, una segunda función de transferencia o transformación y Amazon S3. Los recursos se describen mediante Terraform y se vinculan a una versión. La adquisición en los nodos, la recepción en la API y la transformación de datos son etapas diferenciadas, con marcas temporales propias.
+
+Cada registro conserva lote, nodo, sensor, variable, unidad, valor original, hora de observación, hora de recepción, secuencia de mensaje, versión de firmware, posición vigente y estado de calidad. La combinación de dispositivo, secuencia y hora de observación permite detectar reenvíos sin tratarlos como mediciones nuevas. Los fallos de red se registran como retrasos o faltantes, sin transformar la ausencia de una lectura en un cero físico.
+
+Se utilizan tres capas: datos originales inmutables, datos depurados con correcciones y marcas, y tablas de análisis con variables derivadas. Cada transformación mantiene la versión de entrada, reglas aplicadas y registros excluidos. La referencia temporal de almacenamiento es UTC; la conversión a hora local de Panamá se realiza para interpretación y geometría solar, conservando el desplazamiento aplicado.
+
+El control de calidad se ejecuta en este orden: validar identidad y formato; detectar duplicados; comprobar unidades y especificaciones; identificar faltantes, saturación y cambios de posición; aplicar correcciones metrológicas; sincronizar por hora de observación; y construir las variables derivadas. Una excursión rápida compatible con un cambio de irradiancia no se elimina automáticamente por un criterio estadístico de valor atípico.
+
+Las ventanas de análisis utilizadas para predicción contienen únicamente información disponible al instante de decisión. La agregación de una magnitud continua se calcula, cuando el muestreo es irregular, mediante
+\begin{equation}
+\bar y_k=\frac{1}{\Delta t_k}\int_{t_k-\Delta t_k}^{t_k}y(t)\,\mathrm dt,
+\label{met:agregacion_causal}
+\end{equation}
+con cobertura mínima documentada. La irradiancia se integra conservando energía. Los datos faltantes no se interpolan a través de cambios de actuador, interrupciones largas ni fronteras entre conjuntos de desarrollo y prueba. Se conservan máscara de ausencia y tiempo desde la última observación.
+
+\section{Campaña experimental y caracterización dinámica}
+\label{met:campana}
+
+\subsection{Preparación y registro de episodios}
+
+Antes de iniciar un episodio se comprueban reloj, sensores, tara y referencias; se registra la configuración de la planta; se mide el estado inicial del café; y se anota la situación meteorológica. Para comparar modelos se utiliza el estado inicial observado o una estimación obtenida sin acceder a observaciones futuras.
+
+El registro de operación incluye apertura de puertas, volteo, muestreo, incorporación o retiro de café, limpieza y cambios de actuador. Estos eventos pueden producir perturbaciones que las series meteorológicas no explican. Se representan explícitamente en la simulación o se excluyen de una comparación que presuponga una planta sin manipulación, indicando los intervalos afectados.
+
+La campaña distingue operación diurna, transiciones por nubes, calentamiento y enfriamiento, períodos húmedos y situaciones de bajo viento según su ocurrencia real. No se declara cobertura anual o estacional a partir de unos pocos días. La selección de episodios para desarrollo y prueba se cierra antes de ajustar los modelos.
+
+\subsection{Ensayos sin carga y con producto}
+
+En el recinto sin café se registran calentamiento y enfriamiento bajo aberturas y ventilación conocidas. Estos ensayos se utilizan para examinar pérdidas, inercia y distribución de captación. Su transferencia a una condición cargada exige incorporar el sombreado, la resistencia aerodinámica y la capacidad del producto.
+
+Con carga se registran simultáneamente condiciones del aire, radiación, temperaturas superficiales y humedad del café. Las muestras se distribuyen entre posiciones para identificar diferencias de secado. Se controlan y documentan masa por área, espesor del lecho y frecuencia de volteo, evitando atribuir a una política de ventilación cambios producidos por una operación manual diferente.
+
+La tasa de evaporación se estima sobre intervalos compatibles con el pesaje, no mediante diferenciación directa de una señal cuantizada sin considerar ruido. Para un intervalo sin extracción de muestra,
+\begin{equation}
+\overline{\dot m}_e=
+m_s\frac{M(t_1)-M(t_2)}{t_2-t_1},
+\qquad t_2>t_1.
+\label{met:evaporacion_intervalo}
+\end{equation}
+Si hay extracciones se utiliza el balance corregido de la Sección~\ref{met:humedad_producto}. Se conserva la incertidumbre temporal y de masa.
+
+\subsection{Ensayos de actuación e identificación}
+
+La identificación de actuadores se inicia con medición de caudal y potencia en cada modo disponible. Posteriormente se aplican cambios reproducibles de operación, manteniendo la configuración restante registrada. Los pasos se repiten en condiciones ambientales y cargas diferentes para examinar variación de ganancia, retardo e inercia.
+
+Una secuencia de actuación se limita por las condiciones del producto y por el equipo. Se evita imponer variaciones más rápidas que su tiempo de respuesta o utilizar un régimen eléctrico no autorizado por el fabricante. El APK25-5 se representa inicialmente por apagado y velocidad nominal; el Zeus 900, por apagado, bajo y alto. Un ciclo de encendido no se interpreta como una velocidad continua sin identificar el caudal medio y la dinámica que produce.
+
+Se observa la respuesta local y agregada de temperatura, $W$, velocidad y pérdida de agua. El efecto de la acción se distingue del cambio meteorológico mediante registros simultáneos, repetición y ajuste dinámico. Se conservan intervalos de referencia antes y después del cambio suficientes para identificar las escalas relevantes \cite{ljung1999}. Si la excitación o las observaciones no permiten separar parámetros, se utiliza una estructura reducida identificable.
+
+\section{Preparación de perturbaciones y escenarios meteorológicos}
+\label{met:meteorologia}
+
+\subsection{Conversión psicrométrica y dominio observado}
+
+La conversión de humedad se realiza con temperatura, humedad relativa y presión del mismo lugar y ventana temporal. Una lectura porcentual se divide entre cien antes de calcular la presión de vapor. Se implementa la relación psicrométrica del marco teórico:
+\begin{equation}
+p_v=\phi p_{ws}(T),\qquad
+W=\varepsilon_m\frac{p_v}{p-p_v},\qquad
+Y=\frac{W}{1+W},\qquad
+\varepsilon_m=\frac{R_{da}}{R_v}\simeq0.622.
+\label{met:conversion_humedad}
+\end{equation}
+La correlación de saturación, su intervalo, las unidades y la referencia termodinámica de la entalpía se mantienen iguales en sensores, CFD, red reducida y control \cite{ashrae2021}. La presión medida tiene prioridad; una estimación por altitud se identifica como tal y su incertidumbre se propaga.
+
+La incertidumbre de $W$ se obtiene de las incertidumbres y covarianzas de $T$, $\phi$ y $p$. La sensibilidad aumenta cerca de saturación y no se resume con una exactitud porcentual constante. Se conservan las lecturas originales para distinguir un cambio real de vapor de un cambio de humedad relativa causado por calentamiento.
+
+El dominio observado se describe mediante distribuciones conjuntas, duración de regímenes, tasas de cambio y correlaciones con hora solar. Se informan rangos y cuantiles por episodio, además de la cobertura de combinaciones de irradiancia, temperatura, humedad y viento. El producto cartesiano de sus mínimos y máximos no se considera un conjunto de situaciones meteorológicas observadas.
+
+La dirección del viento se convierte a $v_{w,x}$ y $v_{w,y}$ en los ejes de la planta. La posición solar se reconstruye con ubicación, fecha y hora mediante un algoritmo documentado \cite{reda2004}. Los intervalos nocturnos y los registros bajo el umbral del radiómetro se tratan por separado al calcular indicadores de nubosidad.
+
+\subsection{Implementación del pronóstico \textit{Markovian Ensemble}}
+\label{met:markov}
+
+El esquema \textit{Markovian Ensemble} se operacionaliza como un generador de trayectorias condicionadas al estado meteorológico reciente. Su ajuste se realiza únicamente con los episodios de desarrollo. Se reserva una comparación con persistencia para determinar si el modelo aporta información prospectiva; el uso de observaciones futuras como si fueran pronósticos se limita a un escenario expresamente identificado de información perfecta.
+
+La representación diurna de irradiancia utiliza un índice relativo a una referencia de cielo despejado $G_{\mathrm{cs}}$, calculada para el mismo plano y posición solar:
+\begin{equation}
+k_G(t)=\frac{G(t)}{G_{\mathrm{cs}}(t)}.
+\label{met:indice_cielo}
+\end{equation}
+El cociente se calcula cuando el denominador supera un umbral fijado según incertidumbre y geometría. No se fuerza $k_G\leq1$, porque la referencia tiene error y pueden ocurrir realces de irradiancia. Durante la noche se utiliza un régimen separado con irradiancia solar nula, conservando el ruido instrumental en el archivo de observación.
+
+Se define un conjunto finito de estados meteorológicos a partir de la fase del día y de clases conjuntas de $k_G$, temperatura, $W_{\mathrm{amb}}$ y componentes del viento. Los límites o agrupamientos se estiman en desarrollo. El número de clases se selecciona mediante validación temporal, evitando estados con transiciones insuficientemente observadas.
+
+Para estados $a,b$, la transición estimada se expresa como
+\begin{equation}
+\widehat P_{ab}=
+\frac{n_{ab}+\alpha_M}
+{\sum_{j=1}^{J}n_{aj}+J\alpha_M},
+\label{met:transicion_markov}
+\end{equation}
+donde $n_{ab}$ cuenta transiciones, $J$ es el número de estados y $\alpha_M$ es una regularización registrada. Se utilizan matrices condicionadas por fase solar cuando los datos permiten estimarlas; una transición nocturna no se aplica automáticamente a un período de irradiancia máxima.
+
+Cada trayectoria se inicializa con observaciones disponibles al tiempo de decisión. Se muestrean estados sucesivos y, dentro de ellos, vectores de perturbaciones o innovaciones procedentes de bloques temporales del conjunto de desarrollo. El remuestreo conjunto preserva dependencias entre temperatura, vapor, irradiancia y viento mejor que generar cada variable por separado. La longitud de bloque y el período de transición se seleccionan según la persistencia observada y el horizonte requerido.
+
+Las trayectorias se reconstruyen en unidades físicas y se comprueban frente a presión positiva, irradiancia no negativa, presión de vapor admisible y continuidad de escala. Los límites proceden de física, metrología y soporte de datos; no se modifican después para mejorar resultados de control. Las condiciones fuera del soporte observado se clasifican como escenarios de estrés, con incertidumbre adicional.
+
+\subsection{Evaluación del pronóstico y uso de escenarios}
+
+La evaluación reproduce decisiones sucesivas: para cada origen temporal se ajusta o actualiza el estado con el pasado y se predice el horizonte completo. Se calculan errores por variable y plazo, cobertura de intervalos, amplitud de los intervalos y habilidad respecto de persistencia. Una cobertura alta acompañada de intervalos excesivamente amplios no se interpreta por sí sola como un buen pronóstico.
+
+Los escenarios para simulación y MPC mantienen identificador, probabilidad o peso, origen temporal y versión del generador. Se utiliza la misma realización meteorológica para comparar políticas de control. La selección de casos incluye condiciones frecuentes y transiciones exigentes realmente respaldadas por los registros, mientras que las extrapolaciones se presentan por separado.
+
+\section{Construcción y verificación del modelo CFD tridimensional}
+\label{met:cfd}
+
+\subsection{Dominio, regiones y condiciones iniciales}
+
+El modelo tridimensional se construye a partir del levantamiento de Coffee Solutions. Se distinguen región fluida, sólidos con almacenamiento térmico, carga, interfaces y fronteras exteriores. Las bandejas se representan con su obstrucción y área de intercambio; los detalles omitidos se sustituyen por cierres cuya procedencia e incertidumbre quedan registradas.
+
+El caso base se conserva como un conjunto reproducible de geometría, malla, propiedades, condiciones iniciales, condiciones de frontera y configuración del solucionador. La implementación se organiza en OpenFOAM, plataforma contemplada en los documentos del proyecto, registrando distribución, versión, bibliotecas, archivos modificados y esquema de compilación. El nombre de un solucionador de transferencia térmica no acredita por sí solo que resuelva evaporación, vapor y transporte en sólidos.
+
+Las condiciones iniciales se obtienen del episodio contrastado. Cuando el campo completo no está observado, se utiliza una reconstrucción documentada con incertidumbre y un período de inicialización separado del intervalo de puntuación. Ese período no se ajusta empleando el error del conjunto final de prueba.
+
+\subsection{Densidad, turbulencia y representación de la carga}
+
+Se estima la magnitud de las variaciones de densidad producidas por temperatura y composición. La aproximación de Boussinesq se utiliza únicamente cuando esas variaciones son pequeñas en el régimen evaluado y el resto de sus supuestos resulta admisible \cite{gray1976}. Para excursiones mayores se utiliza una formulación de baja velocidad con densidad de mezcla dependiente de estado, manteniendo una ecuación consistente de continuidad.
+
+La clasificación del flujo se apoya en las escalas de Rayleigh y Reynolds, en la geometría y en los modos de actuación. La convección natural y un chorro forzado pueden coexistir; una única afirmación de régimen turbulento para todo el secador se sustituye por una evaluación por condición. Se compara una representación laminar con un cierre turbulento pertinente cuando la incertidumbre de régimen afecta las variables de interés \cite{launder1974,versteeg2007}.
+
+El cierre seleccionado se registra junto con sus constantes, tratamiento de pared y criterios de resolución. La altura de primera celda se determina en relación con ese tratamiento y se informa la distribución obtenida de $y^+$; no se combina una función de pared con una malla cuya ubicación resulta incompatible con su intervalo de validez.
+
+Cuando resolver individualmente el lecho no es viable, la carga se representa como una región porosa. Su porosidad, espesor, área específica y resistencia se obtienen de la carga medida o de ensayos de presión--caudal. La ley de Ergun constituye una opción de cierre, con diámetro equivalente y coeficientes identificados para la geometría representada \cite{ergun1952}. No se asignan valores correspondientes a esferas ideales sin contrastarlos con el café y la bandeja.
+
+La transferencia al producto utiliza área efectiva, coeficiente térmico, temperatura y contenido de agua locales o de subregiones. La misma tasa de evaporación se aplica con signos compatibles en pérdida de agua del producto, aporte de vapor al aire y transferencia energética. El calor latente no se incorpora dos veces mediante una fuente de vapor y un sumidero adicional en una ecuación de entalpía que ya lo contiene.
+
+\subsection{Aberturas, viento y actuación}
+
+Las paredes sólidas utilizan la condición cinemática y térmica correspondiente a la superficie real. En las aberturas se permiten entrada, salida y reversión según presión exterior, flotación y actuación. Para entrada se especifican temperatura y composición exteriores; para salida se evita imponer una composición que fuerce artificialmente el intercambio.
+
+La presión de viento se establece con orientación y coeficientes documentados, o mediante un dominio exterior si su resolución forma parte del caso. Un caudal impuesto y una presión impuesta no se utilizan simultáneamente como especificaciones independientes de la misma frontera. La configuración de ventilación se formula mediante una curva del equipo, una condición medida de operación o una fuente de momento identificada.
+
+La recirculación interior conserva la masa total del recinto salvo intercambios a través de aberturas. La extracción se acopla con la reposición de aire. El caudal neto y la mezcla se reportan por separado, pues aumentar velocidad cerca de una bandeja no implica aumentar la renovación exterior.
+
+\subsection{Radiación e intercambio con el exterior}
+
+La carga solar se distribuye sobre cubierta, base y producto según geometría, orientación y sombreado. Si únicamente se dispone de irradiancia global, la separación directa--difusa se declara como una estimación con incertidumbre; no se presenta como medición. La reconstrucción sobre superficies inclinadas conserva el plano original del instrumento y la geometría solar \cite{duffie2013,reda2004}.
+
+Se comprueba la hipótesis de medio no participante para la longitud y banda representadas. En el caso admisible se resuelve intercambio de onda larga entre superficies mediante radiosidad o una formulación equivalente, verificando cierre y reciprocidad de los factores de forma. La transparencia solar de la cubierta no se utiliza para asignarle transparencia térmica; el tratamiento infrarrojo depende de la caracterización óptica.
+
+Las pérdidas exteriores distinguen convección con el ambiente, radiación hacia cielo y entorno, y conducción a través de elementos. La temperatura radiativa efectiva exterior se obtiene de medición o de una correlación declarada, con su incertidumbre. Los ensayos sin carga ayudan a identificar pérdidas efectivas, pero el ajuste no sustituye la comprobación del balance.
+
+\subsection{Discretización, convergencia y ejecución}
+
+Se utiliza una discretización de volúmenes finitos conservativa para transporte de masa, momento, energía y vapor \cite{patankar1980,versteeg2007}. La configuración especifica esquemas espaciales y temporales, interpolación, acoplamiento presión--velocidad, correcciones no ortogonales, tolerancias y número máximo de iteraciones. El transporte de vapor debe estar efectivamente implementado y acoplado con las fuentes del producto.
+
+Se monitorean residuales algebraicos y magnitudes físicas: caudal por abertura, inventario de agua, energía, temperaturas de sensores virtuales y tasas de evaporación. La disminución de un residual del solucionador no basta para declarar convergencia si esas magnitudes siguen variando por error iterativo.
+
+Las tolerancias se establecen para que el error iterativo sea una fracción documentada del presupuesto de error numérico. Se conserva el historial de convergencia y se comprueba positividad de inventarios, propiedades y fracciones. Los limitadores que evitan valores no físicos se registran; un recorte sistemático se considera evidencia de un problema de discretización o de cierre.
+
+En transitorios se controla el número de Courant y se verifica también la resolución de las escalas térmicas, de mezcla y de evaporación. El paso de cálculo puede ser menor que veinte segundos. La exportación se agrega después al intervalo experimental; igualar el paso del solucionador al del sensor no constituye una verificación temporal.
+
+\subsection{Refinamiento espacial y temporal}
+\label{met:refinamiento}
+
+Se emplean al menos tres mallas relacionadas por refinamiento, manteniendo geometría, fronteras y cierres. En tres dimensiones se caracteriza su tamaño global mediante $h=(V/N_c)^{1/3}$, además de tamaños locales, calidad y resolución de paredes, aberturas y carga. El refinamiento debe mejorar las zonas que controlan la respuesta y no limitarse a aumentar celdas lejos de los gradientes.
+
+Las cantidades de interés incluyen temperaturas y humedad en posiciones experimentales, caudal exterior, potencia intercambiada, evaporación y dispersión sobre el producto. Para una cantidad $\Phi$ con convergencia monótona y razón aproximadamente constante $r=h_2/h_1=h_3/h_2>1$, con la malla 1 como la más fina, se calcula
+\begin{equation}
+p_{\mathrm{obs}}=
+\frac{\ln|(\Phi_3-\Phi_2)/(\Phi_2-\Phi_1)|}{\ln r},
+\qquad
+\Phi_{\mathrm{ext}}=\Phi_1+
+\frac{\Phi_1-\Phi_2}{r^{p_{\mathrm{obs}}}-1}.
+\label{met:richardson}
+\end{equation}
+El índice de convergencia se evalúa siguiendo el procedimiento GCI \cite{celik2008}:
+\begin{equation}
+U_{\mathrm{GCI},1}=
+F_s\frac{|\Phi_1-\Phi_2|}{r^{p_{\mathrm{obs}}}-1}.
+\label{met:gci}
+\end{equation}
+Esta expresión tiene unidades de $\Phi$. Se utiliza $F_s=1.25$ cuando son aplicables las condiciones del procedimiento de tres mallas y se comprueba el régimen asintótico. La versión relativa se obtiene con una escala física no nula, evitando dividir entre un caudal neto cercano a cero.
+
+Para razones desiguales se aplica el procedimiento general; para convergencia oscilatoria, diferencias contaminadas por iteración o cantidades no monotónicas se reporta la situación y se amplía el estudio. No se atribuye un orden formal observado a una secuencia que no lo sustenta.
+
+El refinamiento temporal se realiza con al menos tres pasos sobre una malla cuya contribución espacial está caracterizada. Se comparan la fase y amplitud de transitorios, además de errores integrados. La elección final equilibra costo e incertidumbre respecto de las tolerancias de comparación experimental; la afirmación de independencia de malla se acompaña de las cantidades y límites que la sustentan.
+
+\section{Modelos complementarios y proyección entre escalas}
+\label{met:modelos_complementarios}
+
+\subsection{Cavidad bidimensional como contraste de mecanismos}
+\label{met:cavidad}
+
+La cavidad se formula en un dominio cuadrado de aire con paredes laterales a temperaturas diferentes, paredes horizontales adiabáticas en el caso de referencia y condición de no deslizamiento. Se utilizan las ecuaciones de corriente--vorticidad y energía del marco teórico, manteniendo la convención $\omega=-\nabla^2\psi$ y la dirección ascendente del eje vertical.
+
+La implementación se verifica con el caso clásico de convección natural para $\mathrm{Pr}=0.71$ y $\mathrm{Ra}=10^3,10^4,10^5,10^6$, dentro de las condiciones del estudio de referencia \cite{devahl1983}. Se contrastan Nusselt medio en la pared caliente, extremos de velocidad y sus posiciones. Las magnitudes se convierten con las mismas escalas de longitud, difusividad y diferencia de temperatura utilizadas en la referencia.
+
+Se realiza refinamiento espacial y temporal antes de incorporar radiación. El caso sin intercambio radiativo identifica errores de discretización y signo de flotación; posteriormente se activan superficies radiantes y se comprueba conservación, reciprocidad y sensibilidad a emisividad \cite{balaji1993}. Los casos radiativos no se comparan directamente con un benchmark que excluye ese mecanismo.
+
+La cavidad permite estudiar estratificación, circulación y competencia entre transferencia convectiva y radiativa. Su geometría cerrada y sus condiciones térmicas difieren de un secador ventilado con evaporación. Por ello sus salidas se mantienen como evidencia mecanística y de verificación del código; no se mezclan como etiquetas de temperatura, humedad o secado de Coffee Solutions.
+
+\subsection{Ensamblaje de la red de seis estados}
+\label{met:red}
+
+La red concentra cubierta, base, producto y aire en $T_c,T_b,T_p,T_a$, junto con $W$ y $M$. Para cada caso se calcula la capacidad térmica de los sólidos a partir de masa y propiedades. La capacidad sensible del producto se actualiza con su agua:
+\begin{equation}
+C_p(M)=m_s(c_s+Mc_l),\qquad
+\dot m_e=-m_s\dot M.
+\label{met:capacidad_producto}
+\end{equation}
+Si hay retiro de producto se actualizan $m_s$, áreas e inventarios mediante el evento registrado.
+
+El ensamblaje utiliza los balances del Capítulo~\ref{ch:marco_teorico}. Se construye primero una tabla de conexiones entre nodos: para cada intercambio interno se registra magnitud, área, ley, temperatura impulsora y signos opuestos en los nodos involucrados. La absorción solar y los intercambios exteriores se asignan por componente. Esta tabla permite detectar una transferencia interna contabilizada como pérdida externa.
+
+El producto recibe calor convectivo, radiativo y por contacto según su montaje. El término evaporativo emplea la misma $\dot m_e$ que el balance de agua y la entalpía de cambio de fase correspondiente a $T_p$. El aire se integra mediante la formulación de entalpía y vapor; en el caso simplificado se utilizan las Ecuaciones~\ref{eq:balance_humedad_simplificado} y~\ref{eq:balance_lumped_aire}, sin agregar un segundo sumidero latente.
+
+La selección del inventario de aire se documenta. Para presión y volumen conocidos se evalúa
+\begin{equation}
+m_{da}=\frac{pV_a}
+{R_{da}T_a(1+W/\varepsilon_m)}.
+\label{met:inventario_aire}
+\end{equation}
+En la formulación variable, su derivada se acopla con el balance de aire seco; un flujo de reposición o salida se determina de manera compatible con ese balance. No se imponen simultáneamente inventario constante, presión fija y caudales independientes que violen continuidad.
+
+La aproximación de $m_{da}$ constante se admite como reducción cuando la variación del inventario calculado con la Ecuación~\ref{met:inventario_aire} produce un error menor que el presupuesto establecido para el episodio. Se registra el punto de referencia y se contrasta la simplificación con la formulación completa. Si falla, se conserva el acoplamiento variable o se amplía el estado; no se oculta la discrepancia dentro de un coeficiente de transferencia.
+
+\subsection{Cierre de secado e identificación escalonada}
+\label{met:identificacion}
+
+El cierre de pérdida de agua se selecciona con observaciones gravimétricas del mismo procesamiento de café. Una estructura inicial identificable es
+\begin{equation}
+\dot M=-k_d(T_p,W,\mathbf u)
+\bigl[M-M_e(T_p,\phi_p)\bigr],
+\qquad k_d\geq0,
+\label{met:cierre_secado}
+\end{equation}
+donde $M_e$ proviene de una isoterma adecuada y $k_d$ representa la cinética efectiva. La actividad del ambiente de intercambio se calcula como $\phi_p=p_v/p_{ws}(T_p)$, con la presión de vapor del aire próximo al producto, dentro del intervalo admisible de la isoterma \cite{correa2010,timmermann2001}. Si $\phi_p>1$, se trata el régimen de condensación mediante el balance correspondiente en lugar de extrapolar una isoterma. Una correlación empírica de secado ajustada a condiciones constantes no se aplica a transitorios arbitrarios sin comprobar su estructura.
+
+Se examinan alternativas de cinética solo si mejoran el contraste de desarrollo y mantienen identificabilidad. La parametrización respeta capacidades positivas, transferencia no negativa e inventarios admisibles. La posibilidad de rehumectación se conserva cuando $M<M_e$ y el régimen la permite; no se impone disminución monótona del agua en todas las condiciones ambientales.
+
+La identificación se organiza de forma escalonada: propiedades y geometría medidas; captación y pérdidas con ensayos sin carga; intercambio con carga; y cinética con humedad del producto. Los parámetros ya medidos se fijan o se incluyen con su incertidumbre. Se evita ajustar al mismo tiempo múltiples capacidades y conductancias cuando solo se observa una constante de tiempo.
+
+Para observaciones $y_j$ y parámetros $\boldsymbol\theta$, el ajuste se expresa como
+\begin{equation}
+\widehat{\boldsymbol\theta}
+=\arg\min_{\boldsymbol\theta\in\Theta}
+\left[
+\sum_j
+\frac{\bigl(y_j-\mathcal H_j[\mathbf x(\boldsymbol\theta)]\bigr)^2}
+{s_j^2}
++\mathcal R_\theta(\boldsymbol\theta)
+\right],
+\label{met:ajuste_fisico}
+\end{equation}
+donde $s_j$ es una escala de incertidumbre o tolerancia documentada y $\mathcal R_\theta$ penaliza desviaciones de información previa cuando esta existe. La dependencia temporal se considera en el análisis de incertidumbre; la suma de residuos no convierte las observaciones sucesivas en réplicas independientes.
+
+Se examinan sensibilidad escalada, rango del Jacobiano, correlaciones de parámetros y perfiles de ajuste \cite{ljung1999}. Parámetros débilmente determinados se fijan con evidencia externa, se agrupan en una combinación identificable o se mantienen como intervalo. Se propaga esa incertidumbre a predicción y control.
+
+\subsection{Operadores de observación y proyección}
+\label{met:operadores}
+
+La comparación entre escalas se define antes del contraste. Un operador $\mathcal H_j$ transforma un campo o estado en la magnitud que observa el instrumento: temperatura puntual con ubicación y respuesta, promedio superficial de una región termográfica, masa de una bandeja o señal temporal agregada. Se conserva la incertidumbre de ubicación y el efecto de un volumen de medición finito cuando son relevantes.
+
+La reducción de CFD a $W$ utiliza inventarios de vapor y aire seco, en lugar de promediar indistintamente humedad relativa o fracción másica:
+\begin{equation}
+W_{\mathrm{red}}=
+\frac{\int_{V_a}\rho Y\,\mathrm dV}
+{\int_{V_a}\rho(1-Y)\,\mathrm dV}.
+\label{met:proyeccion_W}
+\end{equation}
+Las temperaturas de sólidos se proyectan con masa y capacidad térmica; la temperatura del aire se define mediante una ponderación termodinámica compatible con su energía. Se conserva también la dispersión del campo para cuantificar qué información pierde la red.
+
+La red de seis estados no produce por sí sola gradientes ni máximos locales. Si el control utiliza uniformidad o temperatura máxima del producto, se incorpora un cierre espacial adicional identificado con CFD y observaciones distribuidas, y se evalúa su error de manera separada. La precisión de la temperatura media no acredita la de ese cierre.
+
+Los operadores se versionan y se aplican de forma idéntica a datos sintéticos y experimentales. Esta correspondencia establece qué salidas tridimensionales y reducidas pueden compartir una tarea predictiva y cuáles responden a problemas distintos.
+
+\section{Verificación física y validación experimental}
+\label{met:validacion}
+
+\subsection{Balances integrales y coherencia de fuentes}
+\label{met:conservacion}
+
+La verificación se aplica al dominio completo y a sus componentes. Para el aire se comprueban por separado continuidad de mezcla, aire seco y vapor. La evaporación es una fuente de masa de la mezcla y de vapor; por ello, un flujo con evaporación distribuida no se verifica imponiendo que el flujo neto de mezcla sea siempre cero.
+
+En un intervalo $I=[t_0,t_1]$, el residual de masa de aire seco es
+\begin{equation}
+R_{da}(I)=m_{da}(t_1)-m_{da}(t_0)
+-\int_I\left[
+\sum_{\mathrm{ent}}\dot m_{da}
+-\sum_{\mathrm{sal}}\dot m_{da}
+\right]\mathrm dt.
+\label{met:residual_aire_seco}
+\end{equation}
+El residual de vapor incluye $\dot m_e$ y, cuando corresponda, condensación. La comparación se realiza con flujos de aire seco; un flujo de mezcla $\dot m_a$ se convierte mediante $\dot m_{da}=\dot m_a/(1+W)$ en la frontera considerada.
+
+El inventario de agua del sistema incorpora producto, vapor y agua condensada que permanece en el dominio. La evaporación se cancela al sumar esos balances:
+\begin{equation}
+\begin{split}
+R_w(I)={}&m_{w,\mathrm{tot}}(t_1)-m_{w,\mathrm{tot}}(t_0)\\
+&-\int_I\left[
+\sum_{\mathrm{ent}}\dot m_{da}W_{\mathrm{ent}}
+-\sum_{\mathrm{sal}}\dot m_{da}W_{\mathrm{sal}}
+-\dot m_{w,\mathrm{dren}}
+-\dot m_{w,\mathrm{ret}}
+\right]\mathrm dt.
+\end{split}
+\label{met:residual_agua}
+\end{equation}
+Los retiros discretos de muestra se contabilizan como saltos de inventario equivalentes a las salidas correspondientes. Si se incorpora agua o producto, se agrega su entrada explícita.
+
+La energía total utiliza una referencia común para sólidos, agua líquida, vapor y aire. Su residual es
+\begin{equation}
+\begin{split}
+R_E(I)={}&E_{\mathrm{tot}}(t_1)-E_{\mathrm{tot}}(t_0)\\
+&-\int_I\left[
+\dot Q_{\mathrm{ext}}+\dot{\mathcal W}_{\mathrm{ext}}
++\sum_{\mathrm{ent}}\dot m_{da}h_{\mathrm{ent}}
+-\sum_{\mathrm{sal}}\dot m_{da}h_{\mathrm{sal}}
++\dot H_{\mathrm{otros}}
+\right]\mathrm dt.
+\end{split}
+\label{met:residual_energia}
+\end{equation}
+$\dot Q_{\mathrm{ext}}$ incluye la radiación neta y los intercambios térmicos que cruzan la frontera; $\dot{\mathcal W}_{\mathrm{ext}}$ es el trabajo efectivamente transferido al dominio; y $\dot H_{\mathrm{otros}}$ incorpora entradas o salidas de producto, líquido u otros materiales con signo. Los intercambios internos y el calor latente no se restan de nuevo del balance total.
+
+Se reportan residuales absolutos y normalizados. Para un inventario $S$ y sus flujos exteriores $F_\ell$, se utiliza una escala dimensional consistente:
+\begin{equation}
+\eta_S(I)=
+\frac{|R_S(I)|}
+{\max\left\{
+|\Delta S|,\,
+\int_I\sum_\ell|F_\ell|\,\mathrm dt,\,
+S_{\mathrm{ref}}
+\right\}}.
+\label{met:residual_normalizado}
+\end{equation}
+$S_{\mathrm{ref}}>0$ se fija mediante una escala física o de incertidumbre del intervalo y se registra antes del análisis. Para energía tiene unidades de joule y para masa de kilogramo. No se suma una constante adimensional a un denominador dimensional ni se usa una potencia solar instantánea casi nula como única escala nocturna.
+
+Los balances se evalúan acumulados y por ventanas para detectar deriva, cancelaciones de error o fuentes mal sincronizadas. Se examinan conjuntamente agua perdida del producto, vapor acumulado y extracción exterior, además de temperaturas. Ajustar correctamente $T_a$ con una tasa de evaporación incompatible no se considera una representación física suficiente.
+
+\subsection{Criterios de aceptación y presupuesto de incertidumbre}
+
+Antes de ajustar modelos se establece un registro de tolerancias para temperatura, $W$, humedad del producto, caudal, cierre de agua y energía. Las tolerancias se justifican por sensibilidad del secado, metrología y decisión de control; no se deducen del error del modelo que se busca aceptar. Para una magnitud $q$, se distinguen tolerancia de sesgo $\delta_{b,q}$, error predictivo admisible $\delta_{e,q}$ y límite de incertidumbre numérica $\delta_{n,q}$.
+
+La contribución de discretización e iteración se exige inferior a la fracción del presupuesto experimental fijada en ese registro. Se examinan también incertidumbre de instrumentos, parámetros y condiciones de frontera, manteniendo sus dependencias cuando se propagan. Una incertidumbre instrumental mayor que el efecto que se intenta demostrar se declara como limitación de la comparación.
+
+La aceptación combina cuatro condiciones: convergencia numérica documentada; conservación dentro del presupuesto; error compatible con las tolerancias sobre datos independientes; y cobertura del régimen de uso. La conformidad en una condición de baja carga no se transfiere automáticamente a otra de mayor espesor o caudal.
+
+\subsection{Separación entre desarrollo y prueba final}
+\label{met:particion}
+
+Se establece una partición externa cronológica por episodios completos. Como estructura de referencia se conserva aproximadamente la primera mitad para desarrollo y la segunda para prueba final, ajustando la frontera para no dividir un lote ni una maniobra. Se informa el porcentaje efectivo, fechas, número de episodios, carga y cobertura de regímenes; la regla no implica que los datos ya disponibles contengan dos campañas equivalentes.
+
+El conjunto de prueba final permanece cerrado durante identificación física, selección de variables, entrenamiento, enriquecimiento, ajuste del pronóstico y elección de controladores. Dentro del desarrollo se utiliza validación de origen rodante: se ajusta con episodios anteriores y se compara sobre bloques posteriores. Los episodios de un mismo lote o campaña estrechamente dependiente se agrupan según el objetivo de generalización.
+
+Las ventanas de entrenamiento y validación se depuran para que no compartan entradas históricas ni objetivos futuros. Si una muestra utiliza una historia de duración $L_{\mathrm{hist}}$ y un horizonte $H_p\Delta t_c$, se reserva una separación temporal que impida el solapamiento de esos soportes, aplicando como regla conservadora $L_{\mathrm{hist}}+H_p\Delta t_c$ en fronteras dentro de una serie.
+
+Cada partición interna vuelve a estimar escaladores, imputaciones permitidas, selección de variables, parámetros físicos ajustados y generador sintético utilizando solo su porción de entrenamiento. La generación de datos con un modelo calibrado sobre el bloque que después se evalúa produciría filtración de información, aunque las muestras resultantes se denominen sintéticas.
+
+El conjunto final se evalúa después de congelar estructura, parámetros, versiones y criterios. Sus resultados no orientan una nueva iteración del mismo contraste. Una revisión posterior constituye una versión nueva y requiere otra evidencia reservada para evaluar su generalización.
+
+\subsection{Alineación y métricas por variable y horizonte}
+\label{met:metricas}
+
+Se aplican los operadores de la Sección~\ref{met:operadores} y se alinea por tiempo de observación. La compensación de un retardo instrumental procede de una caracterización independiente o del desarrollo, no de desplazar cada predicción hasta maximizar correlación en prueba. Se utilizan máscaras comunes de calidad y se conserva la cobertura efectiva.
+
+Con $e_k=\widehat y_k-y_k$ y pesos temporales $a_k\geq0$, $\sum_k a_k=1$, se calculan
+\begin{equation}
+\mathrm{MBE}=\sum_k a_ke_k,\qquad
+\mathrm{MAE}=\sum_k a_k|e_k|,\qquad
+\mathrm{RMSE}=\left(\sum_k a_ke_k^2\right)^{1/2}.
+\label{met:errores}
+\end{equation}
+Los pesos representan duración cuando el muestreo es irregular. Los resultados se presentan por episodio, posición, régimen y horizonte, seguidos de un agregado cuya ponderación se declara. Para comparar lotes se evita que un episodio más largo domine por tener más registros.
+
+Se informa el cuantil alto del error absoluto y la respuesta ante transiciones, además del promedio. $R^2$ puede incluirse como descriptor cuando la variación de la referencia es suficiente, pero no sustituye error dimensional ni conservación. Cerca de humedad o caudal nulos se evita un error porcentual cuyo denominador vuelve inestable la métrica.
+
+Las predicciones de $W$ se convierten a $\phi$ utilizando su temperatura y presión predichas, y se comprueban conjuntamente. Se distingue el error de temperatura del error de vapor para no atribuir a extracción de agua una disminución de humedad relativa producida únicamente por calentamiento.
+
+\subsection{Inferencia con dependencia temporal y equivalencia}
+\label{met:estadistica}
+
+La incertidumbre del desempeño se estima con episodios o bloques temporales, no tratando todas las lecturas de veinte segundos como independientes. Cuando existen suficientes lotes independientes se remuestrean lotes completos. Para series largas se utiliza un bootstrap por bloques, cuya aplicabilidad se examina sobre residuos aproximadamente estacionarios o estratificados por régimen \cite{kunsch1989}.
+
+La longitud de bloque se establece con la escala de dependencia de los residuos y un análisis de sensibilidad. Se registran número de episodios, duración, número de remuestreos y semilla. Una serie con tendencia meteorológica no se vuelve estacionaria solo por dividirla arbitrariamente. Si la cantidad de unidades independientes es insuficiente, se presentan incertidumbre descriptiva y alcance limitado, sin atribuir precisión inferencial a un gran número de lecturas.
+
+La equivalencia de sesgo se formula mediante un margen físico previo:
+\begin{equation}
+H_0:\mu_e\leq-\delta_{b,q}\ \ \text{o}\ \
+\mu_e\geq\delta_{b,q},
+\qquad
+H_1:-\delta_{b,q}<\mu_e<\delta_{b,q}.
+\label{met:equivalencia}
+\end{equation}
+Se aplica el principio de dos pruebas unilaterales \cite{schuirmann1987}, adaptando la estimación del intervalo a la dependencia temporal. Para $\alpha=0.05$, la equivalencia exige que el intervalo bilateral del $90\%$ del sesgo quede íntegramente dentro del margen. Los intervalos descriptivos de error se reportan al $95\%$, diferenciando ambos propósitos.
+
+La equivalencia del sesgo no demuestra precisión instantánea: una señal con grandes errores positivos y negativos puede tener media nula. Por ello se exige también que el límite superior de incertidumbre de una métrica de error resulte compatible con $\delta_{e,q}$ y que no existan discrepancias sistemáticas en los regímenes relevantes. Para dispersión se utilizan intervalos por bloques o episodios, evitando una prueba $F$ sustentada en normalidad e independencia no verificadas.
+
+No rechazar una diferencia de medias no equivale a demostrar equivalencia. El resultado se clasifica como compatible, incompatible o insuficientemente determinado respecto de cada criterio, indicando cobertura experimental. Las comparaciones múltiples exploratorias se identifican como tales; las conclusiones principales se vinculan con variables y márgenes previamente definidos.
+
+\subsection{Alcance del contraste y análisis de sensibilidad}
+
+La sensibilidad se estudia perturbando parámetros y fronteras dentro de intervalos justificados. Se examinan efectos sobre temperatura del producto, agua removida, uniformidad y demanda de ventilación. Este análisis permite priorizar mediciones y conocer fragilidad del modelo, pero no constituye validación experimental de una región no observada.
+
+La validación espacial requiere sensores distribuidos, termografía o medición de flujo según la magnitud. Un campo completo se interpreta como predicción del modelo; solo sus componentes efectivamente contrastados reciben una afirmación de validación. Se distinguen condiciones interpoladas, nuevas cargas y extrapolaciones meteorológicas o geométricas.
+
+\section{Construcción y evaluación de modelos basados en datos}
+\label{met:ml}
+
+\subsection{Definición de las tareas predictivas}
+
+Se consideran predicción de un paso, predicción multihorizonte y propagación en lazo abierto de una secuencia de acciones. La tarea se define mediante salida, intervalo, horizonte y variables disponibles. Un predictor útil para describir una serie bajo una acción fija no se considera automáticamente un modelo de planta apto para optimizar acciones.
+
+El vector de información al instante $t_k$ incluye historial causal de observaciones, acciones ejecutadas, estado inicial de carga, tiempo desde eventos, variables meteorológicas actuales y pronósticos disponibles. Las variables de operación futuras son las acciones candidatas; las perturbaciones futuras se proporcionan mediante pronósticos o escenarios. No se utilizan observaciones posteriores para construir esas entradas.
+
+Una representación de transición es
+\begin{equation}
+\widehat{\mathbf z}_{k+1}
+=\mathcal F_\eta\left(
+\mathbf z_{k:k-L},\mathbf u_{k:k-L},
+\mathbf d_{k:k-L},\mathbf u_k,\widehat{\mathbf d}_{k+1},
+\mathbf c_{\mathrm{lote}}
+\right),
+\label{met:predictor_dinamico}
+\end{equation}
+donde $\mathbf z$ contiene variables observadas o estados estimados y $\mathbf c_{\mathrm{lote}}$ describe carga y configuración. Las réplicas del predictor para horizontes mayores se evalúan con sus propias predicciones cuando la estrategia es recursiva, evitando una puntuación que reintroduzca el valor verdadero en cada paso.
+
+Las salidas primarias son $T_a$, $W$ y las temperaturas o contenidos de agua con referencia disponible. Cuando $M$ no se mide con suficiente frecuencia, se utiliza una función de pérdida en los tiempos de observación y se distingue supervisión experimental de estimaciones intermedias. La humedad relativa se deriva de estado termodinámico o se evalúa como salida adicional claramente definida.
+
+\subsection{Preparación, referencias y selección}
+
+La depuración respeta las marcas de calidad. Las transformaciones se ajustan dentro de cada partición de entrenamiento y se exportan con el modelo. Se incorporan indicadores de ausencia y antigüedad cuando la estrategia puede utilizarlos; no se rellenan grandes huecos con datos futuros. El conjunto de prueba reproduce también la disponibilidad real de entradas.
+
+Se establecen referencias de persistencia y red física identificada, además de un árbol de regresión como referencia de baja complejidad. XGBoost y LightGBM se incluyen como candidatos de ensamble \cite{friedman2001,chen2016,ke2017}. La comparación utiliza los mismos episodios, información causal y objetivos, con resultados por horizonte.
+
+En el árbol se exploran profundidad, tamaño mínimo de hoja y poda. En los ensambles se exploran número de árboles, tasa de aprendizaje, complejidad de hojas, tamaño mínimo de muestra, submuestreo y regularización. Las combinaciones evaluadas y su presupuesto quedan registradas antes de acceder a prueba. La detención temprana y la selección emplean únicamente bloques internos de validación.
+
+Se optimiza una función multivariable adimensional:
+\begin{equation}
+\mathcal J_{\mathrm{val}}=
+\sum_{q}\lambda_q
+\frac{\mathrm{RMSE}_{q,\mathrm{val}}}{s_q}
++\lambda_C\mathcal P_{\mathrm{fis}}
++\lambda_\tau\frac{\tau_{\mathrm{pred}}}{\tau_{\mathrm{pres}}},
+\label{met:seleccion_ml}
+\end{equation}
+con escalas y pesos fijados por el objetivo predictivo. $\mathcal P_{\mathrm{fis}}$ mide violaciones físicas y $\tau_{\mathrm{pres}}$ es el presupuesto de predicción. Se presentan las componentes por separado para que una mejora de una variable no oculte deterioro de otra.
+
+Se registran semillas, versión de bibliotecas, parámetros seleccionados y regla de elección. Si dos modelos presentan diferencias inferiores a la incertidumbre de comparación, se prioriza el de menor costo o estructura más sencilla según un criterio declarado. La interpretación de importancia de variables se limita al modelo y datos evaluados, sin convertir asociación en identificación causal.
+
+\subsection{PINN condicional para la dinámica reducida}
+\label{met:pinn}
+
+La alternativa informada por física se construye sobre la red de estados, conservando sus balances y cierres \cite{raissi2019}. Para evitar que una red dependiente solo del tiempo confunda condiciones iniciales y acciones, se define un mapa de flujo condicional en un intervalo de duración $\Delta t_c$:
+\begin{equation}
+\widehat{\mathbf x}_\eta(s;\mathbf x_k,\mathbf u_k,\mathbf d_k)
+=\mathbf x_k+
+\frac{s}{\Delta t_c}\,
+\mathcal N_\eta\left(
+\frac{s}{\Delta t_c},\widetilde{\mathbf x}_k,
+\widetilde{\mathbf u}_k,\widetilde{\mathbf d}_k
+\right)\odot\mathbf s_x,
+\quad 0\leq s\leq\Delta t_c.
+\label{met:flujo_pinn}
+\end{equation}
+$\mathbf s_x$ contiene escalas físicas de estado y las tildes indican entradas normalizadas. La construcción impone la condición inicial en $s=0$. Las acciones y perturbaciones se mantienen constantes dentro del segmento o se incorporan mediante una trayectoria parametrizada explícita; en el segundo caso esa parametrización forma parte de las entradas.
+
+La derivada respecto de $s$ se calcula manteniendo fijas las condiciones del segmento, y el residual de la componente $q$ es
+\begin{equation}
+r_q(s)=
+\frac{\partial\widehat x_q}{\partial s}
+-f_q\bigl(
+\widehat{\mathbf x},\mathbf u_k,\mathbf d_k;
+\boldsymbol\theta
+\bigr).
+\label{met:residual_pinn}
+\end{equation}
+El entrenamiento utiliza activaciones suaves y diferenciables, puntos de colocación por trayectoria y escalas $s_q/\Delta t_c$ para homogeneizar residuales. Los puntos se distribuyen en el dominio admitido de estado, carga y actuación; no se generan en combinaciones que contradicen inventarios o especificaciones.
+
+La pérdida integra datos, balances y restricciones:
+\begin{equation}
+\mathcal L_{\mathrm{PINN}}=
+\lambda_D\mathcal L_D+
+\lambda_F\frac{1}{N_f}
+\sum_{\ell=1}^{N_f}\sum_q
+\left(\frac{r_q(s_\ell)}{s_q/\Delta t_c}\right)^2
++\lambda_R\mathcal L_R.
+\label{met:perdida_pinn}
+\end{equation}
+$\mathcal L_D$ compara observaciones a través de $\mathcal H_j$ y $\mathcal L_R$ recoge restricciones de estado y parámetros. La condición inicial ya impuesta no se cuenta como otra evidencia experimental. Al tratarse de una red de ODE, no se agregan condiciones espaciales de pared que pertenecen al CFD.
+
+Los parámetros físicos se mantienen fijados por identificación o se estiman conjuntamente dentro del desarrollo con cotas y análisis de identificabilidad. Se controla el desequilibrio de gradientes entre términos de pérdida y se documenta la estrategia de ponderación \cite{wang2021}. La detención y la arquitectura se seleccionan con observaciones reales de validación, no solo por la magnitud del residual de colocación.
+
+La positividad de capacidades y coeficientes se impone mediante parametrización. Las restricciones de humedad se evalúan con presión de saturación, inventarios y posibilidad de rehumectación. Una penalización de conservación reduce discrepancias de la formulación entrenada; no acredita por sí misma que sus cierres describan correctamente el producto real.
+
+\subsection{Incertidumbre y costo de predicción}
+
+La incertidumbre predictiva se estima con repeticiones de entrenamiento, remuestreo de episodios o ensambles, manteniendo la misma tarea. Su cobertura se contrasta sobre validación y prueba; la dispersión entre modelos no se denomina automáticamente intervalo calibrado. Se examina por horizonte y al alejarse del soporte observado.
+
+La medición de costo utiliza el hardware y la configuración previstos para ejecución. Se informa tiempo de preparación de entradas, evaluación, propagación del horizonte y memoria. Se registran mediana y percentiles altos, número de repeticiones, carga de cómputo y condiciones de arranque. La aceleración por lotes se diferencia de la latencia de una decisión individual.
+
+Para control se mide el ciclo completo con estimación de estado y optimización. El número de evaluaciones depende del algoritmo, iteraciones, escenarios y horizonte; no se aproxima siempre por horizonte multiplicado por una inferencia. Se registran incumplimientos del plazo y respuesta de respaldo, además del error de predicción.
+
+\section{Enriquecimiento físico--basado en datos}
+\label{met:hpdf}
+
+\subsection{Correspondencia de fuentes y trazabilidad}
+
+El marco híbrido física--datos, HPDF, utiliza simulaciones para ampliar la información disponible sobre Coffee Solutions dentro de condiciones justificadas. Se distinguen observaciones experimentales, proyecciones del CFD y trayectorias de la red reducida. La cavidad bidimensional conserva su función de contraste de mecanismos y no se incorpora como supervisión directa de secado.
+
+Una muestra sintética incluye fuente, caso, geometría, carga, condiciones iniciales, secuencia de acciones, perturbaciones, parámetros, incertidumbre numérica y operador de observación. Las salidas se convierten a la misma magnitud, unidad, resolución temporal y soporte espacial que el objetivo experimental. Un promedio de recinto no recibe la etiqueta de una temperatura superficial del grano.
+
+Los parámetros y generadores usados dentro de una partición se ajustan solo con su entrenamiento. Se conserva el identificador de trayectoria para impedir que ventanas de la misma simulación se distribuyan entre entrenamiento y validación como si fueran casos independientes. Las simulaciones derivadas de episodios reservados para prueba no participan en el enriquecimiento.
+
+\subsection{Dominio de generación y selección de casos}
+
+El dominio de generación es la intersección de condiciones físicamente admisibles, intervalos respaldados por caracterización y configuraciones cuya formulación ha sido verificada. Se distingue del dominio experimental observado y del dominio propuesto de control. No se presupone una relación de inclusión que garantice validez fuera de las mediciones.
+
+Se muestrean carga, estado inicial, parámetros inciertos y acciones mediante un diseño estratificado o de cobertura del espacio, manteniendo dependencias físicas. Las perturbaciones proceden de episodios de desarrollo o del generador meteorológico ajustado. Se incluyen transitorios, cambios de modo y bordes admisibles, no solo estados casi estacionarios.
+
+La selección dirigida de nuevos casos utiliza información de cobertura, incertidumbre del predictor, discrepancia de validación y costo. Una puntuación posible, normalizada por componente, es
+\begin{equation}
+A(\boldsymbol\xi)=
+\beta_U U(\boldsymbol\xi)+
+\beta_D D(\boldsymbol\xi)+
+\beta_R R_{\mathrm{fis}}(\boldsymbol\xi)-
+\beta_C C(\boldsymbol\xi),
+\label{met:adquisicion}
+\end{equation}
+donde $\boldsymbol\xi$ describe una trayectoria candidata, $U$ mide incertidumbre, $D$ carencia de cobertura o proximidad a regímenes con error y $R_{\mathrm{fis}}$ inconsistencia. Los pesos y el presupuesto se fijan con desarrollo. Una discrepancia física puede requerir corregir el modelo generador antes de producir más muestras.
+
+El CFD se prioriza cuando la heterogeneidad espacial, los chorros o una configuración de apertura resultan decisivos. La red reducida explora transitorios largos y secuencias numerosas una vez acreditada su proyección. El costo y la fidelidad se consideran conjuntamente; una gran cantidad de trayectorias de baja fidelidad no equivale a nueva evidencia experimental.
+
+\subsection{Ponderación equilibrada y restricciones}
+
+La pérdida se normaliza por fuente y trayectoria para que la cantidad de registros sintéticos no determine por sí sola su influencia:
+\begin{equation}
+\mathcal L_{\mathrm{HPDF}}=
+\sum_{s\in\mathcal S}
+\lambda_s\frac{1}{N_{\mathrm{tr},s}}
+\sum_{j=1}^{N_{\mathrm{tr},s}}
+\frac{1}{N_{sj}}\sum_{i=1}^{N_{sj}}
+\ell_{sji}
++\lambda_{\mathrm{fis}}\mathcal L_{\mathrm{bal}},
+\qquad
+\sum_{s\in\mathcal S}\lambda_s=1.
+\label{met:perdida_hpdf}
+\end{equation}
+La fuente experimental mantiene una contribución explícita. Las ponderaciones sintéticas se seleccionan considerando discrepancia, incertidumbre y desempeño sobre observaciones reales. Se registra también la estrategia de muestreo por episodio y variable.
+
+Para modelos por árboles, los residuales físicos se evalúan sobre trayectorias y balances integrados. No se interpreta la derivada temporal de una función constante por hojas como una derivada física. Para modelos diferenciables puede añadirse un residual diferencial, comprobando su consistencia con las variables y entradas de la tarea.
+
+La corrección híbrida puede actuar sobre estados proyectados o sobre cierres de transferencia. Cuando modifica $\dot m_e$, el mismo valor corregido se utiliza en producto, vapor y energía. Cuando modifica una conductancia interna, se mantiene su intercambio con signos opuestos. Esta estructuración permite aprovechar datos sin romper la contabilidad física \cite{psichogios1992}.
+
+\subsection{Secuencia del bucle y detención}
+
+El bucle sigue una secuencia reproducible:
+\begin{enumerate}
+\item Entrenar una referencia experimental y los generadores físicos con la porción autorizada de desarrollo.
+\item Evaluar errores y cobertura en bloques reales de validación, además de residuales físicos.
+\item Seleccionar trayectorias candidatas dentro del dominio admisible y asignar la fuente adecuada.
+\item Verificar las simulaciones, proyectar observaciones y descartar o marcar casos con problemas numéricos.
+\item Reentrenar con ponderaciones registradas y comparar sobre los mismos bloques reales.
+\item Conservar la versión que satisface el criterio de mejora y repetir mientras exista beneficio verificable.
+\end{enumerate}
+Se mantienen, por iteración, presupuesto, casos añadidos, tiempo, error por variable, conservación y latencia. El bloque final de prueba no interviene en ninguno de estos pasos.
+
+La detención utiliza una mejora mínima previamente definida sobre validación, un número registrado de iteraciones sin mejora o un límite de cómputo. También se detiene cuando el enriquecimiento deteriora conservación, sensibilidad a actuación o precisión en un régimen crítico. Los valores de estas reglas forman parte de la configuración congelada.
+
+\subsection{Ablaciones y prueba de utilidad del enriquecimiento}
+
+La contribución de cada componente se compara mediante variantes: entrenamiento experimental; incorporación de trayectorias reducidas; incorporación de proyecciones CFD; y corrección estructurada o PINN cuando corresponda. Se mantiene comparable el algoritmo, la información disponible, el presupuesto de selección y los episodios de evaluación. Las mejoras de arquitectura y de fuente se distinguen.
+
+La diferencia de desempeño se calcula emparejando episodios y utilizando intervalos por bloques o lotes. Se exige una mejora relevante frente a su incertidumbre, sin deterioro crítico en variables del producto, conservación o tiempo de ejecución. La conclusión identifica dónde el enriquecimiento ayuda, dónde no cambia la referencia y dónde aumenta error.
+
+Después de elegir la versión se congelan transformaciones, pesos, generadores, modelos y parámetros. Solo entonces se realiza la prueba final. El resultado acredita el procedimiento dentro de la cobertura contrastada; los escenarios sintéticos adicionales se mantienen como evaluación de sensibilidad o estrés.
+
+\section{Caracterización de actuadores y patrones de flujo}
+\label{met:actuadores}
+
+\subsection{Especificaciones y conjunto real de acciones}
+
+Los equipos considerados son el ventilador APK25-5 y el Air Mover Zeus 900. La Tabla~\ref{met:tabla_actuadores} conserva los datos disponibles en el material suministrado. La placa eléctrica se distingue de una curva aerodinámica y de una medición de potencia activa.
+\begin{table}[htbp]
+\centering
+\small
+\caption{Datos disponibles y magnitudes que requieren caracterización.}
+\label{met:tabla_actuadores}
+\begin{tabular}{>{\raggedright\arraybackslash}p{0.29\linewidth}>{\raggedright\arraybackslash}p{0.29\linewidth}>{\raggedright\arraybackslash}p{0.31\linewidth}}
+\toprule
+Magnitud & APK25-5 & Air Mover Zeus 900 \\
+\midrule
+Dimensión reportada & Diámetro de $250\,\mathrm{mm}$ & No reportada. \\
+Alimentación & $110\,\mathrm V$, $60\,\mathrm{Hz}$ & $110$--$120\,\mathrm V$ AC, $60\,\mathrm{Hz}$. \\
+Potencia nominal & $40\,\mathrm W$ & Potencia activa por medir. \\
+Rotación y aspas & $1300\,\mathrm{rpm}$; cinco aspas & No reportadas. \\
+Modos reportados & Una velocidad nominal & Bajo y alto. \\
+Corriente reportada & No reportada & $1.1\,\mathrm A$ en bajo; $1.8\,\mathrm A$ en alto. \\
+Caudal y curva & Requieren medición & Requieren medición. \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Las acciones iniciales se representan por conjuntos discretos: $\mathcal U_{\mathrm{APK}}=\{0,1\}$ y $\mathcal U_{\mathrm{Zeus}}=\{0,\mathrm{bajo},\mathrm{alto}\}$. Cada elemento se vincula con una configuración eléctrica y un caudal medidos. No se introduce una velocidad continua ni una abertura motorizada sin disponer del mecanismo y su caracterización.
+
+La potencia activa se mide con un instrumento adecuado a alimentación AC, registrando tensión, corriente, factor de potencia y régimen. En el Zeus, multiplicar tensión nominal por corriente no proporciona por sí solo potencia activa. Para comparación energética se utiliza la potencia medida por modo y su evolución de encendido.
+
+\subsection{Medición de caudal, presión y respuesta}
+\label{met:caudal}
+
+El caudal se determina en un plano identificado mediante velocidad normal y áreas representadas:
+\begin{equation}
+Q=\int_A\mathbf v\cdot\mathbf n\,\mathrm dA
+\simeq\sum_{j=1}^{N_A}
+(\mathbf v_j\cdot\mathbf n)A_j.
+\label{met:caudal_integrado}
+\end{equation}
+La cuadrícula cubre centro, periferia y regiones de gradiente. Se realiza un refinamiento del muestreo para comprobar estabilidad del integral. La magnitud de velocidad no sustituye su componente normal en un flujo inclinado o con remolino.
+
+Se mide el caudal para cada modo, abertura y carga relevantes, con repeticiones y registro meteorológico. Las recirculaciones o reversión en el plano se informan como contribuciones separadas. Se conserva la incertidumbre de velocidad, área y repetibilidad; un único punto axial no determina el caudal total del ventilador.
+
+Se registran diferencias de presión y caudal para construir la curva disponible o, al menos, los puntos de operación medidos. Cuando se emplea una restricción variable de ensayo se mantiene el régimen permitido del equipo. La respuesta de arranque, tiempo de establecimiento y transición entre modos se identifica para incorporarla al modelo de actuación.
+
+Las condiciones de recinto vacío y cargado se comparan para examinar pérdidas introducidas por bandejas y café. La medición junto al equipo y la renovación efectiva a través del recinto se distinguen, identificando posibles cortocircuitos entre entrada y salida.
+
+\subsection{Requerimientos de renovación y conversión de bases}
+
+Para una aproximación estacionaria con flujos iguales de aire seco y sin condensación, el requerimiento de remoción de vapor es
+\begin{equation}
+\dot m_{da,\mathrm{req}}=
+\frac{\dot m_e}{W_{\mathrm{sal}}-W_{\mathrm{ent}}},
+\qquad W_{\mathrm{sal}}>W_{\mathrm{ent}}.
+\label{met:caudal_requerido_vapor}
+\end{equation}
+En un transitorio se conserva también $\mathrm d(m_{da}W)/\mathrm dt$ y los flujos que resulten del balance completo. Si $W_{\mathrm{ent}}$ es mayor o igual al valor admisible interior, aumentar renovación no garantiza deshumidificación hasta ese objetivo; el caso se clasifica como limitado por condiciones exteriores.
+
+La conversión a caudal volumétrico utiliza el estado de la sección donde se reporta el volumen:
+\begin{equation}
+Q=\dot m_{da}v_{da},
+\qquad
+v_{da}=\frac{R_{da}T}{p}
+\left(1+\frac{W}{\varepsilon_m}\right),
+\qquad
+\dot m_{da}=\frac{\rho_{\mathrm{mez}}Q}{1+W}.
+\label{met:conversion_caudal}
+\end{equation}
+$v_{da}$ es volumen de mezcla por masa de aire seco. Una densidad de mezcla multiplicada por $Q$ no se utiliza directamente como flujo de aire seco.
+
+El dimensionamiento térmico se examina con diferencia de entalpía. Para un régimen cuasiestacionario y una potencia neta que debe retirar la corriente,
+\begin{equation}
+\dot m_{da,\mathrm{req},E}
+=\frac{\dot Q_{\mathrm{ret}}}
+{h_{\mathrm{sal}}-h_{\mathrm{ent}}},
+\qquad h_{\mathrm{sal}}>h_{\mathrm{ent}}.
+\label{met:caudal_requerido_energia}
+\end{equation}
+La definición de $\dot Q_{\mathrm{ret}}$ conserva almacenamiento, otras pérdidas y acoplamiento con evaporación. Una aproximación exclusivamente sensible se usa solo bajo sus condiciones y con base de calor específico declarada. No se emplea el valor absoluto de una diferencia para ocultar que el aire exterior produciría el efecto opuesto.
+
+La tasa de renovación exterior se calcula como $\mathrm{ACH}=3600Q_{\mathrm{ext}}/V_a$ cuando $Q_{\mathrm{ext}}$ está en $\mathrm{m^3\,s^{-1}}$. El caudal de recirculación no se suma a $Q_{\mathrm{ext}}$. Estos indicadores describen capacidad aerodinámica; su suficiencia se contrasta con agua removida y temperatura del producto.
+
+\subsection{Pérdidas y punto de operación}
+
+El punto de operación se determina por compatibilidad entre presión del equipo, presión de viento, flotación y pérdidas del sistema. Se incluyen aberturas, cubierta, cambios de sección, bandejas, lecho y obstáculos. Las resistencias se identifican mediante medición o cierres justificados, conservando dependencia con configuración y carga.
+
+Para una abertura, una aproximación de orificio con presión firmada es
+\begin{equation}
+Q_o=C_dA_o\,\operatorname{sgn}(\Delta p_o)
+\sqrt{\frac{2|\Delta p_o|}{\rho_o}}.
+\label{met:abertura_presion}
+\end{equation}
+La convención de signo define entrada y salida. $C_d$ se documenta o identifica; la fórmula no resuelve por sí sola interacción de aberturas ni zonas de presión desconocida. El balance de red y la continuidad determinan el conjunto de caudales.
+
+El CFD utiliza los puntos o curvas caracterizados y contrasta caudal y presión en las mismas secciones. La potencia nominal no se convierte directamente en un chorro de velocidad supuesta. La fuente de momento, cuando se usa, reproduce empuje o caudal medido y su dispersión.
+
+\subsection{Uniformidad, chorros y disposición}
+\label{met:uniformidad}
+
+Se comparan configuraciones de ventilación natural, extracción, recirculación y combinación cuando los equipos y montaje las permiten. Las posiciones y orientaciones se definen en el CAD; se mantienen constantes la carga y las fronteras de cada comparación numérica.
+
+Sobre puntos o regiones del producto con pesos $w_j$, $\sum_jw_j=1$, se calculan media y dispersión:
+\begin{equation}
+\bar q=\sum_jw_jq_j,\qquad
+\sigma_q=\left[
+\sum_jw_j(q_j-\bar q)^2
+\right]^{1/2},
+\qquad
+I_{U,q}=\frac{\sigma_q}{s_q}.
+\label{met:dispersion_espacial}
+\end{equation}
+La escala $s_q$ es una tolerancia física fija. Para temperatura se evita normalizar por la media en grados Celsius, pues el resultado dependería del origen de la escala. La humedad del producto se evalúa con ponderación de masa y la exposición del aire con la cobertura definida de sensores o regiones.
+
+Se informa gradiente vertical, diferencia entre bandejas, fracción de zonas de bajo movimiento y máximos locales. Un chorro intenso puede mejorar mezcla en su eje y dejar regiones estancadas fuera de él; por ello se observa cobertura y penetración, además de velocidad máxima.
+
+El flujo de momento del chorro se caracteriza con $\int_A\rho(\mathbf v\cdot\mathbf n)\mathbf v\,\mathrm dA$, usando velocidad y no viscosidad. El caso numérico conserva geometría de salida, orientación y área; la comparación con datos se realiza a distancias y planos identificados.
+
+Cuando se estudia renovación mediante un trazador o edad del aire se especifican transporte, difusión y condiciones de entrada. Se contrasta su balance y se utiliza para identificar cortocircuitos o zonas de residencia prolongada. Ese indicador no sustituye la evaluación de evaporación y remoción de vapor.
+
+La selección de disposición considera error térmico e higrométrico, dispersión del producto, extracción efectiva, consumo y restricciones de montaje. Se presentan componentes y compromisos, con la misma carga y las mismas ponderaciones. Las aberturas inteligentes se incorporan como una extensión evaluable solo cuando su área, accionamiento, retardo y posición están caracterizados.
+
+\section{Diseño y evaluación de estrategias de control}
+\label{met:control}
+
+\subsection{Variables, referencias y factibilidad}
+
+La variable térmica relevante para integridad del café es $T_p$, mientras que $T_a$ describe el medio de intercambio. Se definen objetivos de temperatura, razón de humedad y avance de secado, con límites de producto adecuados al procesamiento y a la evidencia disponible \cite{alves2017}. Los valores se fijan antes de comparar controladores y se registran por lote; las temperaturas exploratorias del CFD no constituyen esos límites.
+
+Una referencia de humedad relativa se transforma a $W_{\mathrm{ref}}$ usando su temperatura y presión de referencia. La factibilidad se examina con irradiancia, humedad exterior, capacidad de actuación y estado del producto. Con ventilación sin calentamiento adicional no se exige una temperatura superior a la energía disponible; con aire exterior húmedo no se garantiza una humedad inferior a la que permite el balance de vapor.
+
+Se utiliza una trayectoria o banda admisible de secado, evitando perseguir simultáneamente referencias incompatibles. La prioridad de límites del producto, humedad final y consumo se declara. En períodos de baja irradiancia o alta humedad exterior la estrategia puede conservar condiciones admisibles o reducir rehumectación, en lugar de sostener una referencia imposible.
+
+El período de control es $\Delta t_c=m_c\Delta t_s$, con $m_c$ entero. Se selecciona a partir de las constantes de tiempo identificadas, retardos, resolución de actuación y tiempo total de cálculo. El muestreo de veinte segundos no obliga a conmutar los equipos a esa frecuencia.
+
+\subsection{Estimación de estados y supervisión}
+\label{met:estimacion}
+
+El control utiliza un estado estimado consistente con sensores, inventarios y configuración. Se separan variables medidas de estados inferidos: $W$ procede de la conversión psicrométrica; $M$ se corrige con pesaje o muestreo cuando está disponible; y los nodos sin observación se propagan mediante el modelo con incertidumbre.
+
+Para la red no lineal se plantea una estimación de horizonte móvil, con mediciones de una ventana reciente:
+\begin{equation}
+\begin{split}
+\min_{\mathbf x_i,\boldsymbol\nu_i}\quad&
+\|\mathbf x_{k-N_e}-\bar{\mathbf x}_{k-N_e}\|_{P_e^{-1}}^2
++\sum_{i=k-N_e}^{k}\|
+\mathbf y_i-\mathcal H_i(\mathbf x_i)
+\|_{R_e^{-1}}^2\\
+&+\sum_{i=k-N_e}^{k-1}\|\boldsymbol\nu_i\|_{Q_e^{-1}}^2,\\
+\text{sujeto a}\quad&
+\mathbf x_{i+1}=\mathcal F_{\Delta t_c}
+(\mathbf x_i,\mathbf u_i,\mathbf d_i)+\boldsymbol\nu_i,
+\qquad \mathbf x_i\in\mathcal X.
+\end{split}
+\label{met:mhe}
+\end{equation}
+Las matrices ponderan incertidumbre de llegada, observación y discrepancia de modelo. Las restricciones incluyen inventarios, estados termodinámicos y límites de formulación. Para una implementación alternativa con filtro se conserva la misma distinción de incertidumbres y se documenta el método efectivamente utilizado.
+
+Se evalúa observabilidad práctica con las entradas y sensores disponibles. Si $M$ no puede identificarse a partir de las observaciones del aire, se mantiene como estimación con intervalo y se utiliza una referencia periódica del producto. No se atribuye exactitud de humedad a un estimador únicamente porque reproduce temperatura.
+
+La supervisión registra antigüedad de datos, estado de comunicaciones, consistencia de sensores, resultado del estimador y disponibilidad de actuación. Un dato antiguo no se presenta al controlador como una lectura nueva. La pérdida de información o una solución numérica inadmisible activa una política de respaldo previamente definida y ensayada.
+
+\subsection{Referencia PID y ejecución con modos discretos}
+\label{met:pid}
+
+El PID se utiliza como referencia de control. La selección de la variable y del sentido de acción procede de la ganancia identificada en los ensayos de ventilación. Se incorpora filtrado de la derivada, límites de acción y anti-windup conforme al marco teórico \cite{astrom1995,astrom2008}.
+
+La sintonía se realiza sobre desarrollo o sobre un modelo identificado con esos datos. Se fijan criterio de ajuste, respuesta admisible, pesos y límites. Para actuación discreta, la salida continua solicitada se transforma mediante umbrales, histéresis y tiempos mínimos de permanencia caracterizados, o mediante un ciclo cuya equivalencia dinámica ha sido medida.
+
+Si temperatura y humedad solicitan acciones al mismo extractor, se define una regla de coordinación y prioridad, en lugar de sumar reguladores que compitan sin límite. La recirculación se utiliza para mezcla y la extracción para intercambio exterior según la matriz de respuesta identificada. Una matriz de ganancias de rango insuficiente impide tratar ambas salidas como canales independientes.
+
+Se registra señal solicitada y ejecutada, saturación, componente integral y cambios de modo. La comparación con MPC utiliza el mismo conjunto físico de acciones y límites; un PID con equipos discretos no se enfrenta a un MPC dotado de una velocidad continua inexistente.
+
+\subsection{Control adaptativo con modelo de referencia}
+\label{met:mrac}
+
+La alternativa MRAC se formula sobre una dinámica local identificada dentro de un régimen definido, cuando el signo de ganancia y las condiciones de correspondencia con un modelo de referencia pueden establecerse. Para un canal aproximado por $\dot z=az+bu$, se escoge un modelo estable $\dot z_m=a_mz_m+b_mr$, y una ley $u=\widehat{\boldsymbol\theta}^{\mathsf T}\boldsymbol\varphi$, con regresores observables.
+
+Una actualización de referencia es
+\begin{equation}
+\dot{\widehat{\boldsymbol\theta}}
+=-\Gamma\boldsymbol\varphi\,e_m
+\operatorname{sgn}(b),
+\qquad e_m=z-z_m,\qquad \Gamma=\Gamma^{\mathsf T}>0.
+\label{met:mrac_actualizacion}
+\end{equation}
+Su implementación se contrasta con las hipótesis del diseño y con el análisis del marco teórico. Se registran ganancia de adaptación, cotas de parámetros, discretización, filtros y condiciones de habilitación. Una parametrización acoplada requiere la condición correspondiente de rango y signo, en lugar de aplicar la regla escalar sin justificación.
+
+Las saturaciones, modos discretos y perturbaciones del secador modifican el problema ideal. Se utiliza proyección de parámetros y una regla documentada de suspensión o reducción de adaptación durante saturación, falta de excitación o datos inválidos. Se evalúan seguimiento y acotación en el dominio identificado; no se extiende la garantía ideal de Lyapunov a la planta no lineal completa sin demostrar sus condiciones.
+
+\subsection{MPC físico e híbrido con escenarios meteorológicos}
+\label{met:mpc}
+
+El MPC utiliza la red física identificada o el predictor híbrido congelado como modelo de transición. Al tiempo $t_k$, el estimador aporta $\widehat{\mathbf x}_k$ y el pronóstico aporta escenarios $\mathbf d^{(\omega)}_{k:k+H_p}$ con pesos $\pi_\omega$, $\sum_\omega\pi_\omega=1$. La acción actual es común a los escenarios.
+
+Se optimiza una secuencia de modos admisibles. El costo de etapa se normaliza por escalas físicas y contabiliza la energía de la acción aplicada durante el intervalo que termina en $k+j$:
+\begin{equation}
+\ell_{k+j}^{(\omega)}=
+\left\|
+S_y^{-1}(\mathbf y_{k+j}^{(\omega)}-\mathbf r_{k+j})
+\right\|_{Q_c}^{2}
++\lambda_U\bigl(I_{U,k+j}^{(\omega)}\bigr)^{2}
++\lambda_P
+\frac{P_{\mathrm{el},k+j-1}\Delta t_c}{E_{\mathrm{ref}}}.
+\label{met:costo_etapa}
+\end{equation}
+El costo del horizonte es
+\begin{equation}
+\begin{split}
+\mathcal J_k={}&
+\sum_{\omega=1}^{N_\omega}\pi_\omega
+\left[
+\sum_{j=1}^{H_p}
+\ell_{k+j}^{(\omega)}
++V_f(\mathbf x_{k+H_p}^{(\omega)})
+\right]\\
+&+\lambda_{\mathrm{sw}}\sum_{j=0}^{H_p-1}
+c_{\mathrm{sw}}(\mathbf u_{k+j},\mathbf u_{k+j-1})
++\lambda_\epsilon\sum_j\|\boldsymbol\epsilon_j\|_1.
+\end{split}
+\label{met:costo_mpc}
+\end{equation}
+$S_y$ contiene escalas de salidas, $I_U$ representa uniformidad solo cuando existe un cierre espacial acreditado, $c_{\mathrm{sw}}$ penaliza conmutaciones y $\boldsymbol\epsilon$ recoge relajaciones de restricciones de desempeño. Las restricciones físicas críticas se diferencian de las referencias relajables.
+
+La propagación cumple
+\begin{equation}
+\mathbf x_{k+j+1}^{(\omega)}
+=\mathcal F_{\mathrm{pred}}
+\bigl(\mathbf x_{k+j}^{(\omega)},
+\mathbf u_{k+j},\mathbf d_{k+j}^{(\omega)}\bigr),
+\qquad
+\mathbf u_{k+j}\in
+\mathcal U_{\mathrm{APK}}\times\mathcal U_{\mathrm{Zeus}},
+\label{met:restricciones_mpc}
+\end{equation}
+además de tiempos mínimos de operación, límites del producto, inventarios y condiciones termodinámicas. Si una abertura está caracterizada como acción disponible, se agrega su conjunto admisible. La acción futura se parametriza como una secuencia común en el horizonte; una ramificación con recurso exige explicitar restricciones de no anticipación.
+
+Se comprueba saturación y condensación potencial mediante $W$, temperatura y punto de rocío. Las restricciones se aplican a los escenarios seleccionados con márgenes que consideran discrepancia predictiva; su cumplimiento en un conjunto finito no se denomina garantía probabilística universal. Los objetivos de humedad se relajan de forma identificable cuando el ambiente o la capacidad de renovación impiden alcanzarlos.
+
+El horizonte, pesos, margen de incertidumbre y presupuesto del optimizador se seleccionan en desarrollo. Para acciones discretas se utiliza un algoritmo compatible con ese conjunto, registrando búsqueda, tolerancia, estado de terminación y tiempo. La primera acción se ejecuta, el siguiente ciclo incorpora nuevas observaciones y se vuelve a optimizar.
+
+Se evalúa sensibilidad a error de pronóstico, desajuste de parámetros y pérdida de sensores. Cuando no se obtiene una solución admisible dentro del plazo, se ejecuta la política de respaldo y se registra el evento. El costo del ciclo incluye adquisición disponible, estimación, generación de escenarios, evaluaciones de modelo, optimización y comunicación.
+
+\subsection{Diseño de comparación en lazo cerrado}
+\label{met:comparacion_control}
+
+La comparación incluye operación de referencia sin control automático, PID, MPC físico y MPC híbrido. MRAC se incorpora dentro del régimen donde su identificación y condiciones permiten una comparación interpretable. Todas las políticas utilizan las mismas referencias, límites, equipos, información disponible y condiciones iniciales de cada caso.
+
+Primero se ejecutan pruebas numéricas sobre una planta de evaluación separada del predictor utilizado por el controlador. Se emplean variantes paramétricas y casos CFD seleccionados para examinar heterogeneidad y desajuste. Optimizar y evaluar exclusivamente sobre el mismo modelo daría una comparación favorable a su estructura y no demostraría robustez.
+
+Los escenarios incluyen transiciones de irradiancia, cambios de viento, ambiente húmedo, variación de carga y error de estado inicial dentro de intervalos justificados. Se distinguen casos nominales y de estrés. Cada política recibe la misma trayectoria ambiental y el mismo estado inicial, con errores de medición y pronóstico comparables.
+
+La evaluación experimental utiliza lotes o episodios con carga y procedimiento comparables. La asignación de políticas se bloquea por condiciones y se aleatoriza cuando la campaña lo permite. Si se alternan políticas dentro de un episodio se considera memoria térmica y de humedad, con períodos de transición definidos; los segmentos no se tratan como repeticiones independientes.
+
+Se reportan diferencias meteorológicas y de producto que permanezcan entre ensayos. Un contraste secuencial realizado en días de distinta irradiancia no permite atribuir toda diferencia al controlador. La conclusión experimental se ajusta al diseño y número real de episodios.
+
+\subsection{Indicadores de desempeño y decisión}
+
+Se calcula seguimiento integrado sobre el tiempo disponible, usando bandas factibles de referencia, y se informa sobreimpulso, tiempo fuera de límites, dispersión espacial y humedad final por posición. Para agua evaporada positiva, el consumo específico eléctrico es
+\begin{equation}
+e_{\mathrm{el}}=
+\frac{\int_{t_0}^{t_f}P_{\mathrm{el}}(t)\,\mathrm dt}
+{m_{w,e}(t_f)}.
+\label{met:energia_especifica}
+\end{equation}
+El resultado se expresa en joule por kilogramo o se convierte a $\mathrm{Wh\,kg^{-1}}$. Se distingue del uso de energía solar y se conserva el balance de retiros de muestra.
+
+Se registran duración de secado, pérdida y eventual recuperación de agua, energía por lote, tiempo en cada modo, conmutaciones y plazos incumplidos. La mejora de humedad relativa sin evidencia de remoción de agua no se presenta como mayor eficacia de secado.
+
+Los indicadores de predicción y control se evalúan conjuntamente: menor RMSE no implica necesariamente mejor desempeño en lazo cerrado. Se examinan sensibilidad de la política a la acción, restricciones y costo computacional. Las diferencias se comparan por caso emparejado o por bloques experimentales, con incertidumbre y magnitud práctica.
+
+La decisión sobre una estrategia se sustenta en límites del producto, humedad final y uniformidad, seguidos del compromiso entre seguimiento, consumo y tiempo. Los valores absolutos y la frecuencia de fallos acompañan cualquier puntuación agregada. Las afirmaciones de utilidad se limitan a las configuraciones y condiciones contrastadas.
+
+\section{Reproducibilidad y cierre del procedimiento}
+\label{met:reproducibilidad}
+
+El expediente de cada episodio relaciona datos originales, calibraciones, mapa de sensores, geometría, carga, eventos manuales y comandos. El de cada simulación relaciona caso de entrada, versión del solucionador, malla, propiedades, fronteras, paso temporal, convergencia, balances y operadores de proyección. El de cada predictor o controlador relaciona particiones, transformaciones, parámetros, semillas, criterios de selección y resultados de ejecución.
+
+Se conserva un manifiesto que permite reconstruir qué información intervino en cada versión. La identificación de un modelo generador, una trayectoria sintética y una observación experimental permanece disponible después de unir tablas. El resultado final distingue incertidumbre metrológica, numérica, paramétrica y predictiva, con su procedimiento de estimación.
+
+Las cantidades aún no disponibles se cierran mediante el levantamiento o ensayo correspondiente: dimensiones y coordenadas definitivas, cantidad y ubicación de sensores, variante de instrumentos, propiedades de carga, fechas y número de episodios, curvas de actuación, parámetros identificados, configuración numérica y tolerancias. No se sustituyen por cifras de otras instalaciones. Esos valores se incorporan a las fichas y a los resultados antes de atribuir ejecución completa al protocolo.
+
+La cadena de evidencia se completa cuando las observaciones sustentan la identificación, la verificación respalda las simulaciones, la prueba independiente acredita el predictor y la comparación en lazo cerrado demuestra su utilidad operacional. De esta forma, la contribución de la investigación se materializa en una integración trazable de instrumentación propia, física multiescala, enriquecimiento dirigido y control sujeto a la capacidad real del secador.

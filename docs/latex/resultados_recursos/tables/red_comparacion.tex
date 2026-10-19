@@ -1,0 +1,24 @@
+% Fuentes: tab_s07_inventario_y_cierres.csv
+\begin{table}[htbp]
+\centering
+\caption{Diferencias máximas entre formulaciones e integradores de la red.}
+\label{tab:res_red_comparacion}
+\small
+\setlength{\tabcolsep}{5pt}
+\begin{tabular}{lrrr}
+\toprule
+Estado & General--constante & Refinamiento Radau & Radau--BDF \\
+\midrule
+$T_c$ & $3{,}099\times10^{-4}$ & $3{,}025\times10^{-10}$ & $1{,}218\times10^{-7}$ \\
+$T_b$ & $1{,}342\times10^{-4}$ & $4{,}758\times10^{-11}$ & $1{,}414\times10^{-8}$ \\
+$T_p$ & $3{,}575\times10^{-4}$ & $8{,}072\times10^{-11}$ & $7{,}685\times10^{-8}$ \\
+$T_a$ & $9{,}279\times10^{-4}$ & $9{,}347\times10^{-10}$ & $5{,}686\times10^{-7}$ \\
+$W$ & $5{,}264\times10^{-7}$ & $4{,}506\times10^{-14}$ & $4{,}988\times10^{-11}$ \\
+$M$ & $1{,}815\times10^{-7}$ & $1{,}989\times10^{-14}$ & $2{,}219\times10^{-11}$ \\
+\bottomrule
+\end{tabular}
+\par\vspace{3pt}
+\begin{minipage}{0.98\textwidth}\footnotesize
+Errores absolutos en las unidades de cada estado: K para temperaturas y kg/kg para $W$ y $M$. El caso general recalcula el inventario de aire seco; la aproximación lo mantiene constante. El resultado queda restringido al caso ensayado.
+\end{minipage}
+\end{table}

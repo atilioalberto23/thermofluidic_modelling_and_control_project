@@ -1,0 +1,1030 @@
+% ============================================================================
+% METODOLOGÍA REFACTORIZADA: RECINTO SIN CARGA Y PARADIGMAS DE CONTROL
+% Incluir desde el documento principal: \input{ch4_methodology_refactorizada}
+% Paquetes: amsmath, amssymb, booktabs, array, tabularx, graphicx, placeins,
+% xcolor y listings. Citas: \cite, compatible con el gestor de la tesis.
+% Los EPS originales se conservan; se incluyen sus conversiones vectoriales PDF.
+% Bibliografía complementaria: referencias_metodologia_refactorizada.bib.
+% El estado reducido tiene CUATRO componentes: Tc, Tb, Ta y W.
+% ============================================================================
+
+\providecommand{\rutafigurasmetodologia}{figuras_metodologia}
+\providecommand{\rutacodigometodologia}{codigo_metodologia}
+
+\clearpage
+\chapter{Metodología}
+\label{ch:metodologia}
+
+La investigación estudia el comportamiento termo--higrométrico del secador solar tipo invernadero de Coffee Solutions como un recinto instrumentado, sometido a captación solar, intercambio con el ambiente y ventilación. Los ensayos se realizaron sin carga de café. Por tanto, la unidad física modelada comprende el aire interior, la cubierta, la base y los elementos constructivos que intervienen en sus intercambios; los estados de interés son la temperatura y el contenido de vapor del aire. Sobre esta planta se articulan observación distribuida, modelado físico, identificación, predicción y evaluación de paradigmas de control.
+
+El procedimiento coordina tres representaciones con funciones diferentes. El CFD tridimensional describe circulación, estratificación y respuesta espacial a la ventilación; la cavidad bidimensional permite verificar el tratamiento de la convección natural y estudiar su interacción con la radiación; y una red térmica e higrométrica de cuatro estados aproxima los transitorios del recinto a un costo adecuado para identificación y control. Los modelos basados en datos y la PINN se construyen sobre tareas y observables explícitos. La integración entre representaciones se establece mediante operadores de observación, balances conservativos y una separación temporal de los datos que mantiene independiente el contraste final.
+
+\section{Diseño metodológico y alcance experimental}
+\label{met:diseno}
+
+\subsection{Unidad de análisis y secuencia del procedimiento}
+
+La unidad experimental es un episodio continuo de operación del recinto, definido por su configuración de aberturas, estado de los ventiladores, condiciones iniciales y trayectoria ambiental. Un episodio puede contener calentamiento diurno, enfriamiento, transiciones de irradiancia o una secuencia de actuación identificada. Las lecturas sucesivas pertenecen a esa trayectoria y conservan su dependencia temporal; su número se distingue del número de episodios independientes.
+
+La caracterización experimental del recinto proporciona las observaciones con las que se contrastan las representaciones físicas y predictivas. Los ensayos de actuación, cuando cuentan con registro sincronizado, permiten examinar sensibilidad al comando y respuesta dinámica. La evaluación de control se formula como una comparación en lazo cerrado sobre condiciones y restricciones comunes; sus pruebas numéricas y sus eventuales pruebas sobre la planta se documentan como niveles de evidencia diferentes. Esta organización vincula cada afirmación con el procedimiento que puede sustentarla.
+
+\begin{table}[htbp]
+\centering
+\small
+\caption{Secuencia metodológica y productos de cada fase.}
+\label{met:tabla_fases}
+\begingroup
+\renewcommand{\arraystretch}{1.30}
+\setlength{\tabcolsep}{5pt}
+\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{0.20\textwidth}>{\raggedright\arraybackslash}p{0.35\textwidth}>{\raggedright\arraybackslash}X}
+\toprule
+Fase & Procedimiento & Producto verificable \\
+\midrule
+Caracterización & Definir geometría, envolvente, aberturas y equipos. & Configuración de planta y mapa de regiones. \\
+Observación & Documentar sensores, posiciones, tiempos y calidad de adquisición. & Inventario y series sincronizadas. \\
+Modelado físico & Construir CFD, cavidad y red del recinto sin carga. & Casos reproducibles y balances coherentes. \\
+Verificación e identificación & Refinar discretización y estimar parámetros identificables. & Error numérico y parámetros con incertidumbre. \\
+Predicción y enriquecimiento & Entrenar y comparar modelos con separación temporal de fuentes. & Predictores y generadores congelados. \\
+Evaluación de control & Aplicar políticas bajo el mismo conjunto de acciones y escenarios. & Trayectorias de lazo cerrado e indicadores comparables. \\
+Contraste final & Evaluar las configuraciones seleccionadas sobre evidencia reservada. & Desempeño, cobertura y alcance de las conclusiones. \\
+\bottomrule
+\end{tabularx}
+\endgroup
+\end{table}
+
+\subsection{Variables, entradas y configuración de cada episodio}
+
+La notación distingue temperaturas de cubierta, base y aire, $T_c,T_b,T_a$, razón de humedad $W$ en kilogramos de vapor por kilogramo de aire seco y fracción másica de vapor $Y$ en la mezcla. La humedad relativa $\phi$ se expresa como fracción en los cálculos y como porcentaje en las gráficas. Las ecuaciones termodinámicas utilizan kelvin; las lecturas en grados Celsius se convierten conservando su unidad y su valor original.
+
+El estado reducido, las perturbaciones y las acciones se definen como
+\begin{equation}
+\mathbf x=[T_c,T_b,T_a,W]^{\mathsf T},\qquad
+\mathbf d=[G,T_{\mathrm{amb}},W_{\mathrm{amb}},p,v_{w,x},v_{w,y}]^{\mathsf T},
+\qquad
+\mathbf u=[u_{\mathrm{APK}},u_{\mathrm{Zeus}}]^{\mathsf T}.
+\label{met:estados_entradas}
+\end{equation}
+$G$ representa la irradiancia sobre el plano de referencia, $p$ la presión absoluta y $v_{w,x},v_{w,y}$ las componentes del viento en los ejes del recinto. La geometría, las propiedades y el estado de las aberturas integran una configuración $\mathbf c$. La precipitación se conserva como descriptor ambiental y de posibles cambios de configuración.
+
+La ficha de episodio relaciona identificador, fechas, orientación, posiciones vigentes de los sensores, aberturas, modos de ventilación, eventos manuales y versiones de adquisición. Su función es reconstruir la planta que produjo las observaciones y la información que estaba disponible en cada instante de decisión. Las trayectorias simuladas conservan la misma estructura de identificación, añadiendo parámetros, malla y condiciones de frontera.
+
+\section{Representación geométrica y caracterización del recinto}
+\label{met:caracterizacion}
+
+\subsection{Geometría y transformación de coordenadas}
+
+Se adopta un sistema global con $x$ longitudinal, $y$ transversal y $z$ vertical ascendente. El origen se sitúa en la esquina inferior delantera de la pared izquierda. La representación geométrica adoptada establece una longitud de $5.55\,\mathrm m$ y una separación transversal de $1.12\,\mathrm m$. El mapa de sensado utiliza $1.90\,\mathrm m$ de altura en las paredes laterales y $2.05\,\mathrm m$ en la posterior. Estas cotas definen el soporte de las ilustraciones de sensado; el perfil de cubierta y los espesores pertenecen a la geometría constructiva del caso numérico.
+
+La Figura~\ref{met:fig_geometria} presenta las tres superficies instrumentadas y su relación espacial. La pared derecha aparece desplazada para permitir la lectura del interior. Esa separación es una convención de visualización y se conserva la posición física de las superficies al construir el dominio.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.97\textwidth]{\rutafigurasmetodologia/vista_conjunto_3d.pdf}
+\caption{Disposición tridimensional de las superficies instrumentadas. La pared derecha se separa únicamente para visualizar el interior. Elaboración propia.}
+\label{met:fig_geometria}
+\end{figure}
+
+Cada pared dispone de coordenadas locales $(X,Y)$, con $Y$ vertical. Para comparar mediciones y CFD se aplica una transformación explícita:
+\begin{equation}
+\mathbf r_{\mathrm{izq}}=(X,0,Y),\qquad
+\mathbf r_{\mathrm{der}}=(X,B,Y),\qquad
+\mathbf r_{\mathrm{post}}=(L,X,Y),
+\label{met:coordenadas_paredes}
+\end{equation}
+con $L=5.55\,\mathrm m$ y $B=1.12\,\mathrm m$. La transformación incorpora un cambio de origen o de orientación si la instalación utiliza otra convención. Así, la coordenada vertical local $Y$ se diferencia de la coordenada transversal global $y$.
+
+La geometría del caso conserva cubierta, base, paredes, aperturas y obstáculos constructivos relevantes para el flujo. Las áreas y el volumen de aire se obtienen del CAD y se asocian a nombres estables. Los componentes del montaje presentes en el recinto se representan por su geometría o por un cierre equivalente de intercambio o pérdida de presión. La simplificación se registra junto con la magnitud de interés que se busca preservar.
+
+\subsection{Propiedades térmicas y ópticas de la envolvente}
+
+Para cada componente se organiza densidad, calor específico, conductividad, espesor, área y fuente de la propiedad. La capacidad térmica de un nodo sólido es $C_i=m_ic_i$; las conductancias dependen de la geometría de intercambio y de su ley constitutiva. Los valores de fabricante o literatura se distinguen de parámetros efectivos estimados mediante respuesta transitoria.
+
+El tratamiento óptico separa absorción y transmisión de onda corta de emisión e intercambio de onda larga. La potencia solar se asigna a cubierta y base mediante el plano de incidencia, orientación y distribución geométrica de la radiación. En las superficies opacas se considera la potencia absorbida; en la cubierta se distingue la fracción transmitida de la absorbida. Las propiedades infrarrojas se utilizan para el intercambio térmico entre superficies y con el cielo.
+
+El ajuste de un coeficiente efectivo de captación representa la combinación observable de factores ópticos y geométricos. Su interpretación se mantiene en ese nivel cuando los datos no permiten identificar por separado transmitancia, absortancia y área efectiva. Esta parametrización vincula el modelo térmico con la respuesta del recinto sin multiplicar parámetros indistinguibles.
+\FloatBarrier
+
+\section{Plataforma de sensado, meteorología y adquisición}
+\label{met:sensado}
+
+\subsection{Nodos modulares y período de observación}
+
+La plataforma propia utiliza ESP32 y cuatro interfaces RJ45 por nodo para conectar puntos de medición basados en DS18B20 y DHT11. Se documentan distribución de conductores, alimentación, protección, direccionamiento, longitud de cable y versión de firmware. Las interfaces RJ45 cumplen una función de conexión del sistema de sensado.
+
+El período nominal de adquisición es
+\begin{equation}
+\Delta t_s=20\,\mathrm s,\qquad f_s=0.05\,\mathrm{Hz}.
+\label{met:muestreo}
+\end{equation}
+El nodo conserva hora de conversión y secuencia de mensaje. La recepción en la nube tiene una marca temporal propia, lo que permite medir retraso y distinguir una observación reciente de una retransmisión. La conversión de sensores, los reintentos y el envío se organizan como tareas diferenciadas para mantener la cadencia de observación.
+
+El DS18B20 identifica cada dispositivo mediante su código de serie. A doce bits, el incremento digital es $0.0625\,^{\circ}\mathrm C$; la exactitud especificada es $\pm0.5\,^{\circ}\mathrm C$ entre $-10$ y $85\,^{\circ}\mathrm C$ \cite{ds18b20_2019}. La resolución digital y la incertidumbre de medición se registran como cantidades diferentes. Para el DHT11 se conserva la ficha de la variante instalada y se vinculan intervalo operativo, resolución y tiempo de respuesta con los indicadores de calidad del canal.
+
+\subsection{Distribución espacial de los puntos de medición}
+
+La configuración ilustrada dispone de $36$ puntos: $16$ en cada pared lateral y $4$ en la posterior. En las laterales se organizan cuatro nodos, N1 a N4, cada uno con posiciones SO, SE, NO y NE. La Figura~\ref{met:fig_laterales} muestra la distribución y mantiene la misma escala para ambas paredes, facilitando comparaciones de altura, distancia longitudinal y simetría de montaje.
+
+\begin{figure}[p]
+\centering
+\includegraphics[width=0.98\textwidth]{\rutafigurasmetodologia/pared_izquierda.pdf}\par\vspace{5mm}
+\includegraphics[width=0.98\textwidth]{\rutafigurasmetodologia/pared_derecha.pdf}
+\caption{Mapa de posiciones de las paredes laterales: cuatro nodos y dieciséis puntos por pared, sobre una superficie de $5.55\times1.90\,\mathrm{m^2}$. Ambas paredes se representan en la misma escala. Elaboración propia.}
+\label{met:fig_laterales}
+\end{figure}
+
+La disposición de un nodo lateral se define mediante longitud de conexión $\ell=0.98\,\mathrm m$ y ángulo $\theta=19.09^{\circ}$ respecto de la horizontal. Las proyecciones nominales son
+\begin{equation}
+\Delta X=\ell\cos\theta\simeq0.926106\,\mathrm m,\qquad
+\Delta Y=\ell\sin\theta\simeq0.320512\,\mathrm m.
+\label{met:proyecciones_nodo}
+\end{equation}
+Respecto del centro $(X_n,Y_n)$, los cuatro puntos se obtienen con las combinaciones $(X_n\pm\Delta X,Y_n\pm\Delta Y)$. La posición cardinal y el identificador de nodo se mantienen en la tabla de observaciones. La Figura~\ref{met:fig_nodo_posterior} relaciona este detalle con la pared posterior, cuyos cuatro puntos se ubican en las esquinas del rectángulo local de $1.12\times2.05\,\mathrm{m^2}$.
+
+\begin{figure}[p]
+\centering
+\begin{minipage}[t]{0.54\textwidth}
+\vspace{0pt}
+\centering
+\includegraphics[width=\linewidth]{\rutafigurasmetodologia/detalle_nodo.pdf}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.42\textwidth}
+\vspace{0pt}
+\centering
+\includegraphics[width=\linewidth]{\rutafigurasmetodologia/pared_posterior.pdf}
+\end{minipage}
+\caption{Detalle geométrico de un nodo lateral y mapa local de la pared posterior. Las longitudes de conexión y las posiciones cardinales permiten vincular cada lectura con su soporte espacial.}
+\label{met:fig_nodo_posterior}
+\end{figure}
+
+Las coordenadas incorporadas al análisis se contrastan con el mapa de montaje y con la geometría CFD antes de interpolar un campo. La precisión de registro y la incertidumbre de ubicación se incluyen en el operador de observación. Una reubicación origina una nueva vigencia de posición, conservando la trazabilidad de la serie.
+
+Las temperaturas se interpretan según la forma de instalación de cada elemento: exposición al aire, contacto superficial o protección radiativa. Esa clasificación determina qué campo del modelo corresponde al canal. La agregación espacial utiliza pesos definidos por cobertura de aire o por área de superficie observada; el máximo medido y el máximo del campo simulado se reportan con su soporte correspondiente.
+
+\subsection{Comprobación metrológica y calidad de los canales}
+
+La comprobación de temperatura y humedad relaciona cada sensor con una referencia, su incertidumbre, puntos de comparación y condiciones de estabilización. Las correcciones se aplican dentro del intervalo caracterizado y se conservan junto con la lectura original. Para una corrección lineal del canal $j$,
+\begin{equation}
+y_{\mathrm{corr}}=a_j+b_jy_{\mathrm{raw}},\qquad
+u^2(y_{\mathrm{corr}})=\nabla g^{\mathsf T}\Sigma_j\nabla g+u_{\mathrm{rep}}^2,
+\label{met:correccion_sensor}
+\end{equation}
+donde $\Sigma_j$ incluye las covarianzas pertinentes y $u_{\mathrm{rep}}$ representa repetibilidad \cite{jcgm2008}. La especificación del fabricante se registra con su significado metrológico y con la distribución utilizada, si se convierte en incertidumbre estándar.
+
+La colocación conjunta de DS18B20 y DHT11 permite examinar concordancia térmica, sesgos persistentes, retardos y exposición radiativa. Esta comparación se complementa con la referencia metrológica para establecer exactitud. Se registran estado de comunicación, recuperación tras interrupciones, saturación y antigüedad de lectura; con ello se distingue una señal cuantizada estable de un dispositivo detenido.
+
+La sincronización conserva el tiempo de observación, la cobertura y la respuesta de cada instrumento. Un retardo estimado se fija con datos de desarrollo y se aplica de forma uniforme al contraste. En sensado de aire, el montaje limita radiación directa y contacto térmico con sólidos mientras mantiene circulación alrededor del elemento sensible.
+
+\subsection{Estación Ambient Weather WS-2000 y radiometría}
+
+La estación Ambient Weather WS-2000 aporta las condiciones exteriores de temperatura, humedad, viento y radiación, junto con presión y precipitación cuando están disponibles en la exportación. La Tabla~\ref{met:tabla_ws2000} reúne los intervalos pertinentes del manual oficial, versión 2.20, para organizar conversión de unidades y sincronización \cite{ambient_ws2000_2025}.
+
+\begin{table}[htbp]
+\centering
+\small
+\caption{Especificaciones de referencia de la estación WS-2000 utilizadas en el tratamiento de perturbaciones.}
+\label{met:tabla_ws2000}
+\begingroup
+\renewcommand{\arraystretch}{1.25}
+\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{0.33\textwidth}>{\raggedright\arraybackslash}p{0.29\textwidth}>{\raggedright\arraybackslash}X}
+\toprule
+Variable o enlace & Intervalo o período & Uso metodológico \\
+\midrule
+Temperatura exterior & $-40$ a $65\,^{\circ}\mathrm C$ & Condición térmica de entrada. \\
+Temperatura interior del módulo & $-10$ a $60\,^{\circ}\mathrm C$ & Canal auxiliar identificado por ubicación. \\
+Humedad relativa & $10$ a $99\%$ & Conversión a presión de vapor. \\
+Presión barométrica & $8.85$ a $32.50\,\mathrm{inHg}$ & Presión absoluta para psicrometría. \\
+Velocidad del viento & $0$ a $100\,\mathrm{mph}$ & Conversión a $\mathrm{m\,s^{-1}}$. \\
+Dirección del viento & $0$ a $360^{\circ}$ & Rotación a los ejes del recinto. \\
+Irradiancia solar reportada & $0$ a $2367.798\,\mathrm{W\,m^{-2}}$ & Perturbación radiativa con unidad declarada. \\
+Actualización exterior / interior & $16\,\mathrm s$ / $64\,\mathrm s$ & Sincronización causal con la red de $20\,\mathrm s$. \\
+Enlace de sensores / Wi-Fi & $915\,\mathrm{MHz}$ / $2.4\,\mathrm{GHz}$ & Identificación de adquisición y comunicación. \\
+\bottomrule
+\end{tabularx}
+\endgroup
+\end{table}
+
+La irradiancia reportada en $\mathrm{W\,m^{-2}}$ se distingue del canal de iluminancia en lux. La conversión espectral y la calibración utilizadas por el equipo se conservan con el registro. La presión empleada es la absoluta del lugar; la presión reducida al nivel del mar cumple otra función. Se documentan altura, exposición, orientación y separación de la estación respecto del secador.
+
+Los canales de $16$ y $64\,\mathrm s$ se alinean con el sensado interior utilizando las marcas temporales disponibles y una regla causal de retención o agregación. Cada valor conserva su antigüedad. La radiación se integra para representar energía sobre el intervalo, y la velocidad y dirección del viento se transforman conjuntamente en componentes.
+
+Cuando se utilizan lecturas interiores y exteriores de radiación, el cociente
+\begin{equation}
+R_G(t)=\frac{G_{\mathrm{int}}(t)}{G_{\mathrm{ext}}(t)}
+\label{met:cociente_radiativo}
+\end{equation}
+describe disponibilidad radiativa efectiva bajo una geometría de observación definida. Su uso para identificar transmitancia exige compatibilidad de instrumentos, planos, sombreado y banda, junto con un umbral de irradiancia exterior que estabilice la división. Las imágenes termográficas, cuando integran la caracterización, corresponden a cubierta, base y otras superficies constructivas; su extracción utiliza emisividad, temperatura reflejada y regiones de interés constantes.
+
+\subsection{Arquitectura de adquisición y contrato de datos}
+\label{met:arquitectura}
+
+La arquitectura articula ESP32, API Gateway, una Lambda de recepción y validación, DynamoDB, una segunda Lambda de transferencia y Amazon S3. La infraestructura descrita mediante Terraform se vincula con su versión. La Figura~\ref{met:fig_arquitectura} distingue adquisición, persistencia y preparación del conjunto analítico, manteniendo una marca temporal por etapa.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{\rutafigurasmetodologia/arquitectura_adquisicion.pdf}
+\caption{Arquitectura de adquisición y preparación de datos. La recepción conserva la observación original; las correcciones, agregaciones y variables derivadas pertenecen al procesamiento reproducible en Kedro.}
+\label{met:fig_arquitectura}
+\end{figure}
+
+El contrato separa identidad espacial, tiempo y magnitudes. La Tabla~\ref{met:tabla_contrato} relaciona las trece columnas del conjunto analítico empleado en el proyecto. La procedencia experimental o sintética y las unidades se conservan como metadatos del conjunto, con el identificador de episodio y de fuente. El nombre del archivo y el tipo numérico de una columna se utilizan junto con esos metadatos para determinar su significado.
+
+\begin{table}[htbp]
+\centering
+\small
+\caption{Correspondencia entre la tabla de mediciones y el procedimiento de análisis.}
+\label{met:tabla_contrato}
+\begingroup
+\renewcommand{\arraystretch}{1.24}
+\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{0.47\textwidth}>{\raggedright\arraybackslash}X}
+\toprule
+Campos & Interpretación y tratamiento \\
+\midrule
+\texttt{SURFACE}, \texttt{NODE\_ID}, \texttt{SENSOR\_POSITION} & Identidad del punto. Se conserva el identificador nulo de la pared posterior cuando corresponde al esquema. \\
+\texttt{X}, \texttt{Y} & Coordenadas locales de pared, transformadas al sistema global. \\
+\texttt{TIMESTAMP}, \texttt{MSR\_PRD\_ID} & Hora de observación y código temporal de registro; se diferencian de la hora de recepción. \\
+\texttt{DS\_TEMPERATURE}, \texttt{DHT\_TEMPERATURE}, \texttt{DHT\_HUMIDITY} & Lecturas originales, unidad, calidad y corrección asociada. \\
+\texttt{DS\_TEMP\_ANT}, \texttt{DHT\_TEMP\_ANT}, \texttt{DHT\_HUMIDITY\_ANT} & Retardos causales calculados por punto y orden temporal. \\
+\bottomrule
+\end{tabularx}
+\endgroup
+\end{table}
+
+La clave de observación combina punto y tiempo; un código temporal compartido por distintos sensores identifica simultaneidad. Los mensajes pueden incluir secuencia, firmware, unidad y hora de recepción sin alterar la identidad espacial. La cadena conserva datos originales, datos depurados con marcas y tablas derivadas. La referencia temporal de almacenamiento es UTC y la interpretación solar utiliza la hora local de Panamá.
+
+Los retardos se construyen ordenando por \texttt{TIMESTAMP} y agrupando por superficie, nodo y posición, con retención de grupos cuyo nodo es nulo. Se utiliza el equivalente a \texttt{groupby(..., dropna=False).shift(1)}. El primer registro de cada punto conserva un retardo nulo; la validez del anterior se acompaña de su separación temporal, especialmente ante interrupciones. El campo de índice almacenado por pandas se mantiene separado de las variables físicas.
+
+\subsection{Función de recepción y preparación causal}
+\label{met:lambda}
+
+La función de recepción verifica estructura e identidad, normaliza la hora, conserva valores y registra calidad. Una escritura condicional hace idempotente la llegada repetida de la misma observación \cite{aws_lambda_proxy,aws_dynamodb_putitem}. El Listado~\ref{met:codigo_lambda} formaliza este contrato mediante una implementación de referencia compatible con API Gateway y DynamoDB. Las funciones auxiliares y el código completo acompañan el capítulo; este listado especifica el procedimiento y se distingue del código histórico desplegado.
+
+\lstinputlisting[float=htbp,language=Python,basicstyle=\ttfamily\footnotesize,keywordstyle=\bfseries,commentstyle=\itshape,columns=fullflexible,keepspaces=true,breaklines=true,frame=single,framerule=0.3pt,numbers=left,numberstyle=\tiny,numbersep=7pt,xleftmargin=12pt,caption={Recepción validada e idempotente de una observación.},label={met:codigo_lambda}]{\rutacodigometodologia/lambda_recepcion_extracto.py}
+
+La depuración ejecuta validación de identidad, detección de duplicados, comprobación de unidades, marcas de faltantes o saturación, correcciones metrológicas y alineación por hora de observación. Las excursiones compatibles con transiciones ambientales se conservan para análisis. La conversión psicrométrica y los retardos se calculan después de relacionar los canales con sus referencias temporales y de presión.
+
+Las ventanas predictivas contienen información disponible hasta el instante de decisión. Para una magnitud continua con muestreo irregular se utiliza una agregación temporal con cobertura explícita:
+\begin{equation}
+\bar y_k=\frac{1}{\Delta t_k}\int_{t_k-\Delta t_k}^{t_k}y(t)\,\mathrm dt.
+\label{met:agregacion_causal}
+\end{equation}
+Los intervalos sin observación conservan máscara y antigüedad. Las imputaciones se limitan al pasado disponible y respetan cambios de actuación y fronteras de partición.
+\FloatBarrier
+
+\section{Episodios de operación, actuadores y distribución del flujo}
+\label{met:campana}
+
+\subsection{Preparación y registro de la operación sin carga}
+
+La preparación relaciona reloj, estado de comunicación, posiciones de sensores, configuración de aberturas y modo de ventilación con el comienzo del episodio. La temperatura y humedad iniciales se obtienen de las observaciones disponibles o de una estimación causal. Los eventos de apertura de puertas, mantenimiento, interrupción de alimentación y cambio de modo se registran con su tiempo.
+
+Los episodios se organizan por calentamiento, enfriamiento, transiciones de irradiancia y condiciones de intercambio exterior. La clasificación utiliza la ocurrencia real de esos regímenes y sus duraciones. Los tramos de operación natural sirven para examinar captación y pérdidas; los cambios de actuación aportan información sobre renovación y mezcla. La cobertura temporal y ambiental determina el dominio del contraste.
+
+\subsection{Equipos y conjunto admisible de acciones}
+\label{met:actuadores}
+
+Los equipos considerados son el APK25-5 y el Air Mover Zeus 900. La Tabla~\ref{met:tabla_actuadores} conserva las especificaciones disponibles de placa. La caracterización aerodinámica se vincula con la configuración de montaje y la potencia activa se utiliza en la evaluación energética de control.
+
+\begin{table}[htbp]
+\centering
+\small
+\caption{Especificaciones documentadas de los equipos de ventilación.}
+\label{met:tabla_actuadores}
+\begingroup
+\renewcommand{\arraystretch}{1.28}
+\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{0.29\textwidth}>{\raggedright\arraybackslash}p{0.29\textwidth}>{\raggedright\arraybackslash}X}
+\toprule
+Magnitud & APK25-5 & Air Mover Zeus 900 \\
+\midrule
+Alimentación & $110\,\mathrm V$, $60\,\mathrm{Hz}$ & $110$--$120\,\mathrm V$ AC, $60\,\mathrm{Hz}$ \\
+Potencia nominal & $40\,\mathrm W$ & Se relaciona con potencia activa por modo \\
+Corriente reportada & Sin valor en la ficha suministrada & $1.1\,\mathrm A$ en bajo; $1.8\,\mathrm A$ en alto \\
+Geometría y rotación & $250\,\mathrm{mm}$ de diámetro; cinco aspas; $1300\,\mathrm{rpm}$ & Configuración de salida y montaje del equipo \\
+Modos disponibles & Apagado y nominal & Apagado, bajo y alto \\
+Magnitudes para el modelo & Caudal, presión, potencia y respuesta & Caudal, presión, potencia y respuesta por modo \\
+\bottomrule
+\end{tabularx}
+\endgroup
+\end{table}
+
+El conjunto de acciones es
+\begin{equation}
+\mathcal U=\mathcal U_{\mathrm{APK}}\times\mathcal U_{\mathrm{Zeus}},\qquad
+\mathcal U_{\mathrm{APK}}=\{0,1\},\qquad
+\mathcal U_{\mathrm{Zeus}}=\{0,\mathrm{bajo},\mathrm{alto}\}.
+\label{met:acciones}
+\end{equation}
+Cada modo se asocia con caudal y potencia de su montaje. La potencia activa requiere medición de tensión, corriente y factor de potencia; para el Zeus, la corriente de placa caracteriza el régimen eléctrico. La extracción exterior y la recirculación se asignan según la ubicación y función efectiva de cada equipo.
+
+\subsection{Caudal, pérdida de presión y respuesta transitoria}
+\label{met:caudal}
+
+El caudal se obtiene integrando la componente normal de velocidad sobre una sección identificada:
+\begin{equation}
+Q=\int_A\mathbf v\cdot\mathbf n\,\mathrm dA
+\simeq\sum_{j=1}^{N_A}(\mathbf v_j\cdot\mathbf n)A_j.
+\label{met:caudal_integrado}
+\end{equation}
+La cuadrícula cubre centro, periferia y regiones de gradiente, con un refinamiento que examina estabilidad del integral. Se registran flujo inverso, repetibilidad y condiciones de abertura. La curva o los puntos presión--caudal se conservan por modo y por configuración.
+
+Para una abertura se utiliza, cuando corresponde a su régimen, una relación firmada de orificio:
+\begin{equation}
+Q_o=C_dA_o\,\operatorname{sgn}(\Delta p_o)
+\sqrt{\frac{2|\Delta p_o|}{\rho_o}}.
+\label{met:abertura_presion}
+\end{equation}
+El balance de continuidad determina la compatibilidad entre aberturas, presión de viento, flotación y ventiladores. Las pérdidas incluyen elementos constructivos y cambios de sección presentes en el montaje. Los puntos de operación se trasladan al CFD como una condición de presión--caudal o una fuente de momento equivalente.
+
+La identificación dinámica utiliza pasos o secuencias de modos compatibles con el tiempo mínimo de operación del equipo. Antes y después de cada cambio se conserva una ventana que permita reconocer ganancia, retardo y constantes de tiempo \cite{ljung1999}. La interpretación relaciona simultáneamente temperatura interior, $W$, meteorología y acción ejecutada. Los episodios sin registro de comandos alimentan tareas de descripción o pronóstico bajo su régimen observado.
+
+\subsection{Renovación exterior, mezcla y capacidad de regulación}
+
+La conversión de caudal volumétrico a flujo de aire seco emplea las condiciones de la sección:
+\begin{equation}
+\dot m_{da}=\frac{\rho_{\mathrm{mez}}Q}{1+W},\qquad
+v_{da}=\frac{R_{da}T}{p}\left(1+\frac{W}{\varepsilon_m}\right),\qquad
+Q=\dot m_{da}v_{da}.
+\label{met:conversion_caudal}
+\end{equation}
+La tasa de renovación es $\mathrm{ACH}=3600Q_{\mathrm{ext}}/V_a$, con $Q_{\mathrm{ext}}$ en $\mathrm{m^3\,s^{-1}}$. La recirculación modifica mezcla e intercambio térmico, mientras que $Q_{\mathrm{ext}}$ caracteriza el intercambio neto con el ambiente.
+
+En el recinto sin fuente interna de vapor, la ventilación desplaza $W$ hacia $W_{\mathrm{amb}}$. Bajo inventario de aire seco y caudal constantes, su escala de respuesta es $\tau_W=m_{da}/\dot m_{da,\mathrm{ext}}$. Esa relación orienta la duración de los episodios y permite examinar la capacidad de regulación higrométrica. El efecto térmico depende además de captación, almacenamiento y diferencia de entalpía con el exterior.
+
+La uniformidad se evalúa sobre puntos o regiones de aire con pesos $w_j$, $\sum_jw_j=1$:
+\begin{equation}
+\bar q=\sum_jw_jq_j,\qquad
+\sigma_q=\left[\sum_jw_j(q_j-\bar q)^2\right]^{1/2},\qquad
+I_{U,q}=\frac{\sigma_q}{s_q}.
+\label{met:dispersion_espacial}
+\end{equation}
+La escala $s_q$ es una tolerancia física fija. Se informa gradiente vertical, asimetría entre paredes, máximos y fracción de regiones de bajo movimiento. La penetración de chorros se relaciona con el flujo de momento $\int_A\rho(\mathbf v\cdot\mathbf n)\mathbf v\,\mathrm dA$. Estas cantidades permiten distinguir renovación, mezcla y concentración local de velocidad al comparar disposiciones.
+\FloatBarrier
+
+\section{Preparación de perturbaciones y escenarios meteorológicos}
+\label{met:meteorologia}
+
+\subsection{Conversión psicrométrica y consistencia de unidades}
+
+La conversión utiliza temperatura, humedad y presión del mismo lugar y ventana. La humedad porcentual se transforma a fracción antes de calcular
+\begin{equation}
+p_v=\phi p_{ws}(T),\qquad
+W=\varepsilon_m\frac{p_v}{p-p_v},\qquad
+Y=\frac{W}{1+W},\qquad
+\varepsilon_m=\frac{R_{da}}{R_v}\simeq0.622.
+\label{met:conversion_humedad}
+\end{equation}
+La correlación de saturación y la referencia de entalpía se mantienen en adquisición, CFD, red y control \cite{ashrae2021}. La incertidumbre de $W$ se propaga desde $T$, $\phi$ y $p$, incluyendo sus covarianzas. Esta transformación distingue cambios en vapor de variaciones de humedad relativa debidas al calentamiento.
+
+La dirección meteorológica indica procedencia del viento. En coordenadas este--norte, para un ángulo $\alpha$ medido desde el norte en sentido horario, se emplean $v_E=-v_w\sin\alpha$ y $v_N=-v_w\cos\alpha$; una rotación documentada produce $v_{w,x},v_{w,y}$. La posición solar se reconstruye con ubicación y tiempo mediante un algoritmo explícito \cite{reda2004}.
+
+El dominio observado se describe con distribuciones conjuntas, tasas de cambio y duración de regímenes. Se mantiene la asociación entre irradiancia, temperatura, vapor y viento. Los escenarios conservan esa dependencia y diferencian condiciones frecuentes, transiciones y casos de estrés.
+
+\subsection{Pronóstico mediante \textit{Markovian Ensemble}}
+\label{met:markov}
+
+El \textit{Markovian Ensemble} se implementa como un generador de trayectorias condicionado al estado meteorológico reciente. Su entrenamiento pertenece al conjunto de desarrollo y se contrasta con persistencia por horizonte. Una trayectoria de información perfecta se identifica como escenario de referencia, con un papel diferente al pronóstico disponible para control.
+
+Durante el día se define un índice de irradiancia respecto de una referencia de cielo despejado en el mismo plano:
+\begin{equation}
+k_G(t)=\frac{G(t)}{G_{\mathrm{cs}}(t)}.
+\label{met:indice_cielo}
+\end{equation}
+El denominador debe superar el umbral fijado por geometría e incertidumbre. Los regímenes nocturnos se representan separadamente. Los valores de $k_G$ conservan realces de irradiancia y error de la referencia de cielo despejado.
+
+Los estados meteorológicos combinan fase solar, $k_G$, temperatura exterior, $W_{\mathrm{amb}}$ y viento. Sus clases se estiman en desarrollo y el número de estados se selecciona mediante validación temporal. Con $J$ clases, la transición regularizada es
+\begin{equation}
+\widehat P_{ab}=\frac{n_{ab}+\alpha_M}{\sum_{j=1}^{J}n_{aj}+J\alpha_M},
+\label{met:transicion_markov}
+\end{equation}
+donde $n_{ab}$ cuenta transiciones y $\alpha_M$ es una regularización documentada. Cuando la cobertura lo permite, las matrices se condicionan por fase del día.
+
+Cada trayectoria se inicia con observaciones disponibles en el origen de pronóstico. Se muestrean estados sucesivos y vectores conjuntos de perturbaciones o innovaciones de bloques de desarrollo. La longitud de bloque y el período de transición se relacionan con persistencia ambiental y horizonte. La reconstrucción comprueba presión positiva, irradiancia admisible, presión de vapor y continuidad de escala.
+
+\subsection{Evaluación prospectiva y asignación de escenarios}
+
+La validación reproduce orígenes temporales sucesivos y conserva el horizonte completo. Se calculan error, cobertura y amplitud de intervalos por variable y plazo, junto con habilidad relativa a persistencia. La selección del generador utiliza ese contraste prospectivo y su costo de evaluación.
+
+Los escenarios para simulación y MPC conservan origen, identificador, versión y peso. Las políticas comparadas reciben la misma realización ambiental y el mismo conjunto de incertidumbres. Los cambios de irradiancia, temperatura exterior, humedad y viento se organizan por régimen observado; las combinaciones adicionales se identifican como pruebas de sensibilidad o estrés.
+
+\section{Construcción y verificación del modelo CFD tridimensional}
+\label{met:cfd}
+
+\subsection{Dominio, regiones y transferencia SALOME--OpenFOAM}
+
+El CAD identifica la región de aire $\Omega_f$, las regiones sólidas $\Omega_s$ y las superficies de frontera $\Gamma_i$. La Figura~\ref{met:fig_cfd_dominio} presenta la nomenclatura geométrica: pared izquierda, derecha, posterior, frontal, techo y suelo. Las aberturas son subgrupos de esas superficies, con nombres propios, conservados desde geometría hasta posprocesamiento.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{\rutafigurasmetodologia/cfd_dominio.pdf}
+\caption{Dominio y superficies del caso CFD. El esquema identifica la topología de fronteras; las separaciones entre paneles facilitan su visualización.}
+\label{met:fig_cfd_dominio}
+\end{figure}
+
+La Figura~\ref{met:fig_cfd_regiones} distingue celdas de volumen de la región fluida y grupos de caras de frontera. Un grupo superficial adquiere su significado físico mediante una condición de frontera; un sólido con almacenamiento requiere una región volumétrica y su ecuación de conducción. Esta correspondencia estructura el tratamiento conjugado de calor y la conexión con la red reducida.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.80\textwidth]{\rutafigurasmetodologia/cfd_regiones.pdf}
+\caption{Relación entre región fluida, grupos de caras y regiones sólidas. Los nombres de región se mantienen en propiedades, condiciones de frontera y operadores de observación.}
+\label{met:fig_cfd_regiones}
+\end{figure}
+
+La preparación del caso sigue geometría, grupos, mallado, exportación, importación y comprobación, como muestra la Figura~\ref{met:fig_salome}. En SALOME se organizan volúmenes y superficies antes de construir la malla con SMESH. La importación conserva grupos y unidades, verifica conectividad y orientación de normales y ejecuta \texttt{checkMesh}. Se archivan geometría, malla, propiedades, campos iniciales, esquemas y controles de solución.
+
+\begin{figure}[p]
+\centering
+\includegraphics[width=\textwidth,trim=0 87 562 78,clip]{\rutafigurasmetodologia/cfd_metodologia.pdf}\par\vspace{5mm}
+\includegraphics[width=\textwidth,trim=562 87 0 78,clip]{\rutafigurasmetodologia/cfd_metodologia.pdf}
+\caption{Secuencia de preparación SALOME--OpenFOAM, organizada en dos bandas consecutivas: pasos 1--3 y 4--6. Elaboración propia.}
+\label{met:fig_salome}
+\end{figure}
+
+La implementación registra distribución y versión de OpenFOAM, bibliotecas y diccionarios. En la línea Foundation 12, el tratamiento multirregión utiliza los módulos y la configuración de \texttt{foamMultiRun} cuando el caso representa conducción conjugada \cite{openfoam12_multirun}. El transporte escalar de vapor se vincula con el flujo resuelto y con su difusividad; el carácter pasivo o acoplado de ese escalar queda definido por la formulación física \cite{openfoam12_scalar}.
+
+\subsection{Ecuaciones de conservación del recinto sin carga}
+
+La mezcla aire seco--vapor se describe mediante continuidad, cantidad de movimiento y transporte de $Y$:
+\begin{align}
+\frac{\partial\rho}{\partial t}+\nabla\cdot(\rho\mathbf v)&=0,
+\label{met:cfd_continuidad}\\
+\frac{\partial(\rho\mathbf v)}{\partial t}
++\nabla\cdot(\rho\mathbf v\otimes\mathbf v)
+&=-\nabla p+\nabla\cdot\boldsymbol\tau+\rho\mathbf g+\mathbf S_{\mathrm{fan}},
+\label{met:cfd_momento}\\
+\frac{\partial(\rho Y)}{\partial t}+\nabla\cdot(\rho\mathbf vY)
+&=\nabla\cdot(\rho D_{\mathrm{eff}}\nabla Y).
+\label{met:cfd_vapor}
+\end{align}
+La humedad se intercambia por las fronteras abiertas. En las superficies impermeables se prescribe flujo normal de vapor nulo. La fuente de momento $\mathbf S_{\mathrm{fan}}$ representa el equipo cuando se utiliza esa equivalencia; si la actuación se prescribe en una frontera, se conserva el tratamiento correspondiente del flujo.
+
+La ecuación de entalpía de mezcla se expresa como
+\begin{equation}
+\frac{\partial(\rho h)}{\partial t}+\nabla\cdot(\rho\mathbf vh)
+=\frac{Dp}{Dt}-\nabla\cdot\mathbf q
++\boldsymbol\tau:\nabla\mathbf v+S_{\mathrm{fan},E},
+\label{met:cfd_energia}
+\end{equation}
+con $\mathbf q=-k_{\mathrm{eff}}\nabla T+\sum_i h_i\mathbf j_i$, donde $\mathbf j_i$ es el flujo difusivo de cada componente. La conducción efectiva, el transporte de entalpía por difusión y la disipación utilizan una referencia termodinámica común. La energía solar y el intercambio térmico exterior se aplican a las superficies que los reciben. El trabajo mecánico transferido por el ventilador se contabiliza de acuerdo con la representación de actuación.
+
+La conducción en un sólido se formula mediante
+\begin{equation}
+\rho_sc_s\frac{\partial T_s}{\partial t}=\nabla\cdot(k_s\nabla T_s).
+\label{met:cfd_solido}
+\end{equation}
+Las interfaces acoplan temperatura y flujo térmico; las capas delgadas pueden emplear una resistencia equivalente con capacidad cuando esa reducción conserva el intercambio relevante.
+
+La densidad de una mezcla ideal se obtiene de
+\begin{equation}
+\rho=\frac{p}{T\bigl[(1-Y)R_{da}+YR_v\bigr]}.
+\label{met:cfd_densidad}
+\end{equation}
+La aproximación de Boussinesq se selecciona tras examinar variaciones relativas de densidad y el régimen térmico \cite{gray1976}. Si se utiliza, se registra el estado de referencia y el efecto de composición que se retiene. Una formulación de densidad variable mantiene continuidad, transporte de vapor y energía compatibles.
+
+La selección laminar o turbulenta utiliza Rayleigh, Reynolds, geometría y modos de actuación. El tratamiento de pared y los tamaños locales se ajustan a ese cierre; para un modelo turbulento se informa la distribución de $y^+$ y las constantes utilizadas \cite{launder1974,versteeg2007}. La sensibilidad al cierre se contrasta sobre las variables que intervienen en validación y control.
+
+\subsection{Campos iniciales y condiciones de frontera}
+
+Los campos iniciales de velocidad, temperatura, presión y vapor se asignan al episodio contrastado. La Figura~\ref{met:fig_cfd_inicial} ilustra la prescripción volumétrica de los campos. La humedad inicial se incorpora como $Y_0$ a partir de temperatura, humedad relativa y presión mediante la Ecuación~\ref{met:conversion_humedad}. El campo de presión utiliza la variable física o transformada que corresponda al solucionador.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.84\textwidth]{\rutafigurasmetodologia/cfd_condiciones_iniciales.pdf}
+\caption{Inicialización volumétrica del caso CFD. A los campos de la ilustración se incorpora $Y(\mathbf r,0)=Y_0(\mathbf r)$ y se documenta la relación entre presión física y variable del solucionador.}
+\label{met:fig_cfd_inicial}
+\end{figure}
+
+Las paredes sólidas utilizan no deslizamiento y su condición térmica conjugada o equivalente. Las aberturas admiten entrada, salida y reversión: temperatura y composición exteriores se aplican a la corriente entrante, mientras que las variables salientes proceden del campo interior. La presión exterior relaciona ambiente, viento y orientación; la acción utiliza una curva de presión--caudal, un punto de operación o una fuente identificada.
+
+La absorción solar se distribuye según geometría y sombreado constructivo. La reconstrucción de radiación sobre superficies inclinadas conserva el plano del instrumento y la separación directa--difusa empleada \cite{duffie2013,reda2004}. El intercambio de onda larga utiliza propiedades infrarrojas y, para un medio no participante, radiosidad o un cierre superficial equivalente. Los factores de forma se comprueban por reciprocidad y suma geométrica. Las pérdidas exteriores distinguen convección, radiación hacia cielo y entorno y conducción hacia la base.
+
+La recirculación interior aporta momento y mezcla; la extracción se acompaña de reposición de aire a través de las fronteras. La comparación conserva los caudales por sección y el balance global, permitiendo reconocer cortocircuitos entre entrada y salida.
+
+\subsection{Mallado, discretización y convergencia iterativa}
+
+La malla identifica caras, celdas y conectividad. Se refina en paredes, aberturas, interfaces y trayectorias de chorros, utilizando crecimiento suave de tamaños. La Figura~\ref{met:fig_cfd_malla} integra la discretización ilustrada y el detalle próximo a pared. Los esquemas representan el procedimiento de mallado; la evaluación cuantitativa utiliza la malla del caso ejecutado.
+
+\begin{figure}[p]
+\centering
+\includegraphics[width=0.79\textwidth]{\rutafigurasmetodologia/cfd_malla.pdf}\par\vspace{4mm}
+\includegraphics[width=0.79\textwidth]{\rutafigurasmetodologia/cfd_refinamiento.pdf}
+\caption{Discretización del dominio y gradación local próxima a pared. La resolución normal se vincula con el tratamiento térmico y de velocidad, y se controla la transición hacia el interior.}
+\label{met:fig_cfd_malla}
+\end{figure}
+
+El método de volúmenes finitos conserva los flujos que cruzan caras compartidas \cite{patankar1980,versteeg2007}. Se registran esquemas de advección y difusión, integración temporal, acoplamiento presión--velocidad, correcciones no ortogonales y tolerancias. El número de Courant se controla junto con las escalas térmicas, de mezcla y de renovación. El paso del solucionador se selecciona por resolución numérica y las salidas se agregan posteriormente al soporte experimental.
+
+La convergencia se examina con residuales algebraicos, temperaturas de sensores virtuales, humedad, caudales e intercambios energéticos. Los inventarios y las fracciones permanecen en su dominio admisible. Se conservan historiales de solución y cualquier limitador aplicado, vinculando su efecto con las magnitudes de interés.
+
+\subsection{Refinamiento espacial y temporal}
+\label{met:refinamiento}
+
+Se utilizan al menos tres mallas relacionadas por refinamiento, manteniendo geometría, fronteras y cierres. Su tamaño global en tres dimensiones es $h=(V/N_c)^{1/3}$, acompañado de tamaños locales y calidad. Las cantidades de interés incluyen temperaturas y humedad en el mapa de medición, caudal exterior, intercambio de calor y dispersión espacial.
+
+Con razón aproximadamente constante $r=h_2/h_1=h_3/h_2>1$ y malla 1 como la más fina, una secuencia monótona permite estimar
+\begin{equation}
+p_{\mathrm{obs}}=\frac{\ln| (\Phi_3-\Phi_2)/(\Phi_2-\Phi_1)|}{\ln r},\qquad
+\Phi_{\mathrm{ext}}=\Phi_1+\frac{\Phi_1-\Phi_2}{r^{p_{\mathrm{obs}}}-1}.
+\label{met:richardson}
+\end{equation}
+El GCI absoluto sobre la malla fina es
+\begin{equation}
+U_{\mathrm{GCI},1}=F_s\frac{|\Phi_1-\Phi_2|}{r^{p_{\mathrm{obs}}}-1},
+\label{met:gci}
+\end{equation}
+con $F_s=1.25$ cuando se cumplen las condiciones del procedimiento de tres mallas \cite{celik2008}. Se comprueba régimen asintótico y se utiliza una escala física no nula para expresar error relativo.
+
+Las razones desiguales requieren la formulación general del procedimiento. Las secuencias oscilatorias, las diferencias contaminadas por iteración y las magnitudes próximas a cero se reportan con su comportamiento observado y requieren ampliar el estudio. El refinamiento temporal compara tres pasos a tiempos físicos comunes o sobre un estado estacionario acreditado, examinando fase, amplitud e inventarios. La discretización seleccionada se relaciona con el presupuesto de error del contraste.
+\FloatBarrier
+
+\section{Cavidad bidimensional y red térmica e higrométrica reducida}
+\label{met:modelos_complementarios}
+
+\subsection{Cavidad de convección natural como verificación del código}
+\label{met:cavidad}
+
+La cavidad cuadrada utiliza paredes verticales a temperaturas $T_h$ y $T_l$, $T_h>T_l$, paredes horizontales adiabáticas y no deslizamiento en el caso de referencia. Con longitud $L_c$, difusividad $\alpha$, escala de velocidad $\alpha/L_c$ y $\theta=(T-T_l)/(T_h-T_l)$, se implementa
+\begin{align}
+\nabla_*^2\psi_*&=-\omega_*,\qquad
+u_*=\frac{\partial\psi_*}{\partial y_*},\quad
+v_*=-\frac{\partial\psi_*}{\partial x_*},
+\label{met:cavidad_poisson}\\
+\frac{\partial\omega_*}{\partial t_*}+u_*\frac{\partial\omega_*}{\partial x_*}
++v_*\frac{\partial\omega_*}{\partial y_*}
+&=\mathrm{Pr}\nabla_*^2\omega_*+\mathrm{Ra}\,\mathrm{Pr}\frac{\partial\theta}{\partial x_*},
+\label{met:cavidad_vorticidad}\\
+\frac{\partial\theta}{\partial t_*}+u_*\frac{\partial\theta}{\partial x_*}
++v_*\frac{\partial\theta}{\partial y_*}&=\nabla_*^2\theta.
+\label{met:cavidad_energia}
+\end{align}
+La convención $\omega_*=-\nabla_*^2\psi_*$ y el eje vertical ascendente se mantienen en fronteras, derivadas y reconstrucción de velocidad. La pared izquierda tiene $\theta=1$ y la derecha $\theta=0$.
+
+El protocolo de verificación utiliza $\mathrm{Pr}=0.71$ y valores de $\mathrm{Ra}$ del benchmark clásico, entre $10^3$ y $10^6$ \cite{devahl1983}. Para cada caso ejecutado se contrastan Nusselt medio, extremos de velocidad y posiciones, usando las mismas escalas de la referencia. El Nusselt medio caliente es $\overline{Nu}_h=-\int_0^1(\partial\theta/\partial x_*)_{x_*=0}\,\mathrm dy_*$. Las paredes horizontales adiabáticas y el régimen estacionario permiten comprobar consistencia entre el calor transferido por las paredes verticales.
+
+Se refinan espacio y tiempo antes de activar radiación. El caso radiativo conserva la conducción convectiva y añade el intercambio superficial con propiedades y factores de forma documentados \cite{balaji1993}. Se verifica el balance total incluyendo todas las paredes y el almacenamiento. La cavidad aporta evidencia sobre el código y los mecanismos de flotación y radiación, conservando su condición de problema cerrado de referencia al relacionarla con el recinto ventilado.
+
+\subsection{Ensamblaje de la red de cuatro estados}
+\label{met:red}
+
+La red concentra cubierta, base y aire en $T_c,T_b,T_a$, y conserva $W$ como estado higrométrico. Sus conexiones se organizan mediante capacidad, área, ley de intercambio y signo en cada balance. Las transferencias internas entran con signos opuestos en los nodos conectados; la captación y las pérdidas exteriores se asignan al componente que las recibe.
+
+Para una aproximación de inventario constante de aire seco, los balances térmicos son
+\begin{align}
+C_c\dot T_c&=Q_{\mathrm{sol},c}+G_{ca}(T_a-T_c)+Q_{b\to c}^{\mathrm{rad}}-Q_{c,\mathrm{ext}},
+\label{met:red_cubierta}\\
+C_b\dot T_b&=Q_{\mathrm{sol},b}+G_{ba}(T_a-T_b)-Q_{b\to c}^{\mathrm{rad}}-Q_{b,\mathrm{ext}},
+\label{met:red_base}\\
+C_a(W)\dot T_a&=G_{ca}(T_c-T_a)+G_{ba}(T_b-T_a)
+\nonumber\\[-1mm]
+&\quad+F_{\mathrm{ext}}(c_{da}+W_{\mathrm{amb}}c_{pv})(T_{\mathrm{amb}}-T_a)+Q_{\mathrm{fan}},
+\label{met:red_aire}\\
+m_{da}\dot W&=F_{\mathrm{ext}}(W_{\mathrm{amb}}-W),\qquad
+C_a(W)=m_{da}(c_{da}+Wc_{pv}).
+\label{met:red_humedad}
+\end{align}
+$F_{\mathrm{ext}}$ es el flujo exterior de aire seco con entradas y salidas equilibradas en esta reducción. Las conductancias $G_{ca},G_{ba}$ pueden depender del modo de ventilación y de la diferencia térmica. $Q_{\mathrm{fan}}$ representa la fracción de energía del equipo que se transfiere al dominio modelado.
+
+La formulación sensible del aire procede del balance de entalpía húmeda y de la Ecuación~\ref{met:red_humedad}. Al desarrollar ambos balances, los términos asociados con la entalpía del vapor transportado se cancelan de forma consistente; queda el término advectivo de la Ecuación~\ref{met:red_aire}, con la humedad de la corriente entrante. Esa estructura conserva la relación entre temperatura y composición.
+
+Para base y cubierta difusas grises, bajo la aproximación de superficies opacas en onda larga, el cierre radiativo de dos superficies es
+\begin{equation}
+Q_{b\to c}^{\mathrm{rad}}=
+\frac{\sigma(T_b^4-T_c^4)}{
+\dfrac{1-\epsilon_b}{A_b\epsilon_b}
++\dfrac{1}{A_bF_{bc}}
++\dfrac{1-\epsilon_c}{A_c\epsilon_c}},
+\label{met:red_radiacion}
+\end{equation}
+dentro de la reducción geométrica declarada. Una cubierta semitransparente en esa banda requiere incorporar transmisión en el balance radiativo. Si otras superficies participan de forma relevante, se utiliza su red de radiosidades o una conductancia efectiva identificada con esa configuración. La potencia solar y las pérdidas se calculan con sus áreas y propiedades, manteniendo la misma referencia que en CFD.
+
+La Figura~\ref{met:fig_red} presenta la estructura de conexiones. $W$ interviene en composición, capacidad del aire, humedad relativa y renovación. La recirculación altera las conductancias y la mezcla; el intercambio exterior determina el balance de vapor.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.97\textwidth]{\rutafigurasmetodologia/red_recinto_cuatro_estados.pdf}
+\caption{Red reducida del recinto sin carga: tres nodos térmicos y un estado de humedad del aire. Las conexiones internas conservan energía y las fronteras representan captación, pérdidas e intercambio exterior.}
+\label{met:fig_red}
+\end{figure}
+
+\subsection{Inventario variable y consistencia termodinámica}
+
+La reducción se contrasta con una formulación conservativa de volumen $V_a$ y presión uniforme. El inventario de aire seco es
+\begin{equation}
+m_{da}=\frac{pV_a}{R_{da}T_a(1+W/\varepsilon_m)}.
+\label{met:inventario_aire}
+\end{equation}
+La continuidad de aire seco y el balance de vapor cumplen
+\begin{align}
+\dot m_{da}&=\sum_{\mathrm{ent}}F_i-\sum_{\mathrm{sal}}F_o,
+\label{met:red_masa_variable}\\
+\frac{\mathrm d(m_{da}W)}{\mathrm dt}
+&=\sum_{\mathrm{ent}}F_iW_i-\sum_{\mathrm{sal}}F_oW,
+\label{met:red_vapor_variable}
+\end{align}
+para mezcla uniforme en las salidas. Los caudales y la reposición se obtienen mediante un cierre compatible con continuidad y presión; el inventario calculado introduce el acoplamiento entre $T_a,W$ y las fronteras.
+
+La entalpía por masa de aire seco usa una referencia $T_*$ común:
+\begin{equation}
+h(T,W)=c_{da}(T-T_*)+W\bigl[h_{v,*}+c_{pv}(T-T_*)\bigr].
+\label{met:entalpia_aire}
+\end{equation}
+Para un recinto rígido, $E_a=m_{da}h-pV_a$ y el balance es
+\begin{equation}
+\frac{\mathrm d(m_{da}h)}{\mathrm dt}-V_a\dot p
+=Q_{ca}+Q_{ba}+Q_{\mathrm{fan}}
++\sum_{\mathrm{ent}}F_ih_i-\sum_{\mathrm{sal}}F_oh(T_a,W).
+\label{met:red_energia_variable}
+\end{equation}
+Esta formulación, con capacidades positivas y referencias comunes, define la evaluación del inventario variable. La aproximación constante se selecciona cuando la variación de masa y su efecto sobre las magnitudes de contraste quedan dentro del presupuesto establecido. Se conserva el estado de referencia y se compara ambos modelos sobre los mismos episodios.
+
+\subsection{Identificación de parámetros y solución numérica}
+\label{met:identificacion}
+
+La identificación procede de geometría y propiedades a captación, pérdidas, intercambio térmico y renovación. Las capacidades fijadas por caracterización se distinguen de conductancias y parámetros efectivos de ventilación. Se utilizan tramos con información complementaria: calentamiento para captación, enfriamiento para pérdidas y cambios de modo para conductancias y renovación.
+
+Con observaciones $y_j$, operador $\mathcal H_j$ y parámetros $\boldsymbol\theta$, el ajuste es
+\begin{equation}
+\widehat{\boldsymbol\theta}=\arg\min_{\boldsymbol\theta\in\Theta}
+\left[\sum_j\frac{\bigl(y_j-\mathcal H_j[\mathbf x(\boldsymbol\theta)]\bigr)^2}{s_j^2}
++\mathcal R_\theta(\boldsymbol\theta)\right].
+\label{met:ajuste_fisico}
+\end{equation}
+$s_j$ representa incertidumbre o una tolerancia declarada y $\Theta$ impone capacidades y transferencias admisibles. La regularización expresa información previa identificada. El análisis utiliza Jacobiano escalado, rango, correlaciones y perfiles de parámetros \cite{ljung1999}. Las combinaciones indistinguibles se agrupan o se fijan mediante caracterización, propagando su incertidumbre.
+
+La integración conserva discontinuidades de actuación y tiempos de observación. Se registran método, tolerancias absolutas por estado y tolerancia relativa. Un problema con escalas térmicas separadas puede requerir integración implícita; su solución se contrasta mediante refinamiento temporal y una alternativa de integración sobre las mismas entradas. Los balances acumulados acompañan la comparación de trayectorias.
+
+\subsection{Operadores de observación y proyección entre modelos}
+\label{met:operadores}
+
+El operador $\mathcal H_j$ transforma una representación en el observable del instrumento: temperatura en una posición, promedio superficial de termografía o señal temporal agregada. Su definición incorpora soporte, montaje, respuesta y ubicación. Se fija antes del contraste y se aplica del mismo modo a observaciones y salidas simuladas.
+
+La proyección del CFD a razón de humedad utiliza inventarios:
+\begin{equation}
+W_{\mathrm{red}}=
+\frac{\int_{V_a}\rho Y\,\mathrm dV}{\int_{V_a}\rho(1-Y)\,\mathrm dV}.
+\label{met:proyeccion_W}
+\end{equation}
+Las temperaturas sólidas se proyectan con capacidad térmica. Para el aire se define una temperatura equivalente que preserve la energía y los inventarios proyectados. Se conserva además la dispersión del campo para cuantificar la información espacial omitida.
+
+La red de cuatro estados produce variables agregadas. Si una política incorpora uniformidad, máximos locales o gradientes, se añade un cierre espacial identificado con CFD y sensado distribuido. El error de ese cierre se evalúa por separado, y su incertidumbre acompaña las restricciones de control.
+\FloatBarrier
+
+\section{Verificación física y validación con observaciones del recinto}
+\label{met:validacion}
+
+\subsection{Balances integrales de aire seco, vapor y energía}
+\label{met:conservacion}
+
+La verificación evalúa continuidad de mezcla, inventario de aire seco y vapor. Para un intervalo $I=[t_0,t_1]$, se calculan
+\begin{align}
+R_{da}(I)&=m_{da}(t_1)-m_{da}(t_0)
+-\int_I\left[\sum_{\mathrm{ent}}F_i-\sum_{\mathrm{sal}}F_o\right]\mathrm dt,
+\label{met:residual_aire_seco}\\
+R_v(I)&=m_v(t_1)-m_v(t_0)
+-\int_I\left[\sum_{\mathrm{ent}}F_iW_i-\sum_{\mathrm{sal}}F_oW_o\right]\mathrm dt.
+\label{met:residual_vapor}
+\end{align}
+En CFD los inventarios se integran en volumen y los flujos incluyen la contribución difusiva cuando cruza la frontera. En la red, $m_v=m_{da}W$. La conservación se examina bajo el régimen sin cambios de fase representado por el modelo base.
+
+La energía total del dominio comprende sólidos y aire húmedo con una referencia común. Su residual es
+\begin{equation}
+R_E(I)=E_{\mathrm{tot}}(t_1)-E_{\mathrm{tot}}(t_0)
+-\int_I\left[Q_{\mathrm{ext}}+\dot{\mathcal W}_{\mathrm{ext}}
++\sum_{\mathrm{ent}}F_ih_i-\sum_{\mathrm{sal}}F_oh_o\right]\mathrm dt.
+\label{met:residual_energia}
+\end{equation}
+$Q_{\mathrm{ext}}$ reúne las transferencias térmicas y radiativas exteriores, y $\dot{\mathcal W}_{\mathrm{ext}}$ el trabajo transferido al dominio. Las conexiones internas se cancelan al sumar componentes. Las versiones CFD y reducida conservan el tratamiento de energía mecánica adoptado en cada formulación.
+
+Los residuales absolutos se complementan con
+\begin{equation}
+\eta_S(I)=\frac{|R_S(I)|}{\max\left\{|\Delta S|,
+\int_I\sum_\ell|F_{S,\ell}|\,\mathrm dt,S_{\mathrm{ref}}\right\}},
+\label{met:residual_normalizado}
+\end{equation}
+con $S_{\mathrm{ref}}>0$ dimensional y fijado previamente. Los balances acumulados y por ventanas permiten localizar deriva, cancelaciones y errores de sincronización.
+
+Se comprueban invariantes del recinto: sin intercambio exterior, la recirculación conserva el inventario de vapor; con condiciones exteriores constantes y renovación positiva, $W$ tiende al valor exterior; y el calentamiento a contenido de vapor constante modifica $\phi$. Estas pruebas conectan las ecuaciones con comportamientos físicos que pueden examinarse en las implementaciones.
+
+\subsection{Tolerancias y presupuesto de incertidumbre}
+
+El registro de aceptación establece tolerancias de sesgo $\delta_{b,q}$, error predictivo $\delta_{e,q}$ e incertidumbre numérica $\delta_{n,q}$ para temperatura, humedad, caudal y balances. Las escalas proceden de metrología y de la decisión de regulación. La contribución de iteración y discretización ocupa una fracción explícita de ese presupuesto.
+
+Se distinguen incertidumbre de medición, ubicación, fronteras, parámetros y predicción, manteniendo covarianzas relevantes. La aceptación relaciona convergencia, conservación, error independiente y cobertura del régimen de uso. La sensibilidad a propiedades ópticas, conductancias, renovación y presión exterior identifica qué incertidumbres dominan cada observable.
+
+\subsection{Partición temporal y contraste independiente}
+\label{met:particion}
+
+La partición externa es cronológica y utiliza episodios completos o bloques continuos de operación. Una estructura de referencia conserva aproximadamente la primera mitad para desarrollo y la segunda para prueba, con frontera y porcentajes efectivos registrados. Los tramos asociados con una misma maniobra se agrupan conforme al objetivo de generalización.
+
+El desarrollo contiene identificación física, selección de variables, entrenamiento, enriquecimiento, pronóstico y sintonía. Dentro de él se utiliza validación de origen rodante: se ajusta con el pasado y se evalúa sobre bloques posteriores. Los escaladores, imputaciones, parámetros y generadores se estiman nuevamente con la porción autorizada en cada partición.
+
+Para una ventana de historia $L_{\mathrm{hist}}$ y horizonte $H_p\Delta t_c$, se impide compartir soporte entre entrenamiento y validación. Una separación conservadora en una serie continua es $L_{\mathrm{hist}}+H_p\Delta t_c$. La prueba externa se utiliza después de congelar modelo, transformaciones y criterios; una nueva selección requiere una nueva evidencia reservada.
+
+\subsection{Métricas por posición, régimen y horizonte}
+\label{met:metricas}
+
+La alineación utiliza hora de observación, operador de medición y máscaras de calidad comunes. Con $e_k=\widehat y_k-y_k$, $a_k\geq0$ y $\sum_k a_k=1$, se calcula
+\begin{equation}
+\mathrm{MBE}=\sum_ka_ke_k,\qquad
+\mathrm{MAE}=\sum_ka_k|e_k|,\qquad
+\mathrm{RMSE}=\left(\sum_ka_ke_k^2\right)^{1/2}.
+\label{met:errores}
+\end{equation}
+Los pesos representan duración si el muestreo es irregular. Se presentan resultados por episodio, punto, variable y horizonte; el agregado mantiene una ponderación declarada para evitar predominio por número de lecturas.
+
+Se complementan promedios con cuantiles altos del error absoluto, cobertura y respuesta a transiciones. La humedad relativa predicha se calcula junto con temperatura y presión predichas, y se contrasta además $W$ cuando existe una referencia psicrométrica válida. Las unidades dimensionales y el soporte espacial acompañan cada métrica.
+
+\subsection{Dependencia temporal, comparación emparejada y equivalencia}
+\label{met:estadistica}
+
+La incertidumbre del desempeño utiliza episodios o bloques temporales. Con unidades independientes suficientes se remuestrean episodios; en una serie extensa se examina aplicabilidad del bootstrap por bloques sobre residuos estacionarios o estratificados por régimen \cite{kunsch1989}. La longitud de bloque responde a la escala de dependencia y se somete a sensibilidad, conservando semilla y número de remuestreos.
+
+La comparación emparejada utiliza los mismos orígenes, puntos y realizaciones para las alternativas. El número de bloques o episodios efectivos acompaña los intervalos, de modo que la precisión inferencial refleje la información temporal disponible.
+
+La equivalencia de sesgo emplea un margen físico previo:
+\begin{equation}
+H_0:\mu_e\leq-\delta_{b,q}\ \text{o}\ \mu_e\geq\delta_{b,q},
+\qquad H_1:-\delta_{b,q}<\mu_e<\delta_{b,q}.
+\label{met:equivalencia}
+\end{equation}
+El principio de dos pruebas unilaterales utiliza, para $\alpha=0.05$, un intervalo bilateral del $90\%$ íntegramente contenido en el margen, con estimación adaptada a la dependencia temporal \cite{schuirmann1987}. Los intervalos descriptivos de error se reportan al $95\%$ y mantienen su propósito específico.
+
+La aceptación combina sesgo equivalente con un límite superior de error compatible con $\delta_{e,q}$ y con el comportamiento por régimen. La conclusión de cada criterio se expresa como compatible, incompatible o insuficientemente determinada. La validación de campos se restringe a los observables contrastados y la sensibilidad se mantiene como análisis del modelo.
+
+\section{Modelos basados en datos y PINN del recinto}
+\label{met:ml}
+
+\subsection{Tareas predictivas e información disponible}
+
+La tarea distingue pronóstico de canales, predicción multihorizonte y transición de planta condicionada por acciones. El pronóstico utiliza historial causal, posición, condiciones ambientales disponibles y configuración. Un modelo destinado a evaluar acciones incorpora comandos ejecutados en identificación y acciones candidatas durante predicción.
+
+Una transición se organiza como
+\begin{equation}
+\widehat{\mathbf z}_{k+1}=\mathcal F_\eta
+\bigl(\mathbf z_{k:k-L},\mathbf u_{k:k-L},\mathbf d_{k:k-L},
+\mathbf u_k,\widehat{\mathbf d}_{k+1},\mathbf c\bigr),
+\label{met:predictor_dinamico}
+\end{equation}
+con $\mathbf z$ como observaciones o estados estimados y $\mathbf c$ como configuración del recinto. La evaluación recursiva utiliza las predicciones anteriores del modelo. Los objetivos se definen como temperatura interior, $W$ y, para la tarea de canales, lecturas DS, DHT y humedad relativa en cada punto.
+
+La tabla de trece columnas aporta tiempo, posición, canales y retardos. Las entradas meteorológicas y de actuación se relacionan mediante tablas sincronizadas de episodio. Según la disponibilidad efectiva, el experimento se clasifica como pronóstico bajo el régimen observado o como identificación de sensibilidad a acciones. Esta clasificación determina qué predictor puede participar en una optimización de control.
+
+\subsection{Referencias, preparación y selección temporal}
+
+Las referencias incluyen persistencia y red física identificada. Un árbol de regresión aporta una alternativa de baja complejidad y XGBoost y LightGBM representan ensambles de árboles \cite{friedman2001,chen2016,ke2017}. Todos utilizan la misma tarea, partición e información causal.
+
+Los ensayos predictivos se parametrizan con historias de $20$, $60$ y $300\,\mathrm s$ y horizontes de $20$, $300$ y $1200\,\mathrm s$, cuando la duración de los episodios permite construirlos. Los orígenes y su separación se conservan por configuración; las ventanas afectadas por huecos o por falta de objetivo tienen una marca de cobertura.
+
+La preparación incorpora calidad, correcciones y máscaras de ausencia. Los transformadores se ajustan en entrenamiento y se exportan con el modelo. La búsqueda del árbol comprende profundidad, tamaño de hoja y poda; los ensambles exploran número de árboles, tasa de aprendizaje, complejidad de hojas, submuestreo y regularización. La detención temprana utiliza bloques internos.
+
+Una función de selección multivariable es
+\begin{equation}
+\mathcal J_{\mathrm{val}}=\sum_q\lambda_q\frac{\mathrm{RMSE}_{q,\mathrm{val}}}{s_q}
++\lambda_C\mathcal P_{\mathrm{fis}}+\lambda_\tau\frac{\tau_{\mathrm{pred}}}{\tau_{\mathrm{pres}}}.
+\label{met:seleccion_ml}
+\end{equation}
+Las escalas y los pesos se fijan según la tarea. Las componentes se presentan separadamente y se registran combinaciones evaluadas, semillas, versiones y presupuesto. Las diferencias menores que la incertidumbre de comparación se resuelven con un criterio previo de costo o complejidad.
+
+\subsection{PINN condicional de cuatro estados}
+\label{met:pinn}
+
+La PINN utiliza los cuatro balances del recinto y conserva sus condiciones de actuación \cite{raissi2019}. Se construye un mapa de flujo para segmentos de duración $\Delta t_c$:
+\begin{equation}
+\widehat{\mathbf x}_\eta(s;\mathbf x_k,\mathbf u_k,\mathbf d_k)
+=\mathbf x_k+\frac{s}{\Delta t_c}\,
+\mathcal N_\eta\left(\frac{s}{\Delta t_c},\widetilde{\mathbf x}_k,
+\widetilde{\mathbf u}_k,\widetilde{\mathbf d}_k\right)\odot\mathbf s_x,
+\qquad 0\leq s\leq\Delta t_c.
+\label{met:flujo_pinn}
+\end{equation}
+La construcción impone $\widehat{\mathbf x}_\eta(0)=\mathbf x_k$. Las escalas $\mathbf s_x$ normalizan estados y las tildes representan entradas normalizadas. Los modos discretos se codifican explícitamente. Las perturbaciones son constantes por segmento o se representan mediante una trayectoria parametrizada incluida en las entradas.
+
+Con condiciones del segmento fijas, la diferenciación automática calcula
+\begin{equation}
+r_q(s)=\frac{\partial\widehat x_q}{\partial s}
+-f_q(\widehat{\mathbf x},\mathbf u_k,\mathbf d_k;\boldsymbol\theta),
+\qquad q\in\{T_c,T_b,T_a,W\}.
+\label{met:residual_pinn}
+\end{equation}
+La activación es suave y los puntos de colocación cubren estados iniciales, modos y fronteras del dominio admitido. Las escalas de residual son $s_q/\Delta t_c$.
+
+La pérdida combina observaciones, balances y restricciones:
+\begin{equation}
+\mathcal L_{\mathrm{PINN}}=\lambda_D\mathcal L_D
++\lambda_F\frac{1}{N_f}\sum_{\ell=1}^{N_f}\sum_q
+\left[\frac{r_q(s_\ell)}{s_q/\Delta t_c}\right]^2
++\lambda_R\mathcal L_R.
+\label{met:perdida_pinn}
+\end{equation}
+Los datos se comparan mediante $\mathcal H_j$ y las restricciones incluyen capacidades positivas, $W\geq0$ y estados dentro del dominio termodinámico. La condición inicial estructural se distingue de las observaciones de entrenamiento. Los parámetros físicos se fijan mediante identificación o se ajustan en desarrollo con cotas e identificabilidad.
+
+La selección controla desequilibrio de gradientes entre pérdidas \cite{wang2021}, error sobre observaciones y estabilidad de propagación. Una PINN sobre ODE utiliza los balances reducidos; las condiciones espaciales de pared pertenecen al CFD. Su desempeño se informa por estado y horizonte, junto con residual físico, error inicial y acumulación de error en segmentos sucesivos.
+
+\subsection{Incertidumbre predictiva y costo de ejecución}
+
+La incertidumbre se estima con repeticiones de ajuste, remuestreo de episodios o ensambles, y su cobertura se contrasta por horizonte. Las referencias experimentales y numéricas se identifican por fuente. La comparación entre modelos se realiza sobre observables compatibles y conserva las escalas dimensionales.
+
+El costo se mide en el hardware y configuración previstos, incluyendo preparación de entradas, evaluación, propagación y memoria. Se registran mediana, percentiles altos, repeticiones y condiciones de arranque. Para uso en control se mide el ciclo completo de estimación y optimización, relacionando incumplimientos del plazo con la política de respaldo.
+
+\section{Enriquecimiento físico--basado en datos}
+\label{met:hpdf}
+
+\subsection{Fuentes compatibles y generación de trayectorias}
+
+El marco híbrido física--datos, HPDF, utiliza observaciones del recinto, proyecciones CFD y trayectorias de la red de cuatro estados. La cavidad conserva su función de verificación y estudio mecanístico. Cada fuente se relaciona con la misma magnitud, unidad, soporte espacial y período cuando participa en una tarea común.
+
+Una muestra generada conserva caso, geometría, condiciones iniciales, parámetros, modos de actuación, perturbaciones, incertidumbre numérica y operador de observación. El generador de cada partición se ajusta con su entrenamiento y las ventanas de una trayectoria permanecen agrupadas. El diseño de generación combina dominio físicamente admisible, caracterización y formulaciones verificadas.
+
+Se muestrean estados iniciales, parámetros inciertos, configuraciones de abertura y acciones, manteniendo dependencias físicas. La red explora transitorios largos y secuencias numerosas; el CFD se prioriza para heterogeneidad, chorros y cambios de configuración. Una puntuación dirigida de casos puede expresarse como
+\begin{equation}
+A(\boldsymbol\xi)=\beta_UU(\boldsymbol\xi)+\beta_DD(\boldsymbol\xi)
++\beta_RR_{\mathrm{fis}}(\boldsymbol\xi)-\beta_CC(\boldsymbol\xi),
+\label{met:adquisicion}
+\end{equation}
+con incertidumbre, falta de cobertura, inconsistencia y costo normalizados. La selección utiliza desarrollo y un presupuesto fijado; una inconsistencia del generador orienta su corrección antes de ampliar la fuente.
+
+\subsection{Ponderación por fuente y correcciones conservativas}
+
+La influencia de una fuente se normaliza por trayectoria:
+\begin{equation}
+\mathcal L_{\mathrm{HPDF}}=\sum_{s\in\mathcal S}\lambda_s
+\frac{1}{N_{\mathrm{tr},s}}\sum_{j=1}^{N_{\mathrm{tr},s}}
+\frac{1}{N_{sj}}\sum_{i=1}^{N_{sj}}\ell_{sji}
++\lambda_{\mathrm{fis}}\mathcal L_{\mathrm{bal}},\qquad
+\sum_s\lambda_s=1.
+\label{met:perdida_hpdf}
+\end{equation}
+La selección de ponderaciones utiliza incertidumbre de simulación, discrepancia entre fuentes y desempeño sobre observaciones reservadas de desarrollo. Los resultados conservan el aporte de cada fuente y el número de trayectorias.
+
+La corrección híbrida puede modificar conductancias o un cierre de renovación, manteniendo positividad y consistencia de balance \cite{psichogios1992}. Un intercambio interno corregido aparece con signos opuestos en sus nodos. Una corrección de flujo exterior actúa de forma compatible sobre aire seco, vapor y entalpía. Para árboles se utilizan balances integrados por trayectoria; para un predictor diferenciable puede utilizarse además un residual diferencial.
+
+\subsection{Bucle, ablaciones y criterio de detención}
+
+El bucle realiza ajuste inicial, evaluación de cobertura y error, selección de casos, verificación de simulaciones, proyección y reentrenamiento. Cada iteración conserva presupuesto, casos incorporados, error por variable, balances y latencia. La validación utiliza los mismos bloques para mantener comparable la mejora.
+
+Las ablaciones distinguen entrenamiento con observaciones, enriquecimiento mediante red, proyecciones CFD y corrección estructurada o PINN. Se conserva algoritmo e información disponible al examinar el efecto de la fuente. La detención utiliza mejora mínima, iteraciones sin beneficio o presupuesto, junto con conservación y sensibilidad a actuación. Después de seleccionar la alternativa se congelan generadores, transformaciones y pesos para el contraste externo.
+
+\section{Diseño y evaluación de paradigmas de control}
+\label{met:control}
+
+\subsection{Salidas de regulación y referencias factibles}
+
+Las salidas principales son temperatura representativa del aire y razón de humedad:
+\begin{equation}
+\mathbf y_k=[\bar T_{a,k},\bar W_k]^{\mathsf T}.
+\label{met:salidas_control}
+\end{equation}
+La humedad relativa se utiliza como indicador y restricción termodinámica, calculada con temperatura y presión. Una referencia de $\phi$ se transforma a $W$ con la temperatura de referencia correspondiente. Las bandas de regulación se fijan antes de comparar políticas y se relacionan con meteorología, captación y capacidad de ventilación.
+
+La factibilidad se examina con el signo y magnitud del intercambio exterior. La extracción produce enfriamiento sensible cuando el aire exterior es más frío; la reducción de $W$ requiere una corriente exterior con menor razón de humedad. La recirculación aporta mezcla y transferencia entre aire y superficies. Estos mecanismos delimitan las combinaciones de salida alcanzables y las prioridades del regulador.
+
+La proximidad a condensación se evalúa con presión de vapor y punto de rocío, comparando este último con las temperaturas superficiales estimadas. Ese indicador define el dominio del modelo sin cambios de fase y los escenarios de estrés. El cierre espacial, cuando existe, permite incorporar zonas frías y máximos locales con su incertidumbre.
+
+El período de control es $\Delta t_c=m_c\Delta t_s$, con $m_c$ entero, seleccionado mediante constantes de tiempo, retardos, permanencia mínima y presupuesto de cálculo. El período de adquisición caracteriza disponibilidad de observaciones, mientras que el de actuación responde a la dinámica del sistema.
+
+\subsection{Estimación de estado, observabilidad y supervisión}
+\label{met:estimacion}
+
+El estimador utiliza observaciones de aire, sensores asociados a superficies cuando los hay y perturbaciones sincronizadas. $W$ procede de la transformación psicrométrica; $T_c,T_b$ son medidos o inferidos según instrumentación. Su incertidumbre y observabilidad se examinan con el modelo y los episodios disponibles.
+
+Para la red no lineal se plantea una estimación de horizonte móvil:
+\begin{equation}
+\begin{split}
+\min_{\mathbf x_i,\boldsymbol\nu_i}\quad&
+\|\mathbf x_{k-N_e}-\bar{\mathbf x}_{k-N_e}\|_{P_e^{-1}}^2
++\sum_{i=k-N_e}^{k}\|\mathbf y_i-\mathcal H_i(\mathbf x_i)\|_{R_e^{-1}}^2\\
+&+\sum_{i=k-N_e}^{k-1}\|\boldsymbol\nu_i\|_{Q_e^{-1}}^2,\\
+\text{sujeto a}\quad&\mathbf x_{i+1}=\mathcal F_{\Delta t_c}
+(\mathbf x_i,\mathbf u_i,\mathbf d_i)+\boldsymbol\nu_i,\qquad\mathbf x_i\in\mathcal X.
+\end{split}
+\label{met:mhe}
+\end{equation}
+Las matrices representan incertidumbre de llegada, medición y discrepancia. Un filtro alternativo mantiene esa distinción y registra su configuración. Los estados débilmente observables conservan intervalos y su efecto se propaga a decisiones.
+
+La supervisión controla antigüedad de datos, comunicaciones, coherencia de sensores, estado del estimador y disponibilidad de equipos. El respaldo utiliza una política factible de modos, con histéresis y permanencia mínima, establecida antes de la evaluación. Cada activación queda vinculada con su causa y trayectoria.
+
+\subsection{PID de referencia y coordinación de actuadores}
+\label{met:pid}
+
+El PID proporciona una referencia de regulación con señal filtrada, saturación y anti-windup \cite{astrom2008}. La variable regulada y el sentido de actuación se seleccionan mediante la sensibilidad identificada en el régimen de operación. La sintonía utiliza desarrollo y registra ganancias, filtro derivativo, límites y criterio de ajuste.
+
+Con error $e=r-y$, una demanda continua se organiza como
+\begin{equation}
+u^{\mathrm{dem}}(t)=K_Pe(t)+K_I\int e(t)\,\mathrm dt
++K_D\frac{\mathrm d e_f(t)}{\mathrm dt}.
+\label{met:pid_demanda}
+\end{equation}
+La demanda se traduce al conjunto discreto de la Ecuación~\ref{met:acciones} mediante umbrales, histéresis y permanencia mínima, registrando señal solicitada y ejecutada. La ganancia y el mapeo conservan el signo de la respuesta física, que puede cambiar al variar la diferencia con el exterior.
+
+Cuando temperatura y humedad solicitan el mismo equipo, una regla de prioridad y coordinación resuelve el acoplamiento. La matriz local de respuesta distingue la contribución de extracción y mezcla. Su rango y condicionamiento delimitan si ambas salidas admiten regulación independiente en el régimen considerado.
+
+\subsection{Control adaptativo con modelo de referencia}
+\label{met:mrac}
+
+El MRAC se formula sobre un canal local cuya estructura y signo de ganancia están identificados \cite{astrom1995}. Para $\dot z=az+bu$, se selecciona un modelo estable $\dot z_m=a_mz_m+b_mr$ y una ley $u=\widehat{\boldsymbol\theta}^{\mathsf T}\boldsymbol\varphi$, con regresores observables. El error de adaptación es $e_m=z-z_m$.
+
+Una actualización de referencia es
+\begin{equation}
+\dot{\widehat{\boldsymbol\theta}}=-\Gamma\boldsymbol\varphi e_m\operatorname{sgn}(b),
+\qquad \Gamma=\Gamma^{\mathsf T}>0.
+\label{met:mrac_actualizacion}
+\end{equation}
+La implementación documenta proyección de parámetros, cotas, discretización y filtros. La adaptación se suspende o limita ante saturación, información inválida o excitación insuficiente. Los modos discretos y las perturbaciones se consideran en el contraste de acotación y seguimiento, manteniendo explícito el régimen de correspondencia con el modelo de referencia.
+
+La evaluación compara respuesta nominal, cambio de parámetros y variación ambiental. Las conclusiones de estabilidad se vinculan con las hipótesis efectivamente satisfechas por el canal y por su ejecución discreta. El registro conserva evolución de parámetros y acción aplicada.
+
+\subsection{MPC físico, basado en datos e híbrido}
+\label{met:mpc}
+
+El MPC utiliza como transición la red identificada, un predictor condicionado por acciones o su alternativa híbrida \cite{rawlings2017}. En $t_k$ recibe $\widehat{\mathbf x}_k$ y trayectorias $\mathbf d^{(\omega)}$ con pesos $\pi_\omega$, $\sum_\omega\pi_\omega=1$. Las alternativas conservan estimador, información disponible, conjunto de modos y restricciones.
+
+El costo de etapa normaliza seguimiento y añade energía eléctrica:
+\begin{equation}
+\ell_{k+j}^{(\omega)}=
+\left\|S_y^{-1}(\mathbf y_{k+j}^{(\omega)}-\mathbf r_{k+j})\right\|_{Q_c}^2
++\lambda_UI_{U,k+j}^{2,(\omega)}
++\lambda_P\frac{P_{\mathrm{el},k+j-1}\Delta t_c}{E_{\mathrm{ref}}}.
+\label{met:costo_etapa}
+\end{equation}
+El término de uniformidad se utiliza cuando un cierre espacial acreditado proporciona ese observable. $S_y$ reúne escalas de salida y $P_{\mathrm{el},k+j-1}$ es la potencia de la acción aplicada en el intervalo que termina en $k+j$.
+
+La función del horizonte es
+\begin{equation}
+\begin{split}
+\mathcal J_k={}&\sum_{\omega=1}^{N_\omega}\pi_\omega
+\left[\sum_{j=1}^{H_p}\ell_{k+j}^{(\omega)}+V_f(\mathbf x_{k+H_p}^{(\omega)})\right]\\
+&+\lambda_{\mathrm{sw}}\sum_{j=0}^{H_p-1}c_{\mathrm{sw}}(\mathbf u_{k+j},\mathbf u_{k+j-1})
++\lambda_\epsilon\sum_j\|\boldsymbol\epsilon_j\|_1,
+\end{split}
+\label{met:costo_mpc}
+\end{equation}
+con penalización de conmutación y relajaciones de desempeño. La transición cumple
+\begin{equation}
+\mathbf x_{k+j+1}^{(\omega)}=\mathcal F_{\mathrm{pred}}
+(\mathbf x_{k+j}^{(\omega)},\mathbf u_{k+j},\mathbf d_{k+j}^{(\omega)}),
+\qquad \mathbf u_{k+j}\in\mathcal U.
+\label{met:restricciones_mpc}
+\end{equation}
+Se añaden permanencia mínima, dominio termodinámico, límites operativos y bandas factibles. Las preferencias relajables se diferencian de restricciones físicas de equipos. El riesgo de condensación y los máximos locales utilizan el soporte y la incertidumbre de sus predictores.
+
+La secuencia candidata es común a los escenarios del horizonte; se ejecuta la primera acción y se reoptimiza con nuevas observaciones. Esta parametrización mantiene causalidad. Una política con ramificación futura requiere condiciones explícitas de no anticipación.
+
+El optimizador se selecciona para modos discretos, conservando horizonte, presupuesto, tolerancias y estado de terminación. La evaluación utiliza pronósticos disponibles, error de modelo y perturbaciones de sensado. El plazo incluye estimación, escenarios, evaluaciones y comunicación. Una solución tardía o inadmisible activa el respaldo y se contabiliza en desempeño.
+
+\subsection{Comparación en lazo cerrado sobre condiciones comunes}
+\label{met:comparacion_control}
+
+La comparación comprende operación de referencia, PID, MRAC en su régimen identificado, MPC físico y MPC con predictor basado en datos o híbrido. La Tabla~\ref{met:tabla_control} establece qué componente varía y qué condiciones se mantienen comunes.
+
+\begin{table}[htbp]
+\centering
+\small
+\caption{Paradigmas de control y condiciones de comparación.}
+\label{met:tabla_control}
+\begingroup
+\renewcommand{\arraystretch}{1.28}
+\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{0.22\textwidth}>{\raggedright\arraybackslash}p{0.34\textwidth}>{\raggedright\arraybackslash}X}
+\toprule
+Alternativa & Componente específico & Condiciones comunes \\
+\midrule
+Referencia & Operación natural o regla de modos documentada. & Misma planta, estado inicial y episodio ambiental. \\
+PID & Ganancias, filtrado y coordinación de salidas. & Mismos sensores, bandas, modos y permanencia mínima. \\
+MRAC & Modelo local y actualización de parámetros. & Mismo régimen factible y límites de actuación. \\
+MPC físico & Red de cuatro estados como predictor. & Mismo horizonte, escenarios y criterios de costo. \\
+MPC de datos o híbrido & Predictor condicionado por acciones o cierre enriquecido. & Misma información, optimización, restricciones y presupuesto. \\
+\bottomrule
+\end{tabularx}
+\endgroup
+\end{table}
+
+La planta numérica de evaluación se separa del predictor del controlador. Se introducen variantes paramétricas y casos CFD seleccionados para representar heterogeneidad y desajuste. Cada política recibe la misma trayectoria meteorológica, condiciones iniciales y realizaciones de error de medición o pronóstico.
+
+Los escenarios comprenden transiciones de irradiancia, viento, ambiente húmedo, cambio de estado inicial, incertidumbre de parámetros y pérdida de observaciones. Se distinguen condiciones nominales y estrés. Una comparación experimental, cuando forma parte de la etapa ejecutada, utiliza episodios del recinto sin carga y registra diferencias ambientales, memoria térmica y transiciones entre políticas. Su conclusión conserva el diseño y el número efectivo de episodios.
+
+\subsection{Indicadores de regulación, energía y factibilidad}
+
+Para un intervalo evaluado de duración $\mathcal T=t_f-t_0$, se calculan por salida
+\begin{equation}
+\mathrm{IAE}_q=\int_{t_0}^{t_f}|y_q-r_q|\,\mathrm dt,\qquad
+\mathrm{nIAE}_q=\frac{\mathrm{IAE}_q}{s_q\mathcal T}.
+\label{met:iae_control}
+\end{equation}
+Se informan sobreimpulso, establecimiento cuando existe una transición definida, cuantiles del error, fracción de tiempo fuera de banda y duración de violaciones. La dispersión espacial se calcula con el soporte de observación o cierre correspondiente.
+
+La energía eléctrica y la potencia media son
+\begin{equation}
+E_{\mathrm{el}}=\int_{t_0}^{t_f}P_{\mathrm{el}}(t)\,\mathrm dt,\qquad
+\bar P_{\mathrm{el}}=\frac{E_{\mathrm{el}}}{\mathcal T}.
+\label{met:energia_control}
+\end{equation}
+Se reportan $E_{\mathrm{el}}$ en Wh, tiempos por modo, conmutaciones, activaciones de respaldo y plazos incumplidos. La reducción de humedad relativa se interpreta junto con $W$, temperatura y renovación. Los indicadores describen regulación y operación del recinto.
+
+Las diferencias entre políticas se calculan sobre casos emparejados y se acompañan de incertidumbre por episodios o bloques. La decisión prioriza factibilidad y cumplimiento de restricciones, y compara después seguimiento, uniformidad, energía y costo de cálculo. La precisión del predictor y el desempeño de la política se presentan como resultados relacionados, con métricas específicas para cada tarea.
+\FloatBarrier
+
+\section{Reproducibilidad y correspondencia con los resultados}
+\label{met:reproducibilidad}
+
+El expediente experimental relaciona observaciones originales, unidades, calidad, mapa espacial, configuración, eventos y comandos. El expediente numérico conserva versión, geometría, regiones, malla, propiedades, fronteras, convergencia, balances y proyección. El de cada predictor o controlador incorpora particiones, transformaciones, parámetros, semillas, criterio de selección y tiempos de ejecución.
+
+En Kedro se separan nodos de depuración, psicrometría, preparación causal, identificación, simulación, proyección, entrenamiento, enriquecimiento y evaluación. Cada salida conserva procedencia y configuración. Las tablas de resultados se organizan por caracterización del recinto, desempeño de sensado, meteorología, actuación, CFD, cavidad, red, validación, predicción, enriquecimiento y control, con una comparación integrada de alcance.
+
+La cadena metodológica se cierra al relacionar observaciones con modelos identificables, verificar discretización y conservación, contrastar predictores sobre evidencia reservada y evaluar control bajo capacidad real de actuación. La contribución se concreta en la integración de instrumentación distribuida propia, representaciones físicas complementarias y predictores orientados a la regulación térmica e higrométrica del recinto sin carga.

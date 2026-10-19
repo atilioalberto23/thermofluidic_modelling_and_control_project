@@ -1,0 +1,27 @@
+% Fuentes: tab_s09_errores_predictivos.csv
+\begin{table}[htbp]
+\centering
+\caption{RMSE en el bloque cronológico final por canal y horizonte.}
+\label{tab:res_rmse}
+\small
+\setlength{\tabcolsep}{5pt}
+\begin{tabular}{lrrrrr}
+\toprule
+Variable & $h$ (s) & Persistencia & Árbol & XGBoost & LightGBM \\
+\midrule
+$T_{\mathrm{DS}}$ & $20$ & $0{,}2122$ & $0{,}2158$ & $0{,}1731$ & $0{,}1730$ \\
+$T_{\mathrm{DS}}$ & $300$ & $0{,}2258$ & $0{,}2341$ & $0{,}1743$ & $0{,}1738$ \\
+$T_{\mathrm{DS}}$ & $1\,200$ & $0{,}3758$ & $0{,}2862$ & $0{,}1765$ & $0{,}1758$ \\
+$T_{\mathrm{DHT}}$ & $20$ & $0{,}2551$ & $0{,}2378$ & $0{,}2007$ & $0{,}2008$ \\
+$T_{\mathrm{DHT}}$ & $300$ & $0{,}2657$ & $0{,}2549$ & $0{,}2010$ & $0{,}2006$ \\
+$T_{\mathrm{DHT}}$ & $1\,200$ & $0{,}4009$ & $0{,}3033$ & $0{,}2014$ & $0{,}2020$ \\
+$\phi_{\mathrm{DHT}}$ & $20$ & $1{,}4169$ & $1{,}1904$ & $1{,}0442$ & $1{,}0404$ \\
+$\phi_{\mathrm{DHT}}$ & $300$ & $1{,}4489$ & $1{,}2735$ & $1{,}0514$ & $1{,}0536$ \\
+$\phi_{\mathrm{DHT}}$ & $1\,200$ & $1{,}8523$ & $1{,}1725$ & $1{,}0622$ & $1{,}0647$ \\
+\bottomrule
+\end{tabular}
+\par\vspace{3pt}
+\begin{minipage}{0.98\textwidth}\footnotesize
+Temperaturas en $u_T$ y humedad en puntos porcentuales. Se evaluaron $15516$, $15480$ y $15372$ pares posición--origen para $h=20$, $300$ y $1200$ s, respectivamente. Las métricas son las exportadas con pesos iguales por sensor/segmento y duración dentro de cada serie.
+\end{minipage}
+\end{table}

@@ -1,0 +1,24 @@
+% Fuentes: tab_s06_benchmark_cavidad.csv
+\begin{table}[htbp]
+\centering
+\caption{Resultados de la cavidad sin radiación para tres discretizaciones espaciales.}
+\label{tab:res_cavidad_espacial}
+\small
+\setlength{\tabcolsep}{5pt}
+\begin{tabular}{lrrrrrr}
+\toprule
+$Ra$ & $n$ & $\overline{Nu}_h$ & $|v_x|_{\mathrm{ext}}$ & $|v_y|_{\mathrm{ext}}$ & Residual & Costo (s) \\
+\midrule
+$1\,000$ & $17$ & $1{,}114915$ & $3{,}4966$ & $3{,}5277$ & $7{,}61\times10^{-8}$ & $0{,}094$ \\
+$1\,000$ & $33$ & $1{,}112544$ & $3{,}5749$ & $3{,}6117$ & $3{,}44\times10^{-6}$ & $0{,}410$ \\
+$1\,000$ & $65$ & $1{,}114170$ & $3{,}6163$ & $3{,}6593$ & $7{,}14\times10^{-6}$ & $2{,}997$ \\
+$10\,000$ & $17$ & $2{,}219769$ & $16{,}0448$ & $18{,}5859$ & $7{,}38\times10^{-6}$ & $0{,}050$ \\
+$10\,000$ & $33$ & $2{,}183301$ & $16{,}2060$ & $19{,}2942$ & $5{,}61\times10^{-6}$ & $0{,}279$ \\
+$10\,000$ & $65$ & $2{,}202040$ & $16{,}2412$ & $19{,}5244$ & $8{,}37\times10^{-6}$ & $2{,}341$ \\
+\bottomrule
+\end{tabular}
+\par\vspace{3pt}
+\begin{minipage}{0.98\textwidth}\footnotesize
+$Pr=0{,}71$; $n$ indica puntos por dirección y $h_*=1/(n-1)$. Velocidades adimensionales según la escala térmica de la metodología. El residual es el indicador estacionario exportado. Los extremos conservan la convención del solver; se muestran sus magnitudes.
+\end{minipage}
+\end{table}
