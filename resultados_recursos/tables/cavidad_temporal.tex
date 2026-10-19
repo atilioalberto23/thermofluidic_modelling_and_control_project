@@ -1,0 +1,24 @@
+% Fuentes: tab_s06_benchmark_cavidad.csv
+\begin{table}[htbp]
+\centering
+\caption{Refinamiento de paso en la cavidad de $33\times33$ puntos.}
+\label{tab:res_cavidad_temporal}
+\small
+\setlength{\tabcolsep}{5pt}
+\begin{tabular}{lrrrr}
+\toprule
+$Ra$ & $\overline{\Delta t_*}$ & $\overline{Nu}_h$ & $t_*$ final & Pasos \\
+\midrule
+$1\,000$ & $1{,}953125\times10^{-4}$ & $1{,}112543767$ & $0{,}507812$ & $2\,600$ \\
+$1\,000$ & $9{,}765625\times10^{-5}$ & $1{,}112543620$ & $0{,}488281$ & $5\,000$ \\
+$1\,000$ & $4{,}882813\times10^{-5}$ & $1{,}112543498$ & $0{,}478516$ & $9\,800$ \\
+$10\,000$ & $1{,}953125\times10^{-4}$ & $2{,}183300931$ & $0{,}351562$ & $1\,800$ \\
+$10\,000$ & $9{,}765625\times10^{-5}$ & $2{,}183301247$ & $0{,}332031$ & $3\,400$ \\
+$10\,000$ & $4{,}882813\times10^{-5}$ & $2{,}183301289$ & $0{,}332031$ & $6\,800$ \\
+\bottomrule
+\end{tabular}
+\par\vspace{3pt}
+\begin{minipage}{0.98\textwidth}\footnotesize
+$\overline{\Delta t_*}=t_*/N_{\mathrm{pasos}}$ se reconstruye del registro. Los tiempos finales difieren porque se aplicó un criterio de estacionariedad. El estudio no establece por sí solo el orden formal de integración.
+\end{minipage}
+\end{table}

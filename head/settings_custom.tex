@@ -1,0 +1,73 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+%		Thesis Settings
+%		Custom settings
+%
+%		October -- 2019
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%
+%   Use this file for your own custom packages, command-definitions, etc...
+%
+
+
+% the following lines are for creating a simplified TO-DO box. However since boites is not per default installed with all latex-distributions, we have removed this example again
+% if you want to use it and do not have "boites" installed, you can get it from here: http://www.ctan.org/tex-archive/macros/latex/contrib/boites
+%
+%{boites,boites_exemples}
+%\newcommand{\todolist}[1]{\begin{boiteepaisseavecuntitre}{TO DO in this chapter} #1 \end{boiteepaisseavecuntitre}}  % creates a little box
+% %\newcommand{\todolist}[1]{}  % to be used when to do is not to be printed
+
+% *********** Change the header style ***********
+\pagestyle{fancy}
+\renewcommand{\chaptermark}[1]{\markboth{#1}{#1}}
+\fancyhead[RE]{\textbf{\leftmark}}
+\fancyhead[LE]{\textbf{\chaptername\ \thechapter\ }}
+\fancyhead[LO]{\textbf{\leftmark}}
+\fancyhead[RO]{\textbf{\chaptername\ \thechapter\ }}
+
+% if you use chapter* instead of chapter use %\chaptermark{Introduction} o explicitly .. 
+% to do some oher fancy stuff click this link:
+%https://en.wikibooks.org/wiki/LaTeX/Customizing_Page_Headers_and_Footers#Style_customization
+
+% *********** Chemistry Libraries ***********
+\usepackage[version=4]{mhchem}
+\usepackage{chemist}
+\usepackage{chemfig}
+
+% *********** The APA citation style ***********
+\usepackage{csquotes} % needed for biblatex
+\usepackage[backend=biber,style=apa]{biblatex} % uses APA style
+\addbibresource{tail/References.bib}
+
+% Additional library to copy and paste the references in-line (not used here)
+% \usepackage{bibentry}
+% \addbibresource{tail/References.bib}
+% \nobibliography*
+% \bibliography{tail/References.bib}
+
+% *********** Adjusting the footnotes symbols ***********
+% Uncomment only the needed one here XD:
+
+% Option [1]: To only use roman enumeration
+\renewcommand{\thefootnote}{\Roman{footnote}}
+
+% Option [2]: To use Arabic numbering (The default option)
+% \renewcommand{\thefootnote}{\arabic{footnote}} % 
+
+% Option [3]: To symbols instead of numbers (un comment both lines)
+% \usepackage[symbol]{footmisc}
+% \renewcommand{\thefootnote}{\fnsymbol{footnote}}
+
+% Option [4]: To use different styles for normal notes and citations' notes:
+% The source: https://tex.stackexchange.com/questions/408527/differentiate-between-footcite-and-footnote
+% \usepackage{manyfoot}
+% \newfootnote{A}
+% \newcounter{footnoteA}
+% \newcommand{\footnoteA}{%
+% \stepcounter{footnoteA}%
+% \Footnotemark\thefootnoteA \FootnotetextA{}}
+% \renewcommand{\thefootnoteA}{\alph{footnoteA}}
+
+% *********** The end is near ***********

@@ -1,0 +1,20 @@
+% Fuentes: tab_s06_acoplamiento_radiativo.csv; tab_s06_benchmark_cavidad.csv
+\begin{table}[htbp]
+\centering
+\caption{Comparación del caso radiativo y su referencia sin radiación.}
+\label{tab:res_cavidad_radiacion}
+\small
+\setlength{\tabcolsep}{5pt}
+\begin{tabular}{lrrr}
+\toprule
+Caso & $\overline{Nu}_h$ & $\overline{Nu}_c$ & $\overline{Nu}_h-\overline{Nu}_c$ \\
+\midrule
+Sin radiación & $1{,}112544$ & $1{,}112544$ & $8{,}88\times10^{-16}$ \\
+Con radiación & $1{,}082202$ & $1{,}106559$ & $-0{,}024357$ \\
+\bottomrule
+\end{tabular}
+\par\vspace{3pt}
+\begin{minipage}{0.98\textwidth}\footnotesize
+$Ra=10^3$, $Pr=0{,}71$, malla $33\times33$. La diferencia entre Nusselt convectivos requiere examinar el intercambio radiativo y las fronteras horizontales; la tabla no aporta un balance energético total desglosado.
+\end{minipage}
+\end{table}

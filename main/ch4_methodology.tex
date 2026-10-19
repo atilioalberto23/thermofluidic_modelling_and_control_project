@@ -1,0 +1,2643 @@
+\chapter{Metodología}
+
+
+\section{Caracterización de la planta de secado}
+
+La formulación de modelos determinísticos, modelos basados en datos y estrategias de control requiere una caracterización previa de la planta de secado y de su entorno operativo. En esta etapa se identificaron las características geométricas, las propiedades de los materiales, las variables ambientales y los parámetros de operación necesarios para construir los modelos físicos, definir las condiciones de frontera, establecer el dominio operativo del sistema y suministrar la información requerida para la validación experimental.
+
+La caracterización desarrollada constituye la base común de todos los modelos considerados en esta investigación. En consecuencia, los parámetros identificados en esta sección son utilizados posteriormente en la formulación CFD, en los modelos de parámetros concentrados, en la calibración de modelos basados en datos y en la evaluación de las estrategias de control propuestas.
+
+\subsection{Caracterización geométrica del secador}
+
+La geometría del secador determina el volumen disponible para la circulación del aire, las superficies de intercambio térmico, la distribución espacial de la radiación incidente y las condiciones que favorecen el establecimiento de corrientes convectivas naturales. Por esta razón, la caracterización geométrica constituye el primer paso para la formulación de los modelos desarrollados en esta investigación.
+
+Como parte del Entregable I se analizaron las principales configuraciones geométricas empleadas en secadores solares tipo invernadero, obteniéndose expresiones analíticas para el volumen interno, el área superficial expuesta y la relación superficie--volumen ($S/V$). Estos parámetros fueron posteriormente incorporados en la formulación de los modelos determinísticos y utilizados para comparar diferentes configuraciones desde el punto de vista térmico.
+
+La relación superficie--volumen se empleó como un indicador geométrico asociado al intercambio energético entre el secador y el ambiente. Geometrías con valores elevados de $S/V$ presentan, en principio, una mayor capacidad de intercambio térmico con el entorno, mientras que configuraciones con menores valores favorecen una mayor inercia térmica debido a la reducción relativa del área expuesta. Estos criterios fueron utilizados únicamente como indicadores preliminares de diseño, siendo posteriormente complementados mediante simulaciones CFD y validación experimental.
+
+El caso de estudio considerado en esta investigación corresponde al secador solar desarrollado por Coffee Solutions, cuya configuración geométrica se clasifica como un secador tipo invernadero prismático. Las dimensiones finales, áreas características y relaciones geométricas empleadas en los modelos fueron obtenidas mediante medición directa sobre la instalación experimental y se presentan en las secciones correspondientes.
+
+
+\subsection{Caracterización de materiales}
+
+La caracterización de los materiales tuvo como objetivo identificar las propiedades requeridas por los modelos determinísticos y evaluar su influencia sobre el comportamiento termo-higrométrico del secador. Para cada componente estructural se determinaron las propiedades térmicas, ópticas y mecánicas necesarias para representar el intercambio de energía entre el sistema y el entorno.
+
+Las propiedades térmicas consideradas incluyen la conductividad térmica, la densidad y el calor específico, empleadas en la formulación de la conducción de calor y en el cálculo de la capacidad de almacenamiento energético de cada componente. Las propiedades ópticas comprenden la transmitancia, absorptividad, reflectividad y emisividad, utilizadas en el modelo de carga radiativa y en la estimación de la energía solar absorbida por las diferentes superficies. Finalmente, las propiedades mecánicas fueron consideradas únicamente como criterio de selección de materiales para garantizar la estabilidad estructural del secador bajo condiciones normales de operación.
+
+Como resultado del análisis desarrollado durante el Entregable I, se identificó que la superficie inferior del secador constituye el principal elemento de captación energética para el establecimiento de la circulación convectiva natural. En consecuencia, se priorizó la utilización de materiales con elevada absorptividad solar en dicha superficie, favoreciendo el calentamiento de la región inferior del recinto y promoviendo la formación de gradientes térmicos capaces de impulsar el movimiento ascendente del aire.
+
+Las propiedades identificadas en esta etapa fueron incorporadas posteriormente en los modelos CFD, en la formulación de la red térmica y en los balances energéticos desarrollados durante la investigación.
+
+\subsection{Identificación de parámetros de planta}
+
+La formulación de los modelos desarrollados en esta investigación requirió la identificación de los parámetros físicos que caracterizan el comportamiento del secador solar y de las variables ambientales que determinan sus condiciones de operación. Para facilitar su incorporación en las diferentes etapas de modelado, los parámetros fueron clasificados en parámetros estructurales y parámetros exógenos.
+
+\subsubsection{Parámetros estructurales}
+
+Los parámetros estructurales corresponden a características inherentes al diseño físico del secador y permanecen constantes durante la operación normal del sistema. Estos parámetros definen la geometría del dominio computacional, las propiedades físicas utilizadas en los balances de energía y las condiciones de intercambio con el entorno.
+
+Dentro de esta categoría se incluyen las dimensiones geométricas del recinto, el volumen interno, las áreas de intercambio térmico, la inclinación de la cubierta, las dimensiones de las aberturas de ventilación, la distribución espacial de las bandejas de secado y las propiedades térmicas y ópticas de los materiales empleados en la construcción.
+
+Estos parámetros constituyen la base para la formulación de los modelos determinísticos, la discretización geométrica empleada en las simulaciones CFD y la construcción de los modelos de parámetros concentrados desarrollados posteriormente.
+
+
+\subsubsection{Parámetros exógenos}
+
+Los parámetros exógenos representan las condiciones ambientales que actúan como entradas del sistema y cuya evolución temporal determina el régimen de operación del secador. A diferencia de los parámetros estructurales, estas variables presentan un comportamiento dinámico y no pueden ser controladas directamente por el sistema.
+
+Las principales variables consideradas fueron la irradiancia solar global, la temperatura ambiente, la humedad relativa exterior, la velocidad y dirección del viento, la presión atmosférica y la precipitación. Estas variables fueron utilizadas como condiciones de frontera para los modelos determinísticos, como variables de entrada para los modelos predictivos y como información de referencia para el diseño de las estrategias de control.
+
+\subsubsection{Instrumentación meteorológica}
+
+Con el propósito de caracterizar las condiciones ambientales de operación, se implementó un sistema de adquisición de datos compuesto por una estación meteorológica automática y un conjunto de sensores de irradiancia instalados sobre la planta experimental Coffee Solutions.
+
+La estación meteorológica registró de manera continua variables atmosféricas como temperatura ambiente, humedad relativa, velocidad y dirección del viento, presión atmosférica y precipitación. Paralelamente, se instalaron sensores de irradiancia solar para cuantificar la radiación incidente sobre la cubierta del secador, la radiación disponible sobre el plano superior de la instalación y la radiación transmitida hacia el interior del recinto mediante un sensor ubicado sobre el piso del secador.
+
+Esta configuración permitió caracterizar simultáneamente las condiciones ambientales externas y la energía solar efectivamente disponible para el proceso de secado, proporcionando las condiciones de frontera requeridas por los modelos físicos desarrollados en esta investigación.
+
+\subsubsection{Modelo de carga solar}
+
+La estimación de las cargas térmicas incidentes sobre el secador se realizó mediante la metodología propuesta por ASHRAE para el cálculo de cargas solares en edificaciones. La adopción de este modelo permitió integrar las componentes directa, difusa y reflejada de la radiación solar dentro de un marco metodológico ampliamente validado y compatible con la formulación termo-fluidodinámica utilizada posteriormente.
+
+Las variables medidas experimentalmente fueron empleadas tanto para alimentar el modelo ASHRAE como para contrastar sus estimaciones bajo las condiciones climáticas características del sitio de estudio.
+
+
+\subsection{Caracterización climatológica del dominio operativo}
+
+Las condiciones ambientales bajo las cuales opera un secador solar presentan una elevada variabilidad temporal debido a la naturaleza estocástica de la radiación solar y de las variables meteorológicas. En consecuencia, la formulación, validación y evaluación de los modelos desarrollados en esta investigación requieren una caracterización estadística previa del entorno climático donde opera la planta experimental.
+
+Con este propósito se analizaron las series temporales registradas por la estación meteorológica y el sistema de instrumentación instalado en el secador Coffee Solutions. El análisis incluyó la irradiancia solar global, la temperatura ambiente, la humedad relativa, la velocidad y dirección del viento, así como las variables radiativas medidas sobre la cubierta y el interior del secador.
+
+La información obtenida permitió establecer el dominio operativo de la planta, entendido como el conjunto de condiciones ambientales para las cuales fueron formulados, calibrados y validados los modelos desarrollados durante esta investigación.
+
+\subsubsection{Caracterización estadística de las variables ambientales}
+
+Cada variable meteorológica fue caracterizada mediante estadísticos descriptivos que incluyen medidas de tendencia central, dispersión, extremos y percentiles de operación. Adicionalmente, se analizaron los perfiles diarios, la variabilidad intra-diaria y las distribuciones de probabilidad asociadas a cada magnitud.
+
+Este análisis permitió identificar los rangos típicos de operación del sistema y cuantificar la variabilidad natural de las condiciones ambientales que posteriormente fueron utilizadas como entradas de los modelos determinísticos y de los modelos basados en datos.
+
+\subsubsection{Definición del dominio operativo}
+
+A partir de la caracterización estadística de las variables ambientales se definió el dominio operativo del sistema, entendido como la región del espacio de estados ambientales dentro de la cual se espera que el secador opere durante condiciones normales de funcionamiento.
+
+La definición del dominio operativo permitió establecer los intervalos de validez empleados durante la formulación de los modelos determinísticos, la generación de simulaciones CFD, el entrenamiento de modelos basados en datos y la evaluación de las estrategias de control. De esta manera, todos los modelos desarrollados comparten un mismo marco de referencia físico y estadístico.
+
+\subsubsection{Identificación de escenarios críticos}
+
+Con el propósito de evaluar la robustez de los modelos y de las estrategias de control, se identificaron escenarios representativos asociados a condiciones ambientales extremas y de alta exigencia térmica.
+
+Entre los escenarios considerados se incluyen condiciones de elevada irradiancia, alta temperatura ambiente, elevada humedad relativa, baja disponibilidad de radiación solar y combinaciones desfavorables de temperatura y humedad que limitan el proceso de secado.
+
+Estos escenarios fueron utilizados posteriormente para definir las condiciones de simulación, establecer restricciones de diseño y evaluar el desempeño de las estrategias de control bajo condiciones cercanas a los límites del dominio operativo.
+
+\subsubsection{Generación de escenarios meteorológicos}
+
+Con el fin de representar la evolución temporal de las condiciones ambientales y generar escenarios prospectivos para simulación y control, se desarrolló un framework de pronóstico meteorológico basado en un enfoque Markovian Ensemble.
+
+El framework combina modelos probabilísticos y técnicas de pronóstico para generar múltiples trayectorias posibles de irradiancia solar y variables meteorológicas, preservando la dependencia temporal observada en los registros experimentales. Los escenarios generados fueron utilizados para alimentar las simulaciones dinámicas del sistema y evaluar el desempeño de las estrategias de control frente a diferentes condiciones ambientales futuras.
+
+La caracterización climatológica realizada en esta etapa proporcionó las condiciones de frontera, los escenarios de simulación y el dominio operativo utilizados posteriormente en la formulación de los modelos determinísticos, el entrenamiento de modelos basados en datos y el diseño de las estrategias de control desarrolladas en esta investigación.
+
+
+\section{Hipótesis físicas para la formulación del modelo}
+
+En esta investigación, las perturbaciones meteorológicas no constituyen únicamente entradas del modelo, sino el principal mecanismo mediante el cual la planta evoluciona dinámicamente dentro de su dominio operativo.
+
+\subsection{Hipótesis de medio no participante}
+
+Como primera hipótesis de modelado se asumió que el aire contenido en el interior del secador actúa como un medio no participante para la radiación solar de onda corta. Bajo esta aproximación, la absorción de energía radiante por parte del aire se considera despreciable frente a la energía absorbida por las superficies sólidas del sistema.
+
+La adopción de esta hipótesis se fundamenta en la ley de Beer--Lambert,
+
+\begin{equation}
+I=I_0e^{-\kappa L},
+\end{equation}
+
+la cual describe la atenuación de la intensidad radiativa al propagarse a través de un medio absorbente.
+
+Considerando los coeficientes de absorción característicos del aire seco para el espectro solar y las dimensiones típicas del recinto de secado, el producto óptico $\kappa L$ permanece suficientemente pequeño para que la disminución de la intensidad radiativa pueda considerarse despreciable respecto a la radiación incidente. Bajo esta aproximación,
+
+\begin{equation}
+I \approx I_0.
+\end{equation}
+
+En consecuencia, la radiación solar se modeló como una condición de frontera aplicada sobre las superficies sólidas del sistema, mientras que el calentamiento del aire interior se representó mediante los mecanismos de conducción y convección desarrollados a partir del intercambio térmico entre dichas superficies y el fluido.
+
+\subsection{Modelado de perturbaciones meteorológicas}
+
+Desde el punto de vista de la teoría de control, el secador solar constituye una planta dinámica sometida continuamente a perturbaciones externas cuya evolución temporal modifica el balance energético del sistema. A diferencia de procesos industriales convencionales, la principal fuente de energía del secador la radiación solar no puede ser manipulada directamente y presenta una naturaleza inherentemente variable debido a las condiciones atmosféricas.
+
+En consecuencia, la irradiancia solar, la temperatura ambiente, la humedad relativa, la velocidad del viento y las demás variables meteorológicas fueron tratadas como perturbaciones exógenas del sistema. Estas variables modifican continuamente las condiciones de frontera de los modelos determinísticos, alterando los mecanismos de transferencia de calor, la velocidad de evaporación del agua contenida en el café y, en consecuencia, la dinámica global del proceso de secado.
+
+Con el propósito de incorporar dichas perturbaciones dentro de los modelos desarrollados, se adoptó la metodología propuesta por la ASHRAE para el cálculo de cargas solares y condiciones ambientales exteriores. Este modelo permite estimar las componentes directa, difusa y reflejada de la radiación incidente, así como integrar de manera consistente las condiciones meteorológicas dentro de la formulación termo-fluidodinámica empleada posteriormente.
+
+Las variables meteorológicas utilizadas por el modelo fueron obtenidas mediante la estación meteorológica instalada en la planta experimental y complementadas mediante mediciones de irradiancia efectuadas con piranómetros ubicados estratégicamente sobre el techo del secador, en el plano del piso y en la propia estación meteorológica. Esta instrumentación permitió caracterizar simultáneamente las condiciones atmosféricas externas y la energía solar efectivamente disponible para el proceso de secado.
+
+\section{Formulación de modelos determinísticos}
+
+Con el propósito de representar el comportamiento termo-fluidodinámico del secador solar bajo distintos niveles de fidelidad computacional, se desarrolló una jerarquía de modelos determinísticos basada en tres niveles de representación física.
+
+El primer nivel corresponde a un modelo distribuido tridimensional resuelto mediante dinámica de fluidos computacional (CFD), capaz de representar explícitamente los campos espaciales de velocidad, temperatura y humedad. El segundo nivel consiste en un modelo de parámetros concentrados (lumped parameter model), formulado mediante balances macroscópicos de energía y masa entre los principales componentes del secador. Finalmente, el tercer nivel corresponde a un modelo bidimensional simplificado de cavidad, utilizado para estudiar de manera independiente los mecanismos fundamentales de convección natural y transferencia de calor.
+
+Los tres modelos representan el mismo sistema físico, pero difieren en el nivel de resolución espacial, el costo computacional y el tipo de información proporcionada. Esta estrategia permitió combinar modelos de alta fidelidad para la caracterización física del proceso con modelos de menor complejidad orientados al análisis dinámico, la identificación de parámetros y el posterior desarrollo de estrategias de control.
+
+\subsection{Modelo CFD basado en Navier-Stokes}
+Con el fin de obtener una representación espacialmente distribuida del comportamiento termo-fluidodinámico del secador, se formuló un modelo tridimensional basado en las ecuaciones de conservación de masa, cantidad de movimiento, energía y transporte de humedad.
+
+El dominio computacional fue construido a partir de la geometría del secador Coffee Solutions previamente caracterizada, incorporando la cubierta transparente, la superficie absorbente, las bandejas de secado, el volumen de aire y las aberturas de ventilación. Las propiedades termofísicas de los materiales y las condiciones de frontera fueron asignadas utilizando los parámetros identificados durante la etapa de caracterización de planta.
+
+Debido a la naturaleza predominantemente turbulenta del flujo inducido por convección natural y ventilación, se evaluaron distintas formulaciones de turbulencia disponibles dentro del marco RANS. Los modelos fueron ajustados y calibrados considerando las características particulares del flujo desarrollado en el interior del secador, buscando reproducir adecuadamente los patrones de circulación observados experimentalmente.
+
+\subsection{Modelo de parámetros concentrados}
+Con el propósito de disponer de un modelo computacionalmente eficiente para el análisis dinámico del secador, se desarrolló un modelo de parámetros concentrados basado en balances macroscópicos de energía y masa entre los principales componentes del sistema.
+
+A diferencia del modelo CFD, donde las variables dependen explícitamente de la posición espacial, el modelo lumped representa cada componente mediante una temperatura promedio espacialmente uniforme, reduciendo el sistema continuo de ecuaciones diferenciales parciales a un conjunto acoplado de ecuaciones diferenciales ordinarias.
+
+\subsection{Modelo bidimensional de cavidad}
+Con el objetivo de estudiar aisladamente los mecanismos fundamentales de convección natural, se formuló un modelo bidimensional representativo del recinto de secado.
+
+Este modelo conserva los mecanismos físicos dominantes responsables de la circulación convectiva, permitiendo analizar de manera independiente la formación de celdas de recirculación, la distribución del número de Nusselt sobre las superficies y la influencia de los gradientes térmicos sin incurrir en el costo computacional asociado al modelo tridimensional completo.
+
+El modelo bidimensional no pretende sustituir al modelo CFD tridimensional, sino proporcionar una representación simplificada que facilite el análisis físico de la convección natural y la interpretación de los mecanismos responsables del transporte de calor observados posteriormente en las simulaciones completas.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Validación experimental y estadística}
+\label{sec:validacion_experimental_estadistica}
+
+La validación de los modelos determinísticos se estructuró en tres niveles complementarios:
+
+\begin{enumerate}
+    \item adquisición experimental de las variables térmicas, higrométricas y meteorológicas;
+    \item verificación física y numérica de los modelos;
+    \item comparación estadística entre las predicciones y las mediciones experimentales.
+\end{enumerate}
+
+Esta estructura permitió evaluar no solamente la proximidad numérica entre simulación y experimento, sino también la consistencia de los modelos respecto de los principios de conservación, la sensibilidad a la discretización espacial y su capacidad de generalización sobre observaciones no utilizadas durante la calibración.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Adquisición de datos experimentales}
+\label{subsec:adquisicion_datos_experimentales}
+
+La campaña experimental se desarrolló sobre el secador solar Coffee Solutions mediante una arquitectura de sensado distribuido diseñada específicamente para esta investigación. El sistema permitió registrar variables internas del secador, condiciones meteorológicas externas, irradiancia solar y temperaturas superficiales del producto.
+
+La adquisición se realizó con una frecuencia de muestreo de
+
+\begin{equation}
+\Delta t_s = 20~\mathrm{s},
+\end{equation}
+
+seleccionada para capturar las variaciones transitorias del sistema sin generar una carga de almacenamiento y transmisión innecesariamente elevada.
+
+Las variables observadas comprendieron:
+
+\begin{itemize}
+    \item temperatura del aire interior;
+    \item humedad relativa interior;
+    \item temperatura superficial en diferentes regiones del secador;
+    \item temperatura y humedad relativa exteriores;
+    \item irradiancia solar exterior e interior;
+    \item velocidad y dirección del viento;
+    \item presión atmosférica y precipitación, cuando estuvieron disponibles;
+    \item temperatura superficial del café obtenida mediante termografía.
+\end{itemize}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{Módulos distribuidos de sensado}
+\label{subsubsec:modulos_sensado}
+
+Se desarrolló un módulo electrónico de adquisición basado en un microcontrolador ESP32. Cada módulo fue diseñado para interconectar cuatro puntos de medición mediante interfaces RJ45, permitiendo concentrar varios sensores en una única unidad de procesamiento y comunicación.
+
+En cada punto se integraron sensores DS18B20 para temperatura y DHT11 para temperatura y humedad relativa. La combinación de ambos dispositivos permitió disponer de una medición redundante de temperatura y de una medición complementaria de humedad en cada región instrumentada.
+
+La carcasa del módulo fue diseñada para fabricación aditiva e incluyó:
+
+\begin{itemize}
+    \item soporte interno para el ESP32;
+    \item cuatro soportes para bloques RJ45;
+    \item aperturas para alimentación y conexión micro-USB;
+    \item interruptor de alimentación;
+    \item distribución modular de los componentes electrónicos;
+    \item circuito de protección de tensión.
+\end{itemize}
+
+La disposición modular facilitó el reemplazo de sensores, cables o componentes sin modificar la arquitectura completa del sistema. El diseño mecánico y electrónico del módulo se muestra en la presentación técnica adjunta, particularmente en las páginas 2--9. :contentReference[oaicite:1]{index=1}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{Distribución espacial de los sensores}
+\label{subsubsec:distribucion_sensores}
+
+La ubicación de los sensores se definió a partir de la geometría del secador y de las escalas espaciales relevantes del fenómeno térmico. Para ello se adoptó una distancia característica de sensado relacionada con la longitud característica empleada en los modelos determinísticos.
+
+Sea $L_c$ la longitud característica del recinto y $\Delta s$ la separación entre puntos de medición. La densidad espacial de sensado se definió conceptualmente mediante
+
+\begin{equation}
+\eta_s
+=
+\frac{L_c}{\Delta s},
+\label{eq:densidad_sensado}
+\end{equation}
+
+donde valores elevados de $\eta_s$ representan una mayor resolución espacial.
+
+La selección de $\Delta s$ no se equiparó directamente con el tamaño de celda de la malla CFD. En cambio, se utilizó como criterio la capacidad de los sensores para resolver gradientes térmicos relevantes a escala macroscópica, considerando simultáneamente:
+
+\begin{itemize}
+    \item dimensiones del secador;
+    \item localización esperada de zonas calientes y frías;
+    \item proximidad a entradas y salidas de aire;
+    \item distribución de bandejas y producto;
+    \item costo y complejidad de la instrumentación;
+    \item redundancia mínima necesaria para detectar fallos.
+\end{itemize}
+
+De esta manera, la malla experimental se diseñó como una representación reducida de los campos térmicos e higrométricos, y no como una reproducción directa de la discretización numérica.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{Instrumentación meteorológica y radiativa}
+\label{subsubsec:instrumentacion_meteorologica_radiativa}
+
+Las condiciones externas se registraron mediante una estación meteorológica instalada en las proximidades del secador. Esta estación suministró las variables exógenas utilizadas como condiciones de frontera en los modelos determinísticos.
+
+La irradiancia solar se midió mediante tres fuentes complementarias:
+
+\begin{enumerate}
+    \item sensor de irradiancia integrado en la estación meteorológica;
+    \item piranómetro o sensor instalado sobre el plano superior del secador;
+    \item sensor instalado en el interior, próximo al piso o superficie absorbente.
+\end{enumerate}
+
+Esta configuración permitió distinguir entre la irradiancia ambiental disponible, la irradiancia incidente sobre la planta y la fracción transmitida hacia el interior del recinto.
+
+La transmitancia solar experimental de la cubierta pudo estimarse mediante
+
+\begin{equation}
+\tau_{\mathrm{exp}}(t)
+=
+\frac{I_{\mathrm{int}}(t)}
+{I_{\mathrm{ext}}(t)},
+\label{eq:transmitancia_experimental}
+\end{equation}
+
+siempre que ambas mediciones correspondieran al mismo intervalo temporal y orientación efectiva.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{Termografía del producto}
+\label{subsubsec:termografia_producto}
+
+La temperatura superficial del café se evaluó mediante una cámara termográfica. Las imágenes se utilizaron para identificar gradientes térmicos sobre el producto y contrastar las temperaturas superficiales predichas por los modelos.
+
+Para reducir errores asociados a la termografía se consideraron:
+
+\begin{itemize}
+    \item emisividad efectiva del café;
+    \item distancia entre cámara y superficie;
+    \item temperatura reflejada aparente;
+    \item orientación de la cámara;
+    \item estabilidad temporal de la escena;
+    \item selección de regiones de interés comparables.
+\end{itemize}
+
+A partir de cada región de interés $\Omega_r$ se calculó una temperatura superficial promedio:
+
+\begin{equation}
+\overline{T}_{\mathrm{IR},r}
+=
+\frac{1}{A_r}
+\int_{\Omega_r}
+T_{\mathrm{IR}}(\mathbf{x})\,\mathrm{d}A.
+\label{eq:temperatura_termografica_promedio}
+\end{equation}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{Arquitectura de adquisición y almacenamiento}
+\label{subsubsec:arquitectura_datos}
+
+Los módulos de sensado transmitieron las observaciones hacia una arquitectura de datos desplegada en Amazon Web Services. El flujo de información estuvo compuesto por:
+
+\begin{equation}
+\boxed{
+\text{Sensores}
+\rightarrow
+\text{ESP32}
+\rightarrow
+\text{API Gateway}
+\rightarrow
+\text{Lambda}
+\rightarrow
+\text{DynamoDB}
+\rightarrow
+\text{S3}
+}
+\end{equation}
+
+La primera función Lambda recibió y validó las solicitudes procedentes de los nodos antes de almacenar los registros en DynamoDB. Posteriormente, una segunda función replicó o transformó los datos para su almacenamiento persistente en Amazon S3.
+
+La infraestructura fue definida mediante Terraform, permitiendo reproducir y versionar los recursos computacionales. El diagrama presentado en la página 13 de la presentación muestra la secuencia API Gateway--Lambda--DynamoDB--Lambda--S3, mientras que la página 14 plantea la organización posterior de los datos en capas \textit{raw}, intermedia y primaria. :contentReference[oaicite:2]{index=2}
+
+Cada observación fue asociada, como mínimo, con:
+
+\begin{itemize}
+    \item identificador del nodo;
+    \item identificador del sensor;
+    \item marca temporal;
+    \item variable medida;
+    \item valor observado;
+    \item unidad;
+    \item indicador de calidad o estado del sensor.
+\end{itemize}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{Preprocesamiento y sincronización}
+\label{subsubsec:preprocesamiento_sincronizacion}
+
+Antes de comparar los datos experimentales con las simulaciones, las series fueron sometidas a un procedimiento de depuración y sincronización temporal.
+
+El procedimiento incluyó:
+
+\begin{enumerate}
+    \item conversión de todas las marcas temporales a una referencia común;
+    \item eliminación de registros duplicados;
+    \item identificación de mediciones físicamente imposibles;
+    \item detección de valores faltantes;
+    \item alineación entre variables meteorológicas, sensores internos y salidas simuladas;
+    \item agregación temporal cuando la frecuencia de la simulación difirió de la frecuencia de adquisición.
+\end{enumerate}
+
+Para una ventana temporal $\Delta t$, el valor agregado se calculó mediante
+
+\begin{equation}
+\overline{y}_k
+=
+\frac{1}{n_k}
+\sum_{i\in\mathcal{W}_k}y_i,
+\label{eq:agregacion_temporal}
+\end{equation}
+
+donde $\mathcal{W}_k$ representa el conjunto de observaciones pertenecientes a la ventana $k$.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Validación física y numérica}
+\label{subsec:validacion_fisica_numerica}
+
+La concordancia estadística entre simulación y experimento no fue considerada suficiente por sí sola. Antes de la comparación formal, cada modelo fue sometido a verificaciones de consistencia física y numérica.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{Independencia de malla}
+\label{subsubsec:independencia_malla}
+
+La sensibilidad de la solución CFD respecto de la discretización espacial se evaluó mediante al menos tres niveles de malla:
+
+\begin{equation}
+\mathcal{M}_1,\qquad
+\mathcal{M}_2,\qquad
+\mathcal{M}_3,
+\end{equation}
+
+correspondientes a discretizaciones gruesa, intermedia y fina.
+
+Para cada malla se compararon variables integrales y locales, entre ellas:
+
+\begin{itemize}
+    \item temperatura media interior;
+    \item temperatura máxima;
+    \item velocidad media;
+    \item caudal en las aberturas;
+    \item número de Nusselt promedio;
+    \item dispersión espacial de temperatura.
+\end{itemize}
+
+La variación relativa entre dos discretizaciones consecutivas se calculó como
+
+\begin{equation}
+\varepsilon_{\phi}^{(i,j)}
+=
+\left|
+\frac{\phi_j-\phi_i}{\phi_j}
+\right|
+\times 100\,\%.
+\label{eq:error_independencia_malla}
+\end{equation}
+
+Se consideró alcanzada la independencia práctica de malla cuando el refinamiento adicional produjo variaciones inferiores al umbral establecido para las magnitudes de interés, sin mejoras proporcionales respecto del costo computacional.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{Conservación de masa}
+\label{subsubsec:conservacion_masa}
+
+Para el dominio fluido se verificó el balance integral de masa:
+
+\begin{equation}
+\frac{\mathrm{d}}{\mathrm{d}t}
+\int_{\Omega_f}
+\rho\,\mathrm{d}V
++
+\int_{\partial\Omega_f}
+\rho\mathbf{u}\cdot\mathbf{n}\,\mathrm{d}A
+=
+0.
+\label{eq:balance_integral_masa}
+\end{equation}
+
+El residuo normalizado se definió como
+
+\begin{equation}
+R_m
+=
+\frac{
+\left|
+\dfrac{\mathrm{d}}{\mathrm{d}t}
+\int_{\Omega_f}\rho\,\mathrm{d}V
++
+\int_{\partial\Omega_f}
+\rho\mathbf{u}\cdot\mathbf{n}\,\mathrm{d}A
+\right|
+}{
+\max\left(
+\displaystyle
+\sum_{\mathrm{in}}\dot m,\,
+\sum_{\mathrm{out}}\dot m
+\right)
+}.
+\label{eq:residuo_masa}
+\end{equation}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{Conservación de energía}
+\label{subsubsec:conservacion_energia}
+
+La consistencia energética se evaluó mediante el balance integral:
+
+\begin{equation}
+\frac{\mathrm{d}E_{\mathrm{alm}}}{\mathrm{d}t}
+=
+\dot Q_{\mathrm{solar}}
++
+\dot Q_{\mathrm{in}}
+-
+\dot Q_{\mathrm{out}}
+-
+\dot Q_{\mathrm{loss}}
+-
+\dot Q_{\mathrm{evap}},
+\label{eq:balance_integral_energia_validacion}
+\end{equation}
+
+donde $E_{\mathrm{alm}}$ representa la energía almacenada en los dominios sólido, fluido y producto.
+
+El error relativo de cierre energético se calculó como
+
+\begin{equation}
+\varepsilon_E
+=
+\frac{
+\left|
+\dot Q_{\mathrm{solar}}
++
+\dot Q_{\mathrm{in}}
+-
+\dot Q_{\mathrm{out}}
+-
+\dot Q_{\mathrm{loss}}
+-
+\dot Q_{\mathrm{evap}}
+-
+\dfrac{\mathrm{d}E_{\mathrm{alm}}}{\mathrm{d}t}
+\right|
+}{
+\left|
+\dot Q_{\mathrm{solar}}
+\right|
++
+\left|
+\dot Q_{\mathrm{in}}
+\right|
++
+\epsilon
+}
+\times 100\,\%,
+\label{eq:error_cierre_energia}
+\end{equation}
+
+donde $\epsilon$ es un valor pequeño introducido para evitar divisiones numéricamente indefinidas.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{Conservación de humedad}
+\label{subsubsec:conservacion_humedad}
+
+El balance integral de vapor de agua se formuló como
+
+\begin{equation}
+\frac{\mathrm{d}}{\mathrm{d}t}
+\int_{\Omega_f}
+\rho Y_v\,\mathrm{d}V
+=
+\dot m_{v,\mathrm{prod}}
++
+\dot m_{v,\mathrm{in}}
+-
+\dot m_{v,\mathrm{out}},
+\label{eq:balance_integral_humedad}
+\end{equation}
+
+donde $Y_v$ es la fracción másica de vapor y $\dot m_{v,\mathrm{prod}}$ representa la humedad liberada por el café.
+
+La pérdida de humedad del producto debe corresponder, dentro de la incertidumbre experimental, con el vapor acumulado y extraído:
+
+\begin{equation}
+-\frac{\mathrm{d}m_{w,\mathrm{café}}}{\mathrm{d}t}
+\approx
+\frac{\mathrm{d}m_{v,\mathrm{aire}}}{\mathrm{d}t}
++
+\dot m_{v,\mathrm{out}}
+-
+\dot m_{v,\mathrm{in}}.
+\label{eq:acoplamiento_humedad}
+\end{equation}
+
+Esta comprobación permitió detectar inconsistencias entre la cinética de secado, el transporte de especies y las condiciones de ventilación.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Validación estadística formal}
+\label{subsec:validacion_estadistica_formal}
+
+La validación estadística se realizó comparando las series temporales experimentales con las predicciones correspondientes de cada modelo.
+
+Para evitar utilizar las mismas observaciones durante la calibración y la validación, la base experimental fue dividida en dos subconjuntos cronológicamente independientes:
+
+\begin{equation}
+\mathcal{D}
+=
+\mathcal{D}_{\mathrm{cal}}
+\cup
+\mathcal{D}_{\mathrm{val}},
+\qquad
+\mathcal{D}_{\mathrm{cal}}
+\cap
+\mathcal{D}_{\mathrm{val}}
+=
+\varnothing,
+\end{equation}
+
+con
+
+\begin{equation}
+|\mathcal{D}_{\mathrm{cal}}|
+=
+|\mathcal{D}_{\mathrm{val}}|
+=
+0.5|\mathcal{D}|.
+\end{equation}
+
+El primer 50\,\% se empleó para ajustar parámetros inciertos del modelo y el 50\,\% restante para evaluar el modelo calibrado. La división preservó el orden temporal para evitar fuga de información entre observaciones futuras y pasadas.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{Calibración del modelo}
+\label{subsubsec:calibracion_modelo}
+
+Sea $\boldsymbol{\theta}$ el vector de parámetros ajustables. La calibración se formuló como
+
+\begin{equation}
+\boldsymbol{\theta}^{*}
+=
+\arg\min_{\boldsymbol{\theta}}
+\sum_{i\in\mathcal{D}_{\mathrm{cal}}}
+w_i
+\left[
+y_i-
+\hat y_i(\boldsymbol{\theta})
+\right]^2,
+\label{eq:calibracion_parametros}
+\end{equation}
+
+sujeto a límites físicamente admisibles:
+
+\begin{equation}
+\boldsymbol{\theta}_{\min}
+\leq
+\boldsymbol{\theta}
+\leq
+\boldsymbol{\theta}_{\max}.
+\end{equation}
+
+Los parámetros calibrables podían incluir coeficientes convectivos efectivos, infiltración, pérdidas térmicas globales, propiedades aparentes o términos fuente, pero no se permitió que el ajuste compensara violaciones evidentes de conservación.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{Prueba de igualdad de medias}
+\label{subsubsec:t_test}
+
+Para evaluar si existía una diferencia estadísticamente significativa entre los valores medios experimentales y simulados se utilizó una prueba $t$.
+
+Dado que cada predicción se encontraba asociada temporalmente con una observación, la formulación preferente fue la prueba $t$ pareada sobre las diferencias
+
+\begin{equation}
+d_i=y_{i,\mathrm{exp}}-y_{i,\mathrm{sim}}.
+\end{equation}
+
+Las hipótesis fueron
+
+\begin{equation}
+H_0:\mu_d=0,
+\end{equation}
+
+\begin{equation}
+H_1:\mu_d\neq 0.
+\end{equation}
+
+El estadístico se calculó mediante
+
+\begin{equation}
+t
+=
+\frac{\overline{d}}
+{s_d/\sqrt{n}},
+\label{eq:t_pareada}
+\end{equation}
+
+donde $\overline{d}$ es la media de las diferencias y $s_d$ su desviación estándar.
+
+Para un nivel de significancia
+
+\begin{equation}
+\alpha=0.05,
+\end{equation}
+
+no se rechazó $H_0$ cuando
+
+\begin{equation}
+p_t\geq 0.05.
+\end{equation}
+
+Debe señalarse que no rechazar $H_0$ no demuestra igualdad exacta; indica que la evidencia disponible no fue suficiente para detectar un sesgo medio estadísticamente significativo al nivel seleccionado.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{Prueba de igualdad de varianzas}
+\label{subsubsec:f_test}
+
+La capacidad del modelo para reproducir la variabilidad observada se evaluó mediante una prueba $F$:
+
+\begin{equation}
+H_0:
+\sigma_{\mathrm{exp}}^2
+=
+\sigma_{\mathrm{sim}}^2,
+\end{equation}
+
+\begin{equation}
+H_1:
+\sigma_{\mathrm{exp}}^2
+\neq
+\sigma_{\mathrm{sim}}^2.
+\end{equation}
+
+El estadístico se definió como
+
+\begin{equation}
+F
+=
+\frac{s_{\mathrm{exp}}^2}
+{s_{\mathrm{sim}}^2}.
+\label{eq:f_test}
+\end{equation}
+
+Para un nivel de confianza del 95\,\%, no se rechazó la hipótesis nula cuando
+
+\begin{equation}
+p_F\geq 0.05.
+\end{equation}
+
+Debido a la sensibilidad de la prueba $F$ frente a desviaciones de normalidad, sus resultados se interpretaron junto con inspecciones gráficas de residuos y métricas de error. Cuando la hipótesis de normalidad no resultó razonable, la comparación de dispersión debía complementarse con una prueba más robusta, como Levene o Brown--Forsythe.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{Métricas complementarias}
+\label{subsubsec:metricas_validacion}
+
+Las pruebas de hipótesis se complementaron con métricas de magnitud del error:
+
+\begin{equation}
+\operatorname{MAE}
+=
+\frac{1}{n}
+\sum_{i=1}^{n}
+|y_i-\hat y_i|,
+\end{equation}
+
+\begin{equation}
+\operatorname{RMSE}
+=
+\sqrt{
+\frac{1}{n}
+\sum_{i=1}^{n}
+(y_i-\hat y_i)^2
+},
+\end{equation}
+
+\begin{equation}
+\operatorname{MBE}
+=
+\frac{1}{n}
+\sum_{i=1}^{n}
+(\hat y_i-y_i),
+\end{equation}
+
+\begin{equation}
+R^2
+=
+1-
+\frac{
+\sum_{i=1}^{n}(y_i-\hat y_i)^2
+}{
+\sum_{i=1}^{n}(y_i-\overline{y})^2
+}.
+\end{equation}
+
+La validación no se declaró únicamente a partir de un valor $p$. Se exigió conjuntamente:
+
+\begin{enumerate}
+    \item cierre físico aceptable de los balances;
+    \item independencia práctica de la malla;
+    \item ausencia de sesgo medio estadísticamente detectable;
+    \item reproducción razonable de la variabilidad;
+    \item errores compatibles con la incertidumbre instrumental y el objetivo del modelo;
+    \item desempeño consistente sobre el subconjunto de validación no utilizado en la calibración.
+\end{enumerate}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{Criterio integrado de aceptación}
+\label{subsubsec:criterio_aceptacion}
+
+El modelo se consideró respaldado dentro del dominio experimental evaluado cuando satisfizo simultáneamente los criterios físicos, numéricos y estadísticos definidos anteriormente.
+
+En forma conceptual,
+
+\begin{equation}
+\boxed{
+\mathcal{V}
+=
+\mathcal{V}_{\mathrm{física}}
+\cap
+\mathcal{V}_{\mathrm{numérica}}
+\cap
+\mathcal{V}_{\mathrm{estadística}}
+}
+\label{eq:validacion_integrada}
+\end{equation}
+
+donde $\mathcal{V}$ representa el dominio respaldado por la validación.
+
+La aceptación del modelo dentro de este dominio no se interpretó como garantía de validez universal. Las predicciones fuera de los intervalos de temperatura, humedad, irradiancia, viento y condiciones de carga incluidos en la campaña experimental fueron tratadas como extrapolaciones y, por tanto, como resultados sujetos a una incertidumbre mayor.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Modelos basados en datos}
+\label{sec:modelos_data_driven}
+
+Los modelos determinísticos desarrollados anteriormente permiten representar el comportamiento termo-higrométrico del secador a partir de principios de conservación, propiedades físicas y condiciones de frontera. Sin embargo, su utilización directa en tareas de predicción y control puede verse limitada por el costo computacional, la incertidumbre de algunos parámetros y la dificultad para representar completamente la variabilidad observada en el sistema real.
+
+Por esta razón, se desarrollaron modelos basados en datos orientados a aproximar la relación dinámica entre las condiciones meteorológicas, los estados internos del secador y las variables de interés del proceso. Estos modelos fueron formulados como representaciones complementarias de los modelos físicos y no como sustitutos universales de las ecuaciones gobernantes.
+
+De manera general, la relación aproximada puede expresarse como
+
+\begin{equation}
+\hat{\mathbf{y}}_{k+\tau}
+=
+\mathcal{F}_{\boldsymbol{\theta}}
+\left(
+\mathbf{x}_{k},
+\mathbf{u}_{k},
+\mathbf{d}_{k},
+\mathbf{h}_{k}
+\right),
+\label{eq:modelo_data_driven_general}
+\end{equation}
+
+donde
+
+\begin{itemize}
+    \item $\hat{\mathbf{y}}_{k+\tau}$ representa la predicción de las variables de interés para un horizonte $\tau$;
+    \item $\mathbf{x}_{k}$ contiene los estados observados o estimados del secador;
+    \item $\mathbf{u}_{k}$ representa las acciones de control;
+    \item $\mathbf{d}_{k}$ contiene las perturbaciones meteorológicas;
+    \item $\mathbf{h}_{k}$ agrupa la información histórica del sistema;
+    \item $\boldsymbol{\theta}$ representa los parámetros aprendidos por el modelo.
+\end{itemize}
+
+Los modelos fueron evaluados principalmente para la predicción de temperatura, humedad relativa, contenido de humedad del producto y otras variables de desempeño necesarias para el análisis y el diseño de estrategias de control.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Justificación del enfoque basado en datos}
+\label{subsec:justificacion_data_driven}
+
+La principal fuente de variabilidad del proceso corresponde a la evolución temporal de las condiciones meteorológicas. La irradiancia solar, la temperatura ambiente, la humedad relativa y el viento presentan cambios intra-diarios, transitorios y parcialmente estocásticos que modifican continuamente el balance energético y de masa del secador.
+
+En consecuencia, aun cuando la estructura física del sistema permanece aproximadamente constante, su respuesta depende de una secuencia de perturbaciones que no puede describirse adecuadamente mediante valores medios o condiciones estacionarias aisladas.
+
+Desde el punto de vista del control, se requiere disponer de modelos capaces de estimar la evolución futura del sistema con tiempos de inferencia compatibles con la frecuencia de decisión. Las simulaciones CFD proporcionan una representación espacial detallada, pero su costo computacional limita su utilización directa dentro de un lazo de control en tiempo real.
+
+Los modelos basados en datos se incorporaron, por tanto, con tres propósitos:
+
+\begin{enumerate}
+    \item aproximar relaciones no lineales entre variables ambientales y estados internos;
+    \item reducir el tiempo necesario para obtener predicciones;
+    \item complementar las limitaciones de los modelos físicos mediante información experimental.
+\end{enumerate}
+
+La arquitectura metodológica adoptada puede resumirse mediante
+
+\begin{equation}
+\boxed{
+\text{Mediciones}
++
+\text{simulaciones}
+\longrightarrow
+\text{modelo basado en datos}
+\longrightarrow
+\text{predicción rápida}
+\longrightarrow
+\text{control}
+}
+\label{eq:arquitectura_data_driven}
+\end{equation}
+
+Esta relación se restringió al dominio operativo respaldado por datos experimentales y simulaciones previamente verificadas.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Construcción del conjunto de datos}
+\label{subsec:construccion_dataset}
+
+El conjunto de datos se construyó integrando tres fuentes principales:
+
+\begin{enumerate}
+    \item mediciones internas del secador;
+    \item registros meteorológicos y radiativos;
+    \item salidas de los modelos determinísticos.
+\end{enumerate}
+
+Las variables de entrada consideradas incluyeron, según la disponibilidad de cada experimento:
+
+\begin{equation}
+\mathbf{z}_k
+=
+\begin{bmatrix}
+I_k &
+T_{\mathrm{amb},k} &
+RH_{\mathrm{amb},k} &
+v_{w,k} &
+T_{\mathrm{int},k} &
+RH_{\mathrm{int},k} &
+T_{\mathrm{prod},k} &
+\mathbf{u}_k
+\end{bmatrix}^{T}.
+\label{eq:vector_entrada_ml}
+\end{equation}
+
+Para incorporar la dependencia temporal del proceso, se construyeron variables retardadas:
+
+\begin{equation}
+\mathbf{h}_{k}
+=
+\left[
+\mathbf{z}_{k},
+\mathbf{z}_{k-1},
+\ldots,
+\mathbf{z}_{k-p}
+\right],
+\label{eq:ventana_temporal}
+\end{equation}
+
+donde $p$ representa el número de observaciones históricas incluidas.
+
+También se calcularon variables derivadas, entre ellas:
+
+\begin{itemize}
+    \item promedios móviles;
+    \item tasas de cambio;
+    \item máximos y mínimos dentro de una ventana;
+    \item hora del día;
+    \item tiempo transcurrido desde el inicio del proceso;
+    \item diferencias entre condiciones internas y externas;
+    \item indicadores de energía solar acumulada.
+\end{itemize}
+
+La irradiancia acumulada durante una ventana se calculó mediante
+
+\begin{equation}
+E_{\mathrm{sol},k}
+=
+\sum_{j=k-p}^{k}
+I_j\Delta t.
+\label{eq:irradiancia_acumulada_ml}
+\end{equation}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Árboles de regresión}
+\label{subsec:arboles_regresion_metodologia}
+
+Los árboles de regresión se utilizaron como modelo de referencia para aproximar relaciones no lineales entre las entradas meteorológicas, los estados internos y las variables objetivo.
+
+Cada árbol divide recursivamente el espacio de entrada mediante reglas de la forma
+
+\begin{equation}
+z_j \leq s,
+\end{equation}
+
+donde $z_j$ representa una variable de entrada y $s$ un valor de partición.
+
+En cada región terminal $R_m$, la predicción se calculó como el promedio de las observaciones asignadas:
+
+\begin{equation}
+\hat{y}(\mathbf{z})
+=
+\sum_{m=1}^{M}
+c_m
+\mathbb{I}
+\left(
+\mathbf{z}\in R_m
+\right),
+\label{eq:arbol_regresion_metodo}
+\end{equation}
+
+con
+
+\begin{equation}
+c_m
+=
+\frac{1}{|R_m|}
+\sum_{\mathbf{z}_i\in R_m}
+y_i.
+\end{equation}
+
+Los árboles individuales se emplearon principalmente como línea base debido a su interpretabilidad y a su capacidad para identificar particiones relevantes del dominio operativo. Su desempeño fue posteriormente comparado con métodos de boosting.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{XGBoost}
+\label{subsec:xgboost_metodologia}
+
+XGBoost se utilizó para construir un ensamble secuencial de árboles de regresión, donde cada nuevo árbol busca reducir los errores residuales producidos por el conjunto anterior.
+
+La predicción del modelo se representó mediante
+
+\begin{equation}
+\hat{y}_i
+=
+\sum_{m=1}^{M}
+f_m(\mathbf{z}_i),
+\qquad
+f_m\in\mathcal{F},
+\label{eq:xgboost_prediccion}
+\end{equation}
+
+donde $\mathcal{F}$ representa el espacio de árboles de regresión.
+
+La función objetivo incluyó un término de ajuste y un término de regularización:
+
+\begin{equation}
+\mathcal{L}
+=
+\sum_{i=1}^{n}
+\ell
+\left(
+y_i,\hat{y}_i
+\right)
++
+\sum_{m=1}^{M}
+\Omega(f_m).
+\label{eq:xgboost_objetivo}
+\end{equation}
+
+La regularización se empleó para limitar la complejidad de los árboles y reducir el riesgo de sobreajuste.
+
+Los principales hiperparámetros evaluados fueron:
+
+\begin{itemize}
+    \item número de árboles;
+    \item profundidad máxima;
+    \item tasa de aprendizaje;
+    \item fracción de observaciones utilizadas por árbol;
+    \item fracción de variables utilizadas por árbol;
+    \item regularización $L_1$ y $L_2$;
+    \item número mínimo de observaciones requerido en una partición.
+\end{itemize}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{LightGBM}
+\label{subsec:lightgbm_metodologia}
+
+LightGBM se incorporó como una segunda implementación de gradient boosting orientada a reducir el costo de entrenamiento e inferencia sobre datos tabulares.
+
+A diferencia del crecimiento nivel por nivel utilizado en otros algoritmos, LightGBM desarrolla los árboles priorizando las hojas cuya partición produce la mayor reducción de la función de pérdida. Esta estrategia puede incrementar la capacidad de ajuste, pero requiere controlar la complejidad del árbol para evitar sobreajuste.
+
+El modelo se utilizó para evaluar:
+
+\begin{itemize}
+    \item precisión predictiva;
+    \item tiempo de entrenamiento;
+    \item tiempo de inferencia;
+    \item consumo de memoria;
+    \item capacidad de generalización sobre condiciones meteorológicas no utilizadas durante el ajuste.
+\end{itemize}
+
+Los hiperparámetros considerados incluyeron:
+
+\begin{itemize}
+    \item número de hojas;
+    \item profundidad máxima;
+    \item tasa de aprendizaje;
+    \item número de iteraciones;
+    \item fracción de características;
+    \item fracción de observaciones;
+    \item regularización;
+    \item número mínimo de datos por hoja.
+\end{itemize}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Physics-Informed Neural Networks}
+\label{subsec:pinn_metodologia}
+
+Las \textit{Physics-Informed Neural Networks} se utilizaron como una representación híbrida, en la cual el aprendizaje a partir de datos se restringió mediante las ecuaciones físicas desarrolladas anteriormente.
+
+La red aproximó las variables de estado mediante
+
+\begin{equation}
+\hat{\mathbf{x}}
+=
+\mathbf{x}_{\boldsymbol{\theta}}
+\left(
+t,
+\mathbf{d},
+\mathbf{u}
+\right),
+\label{eq:pinn_estado}
+\end{equation}
+
+donde $\boldsymbol{\theta}$ contiene los pesos y sesgos de la red.
+
+El residuo físico asociado con el modelo dinámico se definió como
+
+\begin{equation}
+\mathbf{r}_{f}
+=
+\frac{\mathrm{d}\mathbf{x}_{\boldsymbol{\theta}}}{\mathrm{d}t}
+-
+\mathbf{f}
+\left(
+\mathbf{x}_{\boldsymbol{\theta}},
+\mathbf{u},
+\mathbf{d}
+\right).
+\label{eq:residuo_pinn_metodologia}
+\end{equation}
+
+La función de pérdida se formuló como
+
+\begin{equation}
+\mathcal{L}_{\mathrm{PINN}}
+=
+\lambda_{\mathrm{data}}
+\mathcal{L}_{\mathrm{data}}
++
+\lambda_{\mathrm{phys}}
+\mathcal{L}_{\mathrm{phys}}
++
+\lambda_{\mathrm{ic}}
+\mathcal{L}_{\mathrm{ic}}
++
+\lambda_{\mathrm{bc}}
+\mathcal{L}_{\mathrm{bc}},
+\label{eq:loss_pinn_metodologia}
+\end{equation}
+
+donde
+
+\begin{equation}
+\mathcal{L}_{\mathrm{phys}}
+=
+\frac{1}{N_f}
+\sum_{i=1}^{N_f}
+\left\|
+\mathbf{r}_{f,i}
+\right\|_2^2.
+\end{equation}
+
+Para el modelo de parámetros concentrados, las restricciones físicas provinieron de los balances de energía y humedad. Para representaciones distribuidas, podían incorporarse residuos asociados con las ecuaciones de energía, cantidad de movimiento o transporte de especies, según el alcance del modelo entrenado.
+
+La utilización de PINNs tuvo como objetivo evaluar si la incorporación explícita de restricciones físicas mejoraba la consistencia de las predicciones cuando la cantidad de datos experimentales era limitada.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{División de datos y estrategia de validación}
+\label{subsec:division_datos_ml}
+
+Debido a la naturaleza temporal de la información, la división de los datos se realizó preservando el orden cronológico.
+
+El conjunto total se dividió en:
+
+\begin{equation}
+\mathcal{D}
+=
+\mathcal{D}_{\mathrm{train}}
+\cup
+\mathcal{D}_{\mathrm{val}}
+\cup
+\mathcal{D}_{\mathrm{test}},
+\end{equation}
+
+con intersecciones vacías entre subconjuntos.
+
+El conjunto de entrenamiento se utilizó para estimar los parámetros del modelo; el conjunto de validación para seleccionar hiperparámetros; y el conjunto de prueba para obtener una evaluación final sobre datos no utilizados previamente.
+
+No se emplearon particiones aleatorias simples cuando estas podían mezclar registros futuros con observaciones pasadas, debido al riesgo de fuga temporal de información.
+
+Cuando se evaluaron diferentes periodos meteorológicos, se aplicó una validación temporal por bloques:
+
+\begin{equation}
+\mathcal{D}_1
+\rightarrow
+\mathcal{D}_2
+\rightarrow
+\cdots
+\rightarrow
+\mathcal{D}_q,
+\end{equation}
+
+donde cada bloque posterior se utilizó como validación de un modelo entrenado con información cronológicamente anterior.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Ajuste de hiperparámetros}
+\label{subsec:ajuste_hiperparametros}
+
+La selección de hiperparámetros se realizó mediante búsqueda estructurada sobre el conjunto de validación. El criterio de selección combinó precisión y complejidad computacional:
+
+\begin{equation}
+J_{\mathrm{ML}}
+=
+w_e E_{\mathrm{pred}}
++
+w_t t_{\mathrm{inf}}
++
+w_c C_{\mathrm{modelo}},
+\label{eq:criterio_ml}
+\end{equation}
+
+donde
+
+\begin{itemize}
+    \item $E_{\mathrm{pred}}$ representa el error predictivo;
+    \item $t_{\mathrm{inf}}$ representa el tiempo de inferencia;
+    \item $C_{\mathrm{modelo}}$ representa una medida de complejidad;
+    \item $w_e$, $w_t$ y $w_c$ son ponderaciones.
+\end{itemize}
+
+La inclusión del tiempo de inferencia respondió al objetivo de utilizar posteriormente los modelos dentro de estrategias de control.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Métricas de evaluación}
+\label{subsec:metricas_modelos_datos}
+
+El desempeño se evaluó utilizando:
+
+\begin{equation}
+\mathrm{MAE}
+=
+\frac{1}{n}
+\sum_{i=1}^{n}
+|y_i-\hat{y}_i|,
+\end{equation}
+
+\begin{equation}
+\mathrm{RMSE}
+=
+\sqrt{
+\frac{1}{n}
+\sum_{i=1}^{n}
+(y_i-\hat{y}_i)^2
+},
+\end{equation}
+
+\begin{equation}
+R^2
+=
+1-
+\frac{
+\sum_{i=1}^{n}(y_i-\hat{y}_i)^2
+}{
+\sum_{i=1}^{n}(y_i-\overline{y})^2
+},
+\end{equation}
+
+y
+
+\begin{equation}
+\mathrm{MBE}
+=
+\frac{1}{n}
+\sum_{i=1}^{n}
+(\hat{y}_i-y_i).
+\end{equation}
+
+Para predicciones multihorizonte, el error se evaluó como función del horizonte:
+
+\begin{equation}
+\mathrm{RMSE}(\tau)
+=
+\sqrt{
+\frac{1}{n_{\tau}}
+\sum_{i=1}^{n_{\tau}}
+\left[
+y_{i+\tau}
+-
+\hat{y}_{i+\tau|i}
+\right]^2
+}.
+\label{eq:rmse_horizonte}
+\end{equation}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Evaluación del tiempo de inferencia}
+\label{subsec:tiempo_inferencia_modelos}
+
+El tiempo de inferencia se midió como la duración requerida para producir una predicción a partir de un nuevo vector de entrada:
+
+\begin{equation}
+t_{\mathrm{inf}}
+=
+t_{\mathrm{salida}}
+-
+t_{\mathrm{entrada}}.
+\end{equation}
+
+Cada medición se repitió múltiples veces, descartando las ejecuciones iniciales asociadas con carga de memoria o inicialización del entorno.
+
+Se calcularon:
+
+\begin{itemize}
+    \item tiempo medio;
+    \item mediana;
+    \item percentil 95;
+    \item desviación estándar;
+    \item número de inferencias por segundo.
+\end{itemize}
+
+La compatibilidad con control en línea se evaluó mediante
+
+\begin{equation}
+t_{\mathrm{inf}}
++
+t_{\mathrm{opt}}
+<
+\Delta t_c,
+\label{eq:restriccion_tiempo_control}
+\end{equation}
+
+donde $t_{\mathrm{opt}}$ representa el tiempo requerido por el algoritmo de control y $\Delta t_c$ el intervalo disponible para actualizar la acción.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Comparación entre algoritmos}
+\label{subsec:comparacion_algoritmos_ml}
+
+Los modelos se compararon utilizando el mismo conjunto de prueba, las mismas variables objetivo y los mismos horizontes de predicción.
+
+La comparación consideró:
+
+\begin{itemize}
+    \item precisión;
+    \item sesgo;
+    \item estabilidad frente a cambios meteorológicos;
+    \item tiempo de inferencia;
+    \item complejidad computacional;
+    \item interpretabilidad;
+    \item consistencia física;
+    \item desempeño fuera del subconjunto utilizado durante el ajuste.
+\end{itemize}
+
+La selección del modelo no se basó exclusivamente en la menor métrica de error. Para su posible incorporación en control se priorizó el equilibrio entre capacidad predictiva, velocidad de inferencia y estabilidad dentro del dominio operativo.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Alcance de los modelos basados en datos}
+\label{subsec:alcance_modelos_data_driven}
+
+Los modelos desarrollados fueron considerados válidos únicamente dentro de las regiones del dominio operativo suficientemente representadas en los datos de entrenamiento y validación.
+
+Sea $\mathcal{D}_{\mathrm{train}}$ el dominio cubierto por las observaciones utilizadas durante el aprendizaje. Una predicción se consideró interpolativa cuando
+
+\begin{equation}
+\mathbf{z}^{*}
+\in
+\mathcal{D}_{\mathrm{train}},
+\end{equation}
+
+mientras que condiciones fuera de esta región fueron identificadas como extrapolaciones:
+
+\begin{equation}
+\mathbf{z}^{*}
+\notin
+\mathcal{D}_{\mathrm{train}}.
+\end{equation}
+
+La utilización de datos de simulación no se interpretó como evidencia experimental adicional. Dichos datos ampliaron la cobertura numérica del espacio de entrada, pero conservaron las hipótesis, simplificaciones e incertidumbres del modelo determinístico que los generó.
+
+Por tanto, la confiabilidad de los modelos basados en datos se evaluó separando:
+
+\begin{enumerate}
+    \item desempeño sobre datos experimentales;
+    \item desempeño sobre datos simulados;
+    \item desempeño sobre combinaciones híbridas;
+    \item comportamiento en regiones de extrapolación.
+\end{enumerate}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Bucle de enriquecimiento físico--basado en datos}
+\label{sec:hybrid_physics_data_framework}
+
+Con el propósito de reducir la dependencia exclusiva de datos experimentales y mejorar la cobertura del dominio operativo de los modelos basados en datos, se desarrolló un marco híbrido de enriquecimiento denominado \textit{Hybrid Physics--Data Framework}.
+
+El marco propuesto integra mediciones experimentales con datos sintéticos generados mediante modelos físicos de diferente nivel de fidelidad. Su objetivo no consiste en sustituir la evidencia experimental, sino en utilizar las ecuaciones gobernantes y las simulaciones previamente verificadas para complementar regiones del espacio de operación donde la disponibilidad de observaciones reales resulta limitada.
+
+La arquitectura general del proceso puede expresarse como
+
+\begin{equation}
+\boxed{
+\begin{aligned}
+&\text{Datos experimentales}
+\\
+&\qquad+
+\\
+&\text{Datos CFD tridimensionales}
+\\
+&\qquad+
+\\
+&\text{Datos del modelo térmico concentrado}
+\\
+&\qquad+
+\\
+&\text{Datos del modelo bidimensional de cavidad}
+\\
+&\qquad\Downarrow
+\\
+&\text{Conjunto híbrido de entrenamiento}
+\\
+&\qquad\Downarrow
+\\
+&\text{Modelo basado en datos}
+\\
+&\qquad\Downarrow
+\\
+&\text{Predicción rápida y evaluación para control}
+\end{aligned}
+}
+\label{eq:hybrid_framework_general}
+\end{equation}
+
+Los tres modelos físicos no fueron utilizados de manera redundante. Cada uno proporcionó información correspondiente a una escala y a un propósito específico.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Fuentes físicas de datos sintéticos}
+\label{subsec:fuentes_datos_sinteticos}
+
+La generación de datos sintéticos se realizó mediante tres niveles de modelado determinístico:
+
+\begin{enumerate}
+    \item simulación CFD tridimensional;
+    \item modelo térmico de parámetros concentrados;
+    \item modelo bidimensional de cavidad.
+\end{enumerate}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{Datos generados mediante CFD tridimensional}
+
+El modelo CFD se utilizó para generar información espacialmente distribuida sobre:
+
+\begin{itemize}
+    \item temperatura del aire;
+    \item velocidad y dirección del flujo;
+    \item presión;
+    \item humedad o fracción másica de vapor;
+    \item temperatura de superficies;
+    \item distribución de flujo térmico;
+    \item patrones de recirculación y zonas de baja ventilación.
+\end{itemize}
+
+Para cada condición simulada se obtuvo un campo de la forma
+
+\begin{equation}
+\mathbf{q}
+=
+\mathbf{q}
+\left(
+\mathbf{x},
+t;
+\boldsymbol{\theta},
+\mathbf{d},
+\mathbf{u}
+\right),
+\label{eq:campo_cfd_sintetico}
+\end{equation}
+
+donde $\mathbf{x}$ representa la posición espacial, $\boldsymbol{\theta}$ los parámetros de planta, $\mathbf{d}$ las perturbaciones meteorológicas y $\mathbf{u}$ las acciones de control.
+
+Los campos CFD fueron posteriormente reducidos a variables compatibles con los modelos basados en datos mediante operadores de extracción:
+
+\begin{equation}
+\mathbf{z}_{\mathrm{CFD}}
+=
+\mathcal{R}
+\left[
+\mathbf{q}
+\left(
+\mathbf{x},t
+\right)
+\right],
+\label{eq:operador_reduccion_cfd}
+\end{equation}
+
+donde $\mathcal{R}$ puede representar:
+
+\begin{itemize}
+    \item promedios volumétricos;
+    \item promedios superficiales;
+    \item valores en posiciones equivalentes a los sensores;
+    \item máximos y mínimos;
+    \item desviaciones espaciales;
+    \item gradientes térmicos;
+    \item indicadores de uniformidad.
+\end{itemize}
+
+Esta reducción permitió relacionar los resultados de alta fidelidad con las variables observables disponibles en la planta real.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{Datos generados mediante la red térmica}
+
+El modelo de parámetros concentrados se utilizó para generar trayectorias temporales prolongadas con un costo computacional menor que el CFD.
+
+Las simulaciones permitieron obtener series de:
+
+\begin{equation}
+\mathbf{x}_{L}(t)
+=
+\begin{bmatrix}
+T_{\mathrm{cov}}(t) &
+T_{\mathrm{abs}}(t) &
+T_{\mathrm{prod}}(t) &
+T_{\mathrm{air}}(t) &
+H(t) &
+M(t)
+\end{bmatrix}^{T}.
+\label{eq:estados_lumped_sinteticos}
+\end{equation}
+
+Estas trayectorias fueron utilizadas para representar:
+
+\begin{itemize}
+    \item transitorios térmicos de larga duración;
+    \item respuestas ante cambios meteorológicos;
+    \item evolución del contenido de humedad;
+    \item secuencias de operación bajo distintos perfiles de irradiancia;
+    \item respuesta dinámica ante acciones de ventilación.
+\end{itemize}
+
+La red térmica permitió, por tanto, ampliar la cobertura temporal del conjunto de entrenamiento, especialmente en condiciones donde las simulaciones CFD completas resultaban computacionalmente prohibitivas.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{Datos generados mediante el modelo bidimensional}
+
+El modelo bidimensional de cavidad se empleó como representación intermedia para estudiar condiciones de convección natural y verificar tendencias físicas asociadas con:
+
+\begin{itemize}
+    \item número de Rayleigh;
+    \item número de Nusselt;
+    \item formación de celdas de recirculación;
+    \item intensidad de los gradientes térmicos;
+    \item acoplamiento entre radiación y convección;
+    \item transición entre regímenes de flujo.
+\end{itemize}
+
+Este modelo no se utilizó para reproducir directamente la geometría completa del secador. Su función fue proporcionar una referencia física simplificada para contrastar patrones observados en el CFD tridimensional y en los modelos basados en datos.
+
+La comparación se efectuó mediante variables adimensionales y magnitudes agregadas:
+
+\begin{equation}
+\boldsymbol{\pi}
+=
+\begin{bmatrix}
+Ra &
+Pr &
+Nu &
+Re
+\end{bmatrix}^{T}.
+\label{eq:variables_adimensionales_validacion_cruzada}
+\end{equation}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Definición del espacio de generación sintética}
+\label{subsec:espacio_generacion_sintetica}
+
+La generación de casos sintéticos se restringió a combinaciones físicamente admisibles de parámetros estructurales, perturbaciones meteorológicas, estados iniciales y acciones de control.
+
+Sea
+
+\begin{equation}
+\boldsymbol{\xi}
+=
+\begin{bmatrix}
+\boldsymbol{\theta} &
+\mathbf{x}_0 &
+\mathbf{d} &
+\mathbf{u}
+\end{bmatrix}^{T}
+\end{equation}
+
+el vector que define un escenario de simulación.
+
+Los casos sintéticos fueron generados sobre un dominio
+
+\begin{equation}
+\mathcal{D}_{\mathrm{syn}}
+=
+\left\{
+\boldsymbol{\xi}:
+\boldsymbol{\xi}_{\min}
+\leq
+\boldsymbol{\xi}
+\leq
+\boldsymbol{\xi}_{\max}
+\right\},
+\label{eq:dominio_sintetico}
+\end{equation}
+
+cuyos límites fueron determinados mediante:
+
+\begin{itemize}
+    \item datos meteorológicos observados;
+    \item características físicas de Coffee Solutions;
+    \item capacidades de los actuadores;
+    \item restricciones térmicas del producto;
+    \item rangos de validez de las propiedades y correlaciones utilizadas.
+\end{itemize}
+
+No se generaron combinaciones arbitrarias que violaran restricciones físicas o que representaran condiciones incompatibles con la operación real del sistema.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Muestreo del dominio operativo}
+\label{subsec:muestreo_dominio_hibrido}
+
+Los escenarios de simulación fueron seleccionados con el propósito de cubrir de manera eficiente el dominio operativo sin recurrir a una exploración exhaustiva de todas las combinaciones posibles.
+
+El conjunto de diseño se definió como
+
+\begin{equation}
+\mathcal{S}
+=
+\left\{
+\boldsymbol{\xi}^{(1)},
+\boldsymbol{\xi}^{(2)},
+\ldots,
+\boldsymbol{\xi}^{(N_s)}
+\right\}.
+\end{equation}
+
+La selección incluyó:
+
+\begin{itemize}
+    \item condiciones típicas;
+    \item condiciones próximas a los límites operativos;
+    \item combinaciones meteorológicas críticas;
+    \item diferentes estados iniciales del producto;
+    \item configuraciones relevantes de ventilación;
+    \item regiones con escasa representación experimental.
+\end{itemize}
+
+Cuando fue posible, se utilizaron técnicas de muestreo estratificado, hipercubo latino o diseños cuasiuniformes para evitar concentrar los casos en regiones ya densamente observadas.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Construcción del conjunto híbrido}
+\label{subsec:conjunto_hibrido}
+
+El conjunto final de datos se construyó mediante la unión de observaciones reales y simulaciones:
+
+\begin{equation}
+\mathcal{D}_{H}
+=
+\mathcal{D}_{\mathrm{exp}}
+\cup
+\mathcal{D}_{\mathrm{CFD}}
+\cup
+\mathcal{D}_{L}
+\cup
+\mathcal{D}_{2D},
+\label{eq:dataset_hibrido}
+\end{equation}
+
+donde
+
+\begin{itemize}
+    \item $\mathcal{D}_{\mathrm{exp}}$ contiene datos experimentales;
+    \item $\mathcal{D}_{\mathrm{CFD}}$ contiene salidas tridimensionales reducidas;
+    \item $\mathcal{D}_{L}$ contiene trayectorias del modelo concentrado;
+    \item $\mathcal{D}_{2D}$ contiene información adimensional y patrones de cavidad.
+\end{itemize}
+
+Cada registro incluyó una variable indicadora de procedencia:
+
+\begin{equation}
+s_i
+\in
+\left\{
+\mathrm{exp},
+\mathrm{CFD},
+\mathrm{lumped},
+\mathrm{2D}
+\right\}.
+\label{eq:etiqueta_fuente}
+\end{equation}
+
+Esta etiqueta permitió evaluar por separado el desempeño del modelo sobre datos reales y sintéticos.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Ponderación de datos según su procedencia}
+\label{subsec:ponderacion_fuentes}
+
+Los datos sintéticos no fueron considerados equivalentes a los experimentales. Para evitar que una gran cantidad de simulaciones dominara el entrenamiento, se asignaron pesos diferentes según la fuente y su nivel de confianza.
+
+La función de pérdida ponderada se formuló como
+
+\begin{equation}
+\mathcal{L}
+=
+\sum_{i=1}^{N}
+w_i
+\ell
+\left(
+y_i,
+\hat y_i
+\right),
+\label{eq:loss_ponderada_hibrida}
+\end{equation}
+
+donde
+
+\begin{equation}
+w_i
+=
+\begin{cases}
+w_{\mathrm{exp}},
+&
+s_i=\mathrm{exp},
+\\
+w_{\mathrm{CFD}},
+&
+s_i=\mathrm{CFD},
+\\
+w_{\mathrm{L}},
+&
+s_i=\mathrm{lumped},
+\\
+w_{\mathrm{2D}},
+&
+s_i=\mathrm{2D}.
+\end{cases}
+\end{equation}
+
+La ponderación se estableció de acuerdo con:
+
+\begin{itemize}
+    \item nivel de validación del modelo fuente;
+    \item distancia respecto del dominio experimental;
+    \item incertidumbre de parámetros;
+    \item error de cierre físico;
+    \item calidad numérica de la simulación.
+\end{itemize}
+
+En términos generales se priorizaron las observaciones reales:
+
+\begin{equation}
+w_{\mathrm{exp}}
+\geq
+w_{\mathrm{CFD}},
+\quad
+w_{\mathrm{exp}}
+\geq
+w_{\mathrm{L}},
+\quad
+w_{\mathrm{exp}}
+\geq
+w_{\mathrm{2D}}.
+\end{equation}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Etapas del bucle de enriquecimiento}
+\label{subsec:etapas_bucle_enriquecimiento}
+
+El marco fue implementado como un proceso iterativo.
+
+\subsubsection*{Etapa 1: entrenamiento experimental de referencia}
+
+Se entrenó inicialmente cada algoritmo utilizando únicamente datos experimentales:
+
+\begin{equation}
+\mathcal{M}_{0}
+=
+\operatorname{Train}
+\left(
+\mathcal{D}_{\mathrm{exp}}
+\right).
+\end{equation}
+
+Este modelo proporcionó una línea base para cuantificar la contribución real de los datos sintéticos.
+
+\subsubsection*{Etapa 2: identificación de regiones deficientemente representadas}
+
+Se analizaron las regiones del dominio en las que el modelo de referencia presentó:
+
+\begin{itemize}
+    \item errores elevados;
+    \item alta varianza;
+    \item baja densidad de observaciones;
+    \item extrapolaciones;
+    \item comportamiento físicamente inconsistente.
+\end{itemize}
+
+La densidad local de datos se representó conceptualmente mediante
+
+\begin{equation}
+\rho_{\mathcal{D}}
+\left(
+\boldsymbol{\xi}
+\right),
+\end{equation}
+
+permitiendo priorizar regiones con baja cobertura.
+
+\subsubsection*{Etapa 3: generación física dirigida}
+
+Los modelos determinísticos fueron ejecutados en las regiones identificadas, generando un nuevo conjunto
+
+\begin{equation}
+\Delta\mathcal{D}_{\mathrm{syn}}^{(j)}.
+\end{equation}
+
+La generación fue dirigida hacia regiones informativas, en lugar de aumentar indiscriminadamente el número de simulaciones.
+
+\subsubsection*{Etapa 4: reentrenamiento}
+
+El conjunto se actualizó mediante
+
+\begin{equation}
+\mathcal{D}_{H}^{(j+1)}
+=
+\mathcal{D}_{H}^{(j)}
+\cup
+\Delta\mathcal{D}_{\mathrm{syn}}^{(j)}.
+\end{equation}
+
+Posteriormente, se entrenó una nueva versión del modelo:
+
+\begin{equation}
+\mathcal{M}_{j+1}
+=
+\operatorname{Train}
+\left(
+\mathcal{D}_{H}^{(j+1)}
+\right).
+\end{equation}
+
+\subsubsection*{Etapa 5: evaluación sobre datos reales no utilizados}
+
+La mejora se evaluó exclusivamente sobre datos experimentales reservados:
+
+\begin{equation}
+E_{\mathrm{exp}}^{(j+1)}
+=
+\operatorname{Error}
+\left(
+\mathcal{M}_{j+1},
+\mathcal{D}_{\mathrm{test,exp}}
+\right).
+\end{equation}
+
+No se consideró mejora válida aquella que redujera el error sobre simulaciones, pero no sobre datos experimentales independientes.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Criterios de detención}
+\label{subsec:criterios_detencion_bucle}
+
+El enriquecimiento se detuvo cuando se cumplió al menos una de las siguientes condiciones:
+
+\begin{enumerate}
+    \item la mejora sobre el conjunto experimental fue inferior a un umbral mínimo;
+    \item el costo de generar nuevos datos superó la mejora obtenida;
+    \item el error alcanzó el nivel asociado con la incertidumbre instrumental;
+    \item las nuevas simulaciones no ampliaron significativamente la cobertura del dominio;
+    \item se detectó una degradación de la consistencia física o de la capacidad de generalización.
+\end{enumerate}
+
+La mejora relativa se cuantificó mediante
+
+\begin{equation}
+\Delta E^{(j)}
+=
+\frac{
+E_{\mathrm{exp}}^{(j)}
+-
+E_{\mathrm{exp}}^{(j+1)}
+}{
+E_{\mathrm{exp}}^{(j)}
+}
+\times 100\,\%.
+\label{eq:mejora_relativa_enriquecimiento}
+\end{equation}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Evaluación de la mejora de generalización}
+\label{subsec:generalizacion_hibrida}
+
+La generalización se evaluó separando explícitamente diferentes regiones:
+
+\begin{enumerate}
+    \item interpolación dentro del dominio experimental;
+    \item condiciones experimentales no utilizadas durante el entrenamiento;
+    \item regiones respaldadas mediante simulaciones verificadas;
+    \item regiones de extrapolación.
+\end{enumerate}
+
+Sea
+
+\begin{equation}
+\mathcal{D}_{\mathrm{exp}}
+\subseteq
+\mathcal{D}_{\mathrm{phys}}
+\subseteq
+\mathcal{D}_{\mathrm{op}},
+\end{equation}
+
+donde $\mathcal{D}_{\mathrm{phys}}$ representa el dominio cubierto por modelos físicos y $\mathcal{D}_{\mathrm{op}}$ el dominio operativo de interés.
+
+El enriquecimiento tuvo como objetivo aumentar la cobertura desde $\mathcal{D}_{\mathrm{exp}}$ hacia regiones de $\mathcal{D}_{\mathrm{phys}}$, sin asumir que toda la región $\mathcal{D}_{\mathrm{op}}$ quedaba automáticamente validada.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Prevención del sobreajuste}
+\label{subsec:overfitting_hibrido}
+
+Para reducir el riesgo de sobreajuste se aplicaron:
+
+\begin{itemize}
+    \item regularización de los modelos;
+    \item validación temporal;
+    \item evaluación sobre datos experimentales reservados;
+    \item control de la proporción entre datos reales y sintéticos;
+    \item muestreo equilibrado del dominio;
+    \item detección de simulaciones redundantes;
+    \item comparación entre error de entrenamiento y error experimental.
+\end{itemize}
+
+La proporción de datos sintéticos se definió como
+
+\begin{equation}
+\gamma_{\mathrm{syn}}
+=
+\frac{N_{\mathrm{syn}}}
+{N_{\mathrm{exp}}+N_{\mathrm{syn}}},
+\label{eq:proporcion_sintetica}
+\end{equation}
+
+y se evaluó experimentalmente para determinar si incrementos adicionales producían mejoras reales o degradaban el desempeño sobre observaciones independientes.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Consistencia física de las predicciones}
+\label{subsec:consistencia_fisica_predictions}
+
+Las predicciones de los modelos enriquecidos fueron sometidas a restricciones de plausibilidad física.
+
+Entre los criterios evaluados se incluyeron:
+
+\begin{itemize}
+    \item límites térmicos admisibles;
+    \item humedad relativa en el intervalo físico;
+    \item contenido de humedad no negativo;
+    \item continuidad temporal;
+    \item dirección correcta de la pérdida de humedad;
+    \item compatibilidad con balances globales de energía y masa.
+\end{itemize}
+
+Para una predicción $\hat{\mathbf{x}}$, se definió un residuo físico general:
+
+\begin{equation}
+\mathbf{r}_{\mathrm{phys}}
+=
+\frac{\mathrm{d}\hat{\mathbf{x}}}{\mathrm{d}t}
+-
+\mathbf{f}_{\mathrm{phys}}
+\left(
+\hat{\mathbf{x}},
+\mathbf{u},
+\mathbf{d}
+\right).
+\label{eq:residuo_fisico_modelo_hibrido}
+\end{equation}
+
+El residuo se utilizó como indicador complementario de validez:
+
+\begin{equation}
+J_{\mathrm{phys}}
+=
+\frac{1}{N}
+\sum_{i=1}^{N}
+\left\|
+\mathbf{r}_{\mathrm{phys},i}
+\right\|_2^2.
+\label{eq:metrica_consistencia_fisica}
+\end{equation}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Relevancia para inferencia y control}
+\label{subsec:relevancia_control_hybrid}
+
+Una finalidad principal del enriquecimiento fue obtener modelos capaces de aproximar la respuesta del sistema con tiempos de inferencia inferiores a los requeridos por las simulaciones físicas completas.
+
+La aceleración se cuantificó mediante
+
+\begin{equation}
+S
+=
+\frac{
+t_{\mathrm{phys}}
+}{
+t_{\mathrm{ML}}
+},
+\label{eq:speedup_hibrido}
+\end{equation}
+
+donde $t_{\mathrm{phys}}$ es el tiempo requerido por el modelo determinístico y $t_{\mathrm{ML}}$ el tiempo de inferencia del modelo aprendido.
+
+Para su utilización dentro de control predictivo se exigió:
+
+\begin{equation}
+N_p
+t_{\mathrm{ML}}
++
+t_{\mathrm{opt}}
+<
+\Delta t_c,
+\label{eq:viabilidad_mpc_hibrido}
+\end{equation}
+
+donde $N_p$ es el horizonte de predicción, $t_{\mathrm{opt}}$ el tiempo de optimización y $\Delta t_c$ el intervalo disponible para la actualización del control.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Criterios científicos del marco híbrido}
+\label{subsec:criterios_cientificos_hybrid}
+
+La aplicación del \textit{Hybrid Physics--Data Framework} se sustentó en los siguientes criterios:
+
+\begin{enumerate}
+    \item \textbf{Escasez de datos reales:} las campañas experimentales son costosas, temporalmente limitadas y dependientes del clima.
+    
+    \item \textbf{Heterogeneidad espacial:} los sensores proporcionan observaciones puntuales, mientras que los modelos CFD permiten describir campos distribuidos.
+    
+    \item \textbf{Cobertura climática:} las simulaciones permiten estudiar combinaciones meteorológicas escasamente observadas, siempre dentro de rangos físicamente admisibles.
+    
+    \item \textbf{Conservación física:} los datos sintéticos deben provenir de modelos que satisfagan balances de masa, energía y humedad dentro de tolerancias previamente establecidas.
+    
+    \item \textbf{Trazabilidad:} cada dato debe conservar información sobre su procedencia, parámetros de generación, versión del modelo y nivel de validación.
+    
+    \item \textbf{Validación experimental:} toda mejora atribuida al enriquecimiento debe demostrarse sobre datos reales no utilizados durante el entrenamiento.
+    
+    \item \textbf{Utilidad operacional:} el modelo enriquecido debe reducir el costo de inferencia sin perder la precisión y consistencia necesarias para tareas de control.
+\end{enumerate}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Alcance epistemológico}
+\label{subsec:alcance_epistemologico_hybrid}
+
+Los datos sintéticos no fueron considerados equivalentes a observaciones experimentales. Un modelo basado en datos entrenado con simulaciones aprende principalmente el comportamiento del modelo físico que generó dichas simulaciones.
+
+En consecuencia,
+
+\begin{equation}
+\boxed{
+\text{Más datos sintéticos}
+\not\Rightarrow
+\text{mayor validez experimental automática}.
+}
+\end{equation}
+
+La utilidad científica del enriquecimiento se estableció únicamente cuando la incorporación de simulaciones produjo mejoras medibles sobre datos experimentales independientes y mantuvo la consistencia física de las predicciones.
+
+Por tanto, el marco propuesto debe interpretarse como un procedimiento de transferencia estructurada de conocimiento físico hacia modelos de inferencia rápida, y no como un mecanismo para declarar validez fuera del dominio respaldado por evidencia.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Análisis de actuadores y patrones de flujo}
+\label{sec:analisis_actuadores}
+
+El análisis de actuadores tuvo como propósito determinar la capacidad de intervención disponible sobre la dinámica termo-higrométrica del secador Coffee Solutions. Para ello se caracterizaron los dispositivos instalados, se identificaron las acciones físicamente manipulables y se utilizaron los modelos determinísticos para evaluar su influencia sobre la circulación del aire, la uniformidad térmica y la extracción de humedad.
+
+En esta investigación, los actuadores no se analizaron únicamente como equipos capaces de producir un determinado caudal. Su evaluación consideró simultáneamente:
+
+\begin{itemize}
+    \item capacidad de renovación del aire;
+    \item modificación de los patrones de recirculación;
+    \item homogeneización espacial de temperatura y humedad;
+    \item extracción del vapor generado durante el secado;
+    \item pérdidas de energía térmica asociadas con la ventilación;
+    \item potencia eléctrica requerida;
+    \item compatibilidad con estrategias de control continuo o discreto.
+\end{itemize}
+
+La metodología se estructuró en cuatro etapas: caracterización de los actuadores existentes, estimación de los requerimientos de flujo, análisis CFD de los patrones inducidos y formulación de criterios de dimensionamiento y ubicación.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Necesidades teóricas de actuación}
+\label{subsec:necesidades_teoricas_actuacion}
+
+El secador solar puede operar mediante convección natural cuando los gradientes térmicos producen fuerzas de flotación suficientes para renovar el aire interior. Sin embargo, bajo condiciones de baja irradiancia, alta humedad exterior, estratificación térmica o elevada carga de producto, la circulación natural puede resultar insuficiente para evacuar el vapor y mantener condiciones espaciales uniformes.
+
+El análisis previo mostró que el signo y la magnitud del gradiente vertical de temperatura determinan la estabilidad de la circulación interna. Cuando la superficie inferior se encuentra a mayor temperatura que la región superior, se favorece la aparición de corrientes ascendentes y celdas convectivas. En el caso opuesto, pueden formarse regiones estratificadas con baja renovación de aire. :contentReference[oaicite:1]{index=1}
+
+A partir de esta condición se identificaron tres funciones principales de actuación:
+
+\begin{enumerate}
+    \item \textbf{extracción:} retirar aire caliente y húmedo del recinto;
+    \item \textbf{impulsión o recirculación:} generar mezcla interna y reducir gradientes espaciales;
+    \item \textbf{regulación de aberturas:} modificar el área efectiva de entrada y salida de aire.
+\end{enumerate}
+
+Estas acciones pueden realizarse mediante ventiladores axiales, extractores, circuladores internos y compuertas o aberturas motorizadas.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Caracterización de los actuadores de Coffee Solutions}
+\label{subsec:caracterizacion_actuadores_coffee}
+
+Se levantaron las especificaciones disponibles de los actuadores presentes en la planta experimental. Los parámetros identificados se utilizaron como condiciones de entrada para los modelos de flujo y como restricciones físicas durante la formulación de las estrategias de control.
+
+\begin{table}[H]
+\centering
+\caption{Especificaciones disponibles de los actuadores analizados en Coffee Solutions.}
+\label{tab:actuadores_coffee_solutions}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{
+p{0.28\textwidth}
+p{0.30\textwidth}
+p{0.30\textwidth}
+}
+\toprule
+\textbf{Parámetro}
+&
+\textbf{Ventilador APK25-5}
+&
+\textbf{Air Mover Zeus 900}
+\\
+\midrule
+
+Diámetro
+&
+250 mm
+&
+No disponible
+\\
+
+Potencia nominal
+&
+40 W
+&
+No disponible directamente
+\\
+
+Voltaje de operación
+&
+110 V
+&
+110--120 V AC
+\\
+
+Frecuencia
+&
+60 Hz
+&
+60 Hz
+\\
+
+Velocidad de rotación
+&
+1300 rpm
+&
+No disponible
+\\
+
+Número de aspas
+&
+5
+&
+No disponible
+\\
+
+Modos de operación
+&
+Una velocidad nominal
+&
+Bajo y alto
+\\
+
+Corriente del ventilador
+&
+No disponible
+&
+1.1 A en bajo; 1.8 A en alto
+\\
+
+Caudal nominal
+&
+No disponible
+&
+No disponible
+\\
+
+Curva presión--caudal
+&
+No disponible
+&
+No disponible
+\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Las especificaciones disponibles muestran que la información de placa resulta insuficiente para dimensionar con rigor el sistema. En particular, el diámetro, la potencia y la velocidad de rotación no determinan por sí solos el caudal real dentro del secador. El punto de operación depende de la curva característica del ventilador y de la resistencia aerodinámica del sistema.
+
+Por esta razón, el caudal efectivo se obtuvo o deberá obtenerse mediante uno de los siguientes procedimientos:
+
+\begin{enumerate}
+    \item consulta de la curva presión--caudal suministrada por el fabricante;
+    \item medición de velocidad en la descarga mediante anemometría;
+    \item estimación del caudal a partir de la integración del perfil de velocidad;
+    \item ajuste inverso utilizando datos experimentales y simulaciones CFD.
+\end{enumerate}
+
+El caudal volumétrico se calculó como
+
+\begin{equation}
+\dot V
+=
+\int_{A_o}
+\mathbf{u}\cdot\mathbf{n}\,\mathrm{d}A,
+\label{eq:caudal_integral_actuador}
+\end{equation}
+
+y, cuando la velocidad pudo aproximarse como uniforme,
+
+\begin{equation}
+\dot V
+\approx
+\overline{u}_o A_o.
+\label{eq:caudal_promedio_actuador}
+\end{equation}
+
+Para expresar el caudal en unidades comerciales,
+
+\begin{equation}
+\dot V_{\mathrm{CFM}}
+=
+2118.88\,
+\dot V_{\mathrm{m^3/s}}.
+\label{eq:conversion_cfm}
+\end{equation}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Estimación de los requerimientos de ventilación}
+\label{subsec:requerimientos_ventilacion}
+
+El requerimiento de ventilación se determinó mediante tres criterios complementarios:
+
+\begin{enumerate}
+    \item renovación del volumen de aire;
+    \item extracción de humedad;
+    \item control térmico.
+\end{enumerate}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{Criterio de renovaciones de aire}
+
+El número de renovaciones de aire por unidad de tiempo se definió como
+
+\begin{equation}
+N_{\mathrm{ACH}}
+=
+\frac{\dot V}{V_{\mathrm{sec}}},
+\label{eq:ach_secador}
+\end{equation}
+
+donde $V_{\mathrm{sec}}$ es el volumen interno del secador.
+
+Cuando $N_{\mathrm{ACH}}$ se expresa por hora,
+
+\begin{equation}
+N_{\mathrm{ACH,h}}
+=
+\frac{3600\dot V}{V_{\mathrm{sec}}}.
+\label{eq:ach_hora}
+\end{equation}
+
+Este indicador se utilizó para comparar configuraciones de ventilación, pero no fue considerado suficiente por sí solo, debido a que dos sistemas con el mismo número de renovaciones pueden presentar distribuciones espaciales de flujo completamente diferentes.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{Criterio de extracción de humedad}
+
+El caudal mínimo requerido para retirar el vapor generado por el producto se estimó mediante un balance de humedad:
+
+\begin{equation}
+\dot m_{v,\mathrm{prod}}
+=
+\dot m_a
+\left(
+\omega_{\mathrm{out}}
+-
+\omega_{\mathrm{in}}
+\right),
+\label{eq:balance_humedad_actuador}
+\end{equation}
+
+donde $\omega$ es la razón de humedad del aire y $\dot m_a$ el flujo másico de aire seco.
+
+Por tanto,
+
+\begin{equation}
+\dot m_a
+=
+\frac{
+\dot m_{v,\mathrm{prod}}
+}{
+\omega_{\mathrm{out}}
+-
+\omega_{\mathrm{in}}
+},
+\label{eq:flujo_masico_humedad}
+\end{equation}
+
+y el caudal volumétrico correspondiente se obtuvo mediante
+
+\begin{equation}
+\dot V_{\mathrm{hum}}
+=
+\frac{\dot m_a}{\rho_a}.
+\label{eq:caudal_humedad}
+\end{equation}
+
+Este criterio evita seleccionar un ventilador únicamente por velocidad del aire, sin comprobar que su capacidad sea suficiente para evacuar la humedad liberada durante la etapa de mayor tasa de secado.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{Criterio térmico}
+
+El flujo requerido para limitar la temperatura interior se estimó mediante
+
+\begin{equation}
+\dot Q_{\mathrm{vent}}
+=
+\dot m_a c_{p,a}
+\left(
+T_{\mathrm{out}}
+-
+T_{\mathrm{in}}
+\right).
+\label{eq:carga_ventilacion}
+\end{equation}
+
+Despejando el caudal,
+
+\begin{equation}
+\dot V_{\mathrm{term}}
+=
+\frac{
+\dot Q_{\mathrm{rem}}
+}{
+\rho_a c_{p,a}
+\left|
+T_{\mathrm{in}}-T_{\mathrm{out}}
+\right|
+},
+\label{eq:caudal_termico}
+\end{equation}
+
+donde $\dot Q_{\mathrm{rem}}$ representa la carga térmica que debe ser evacuada para evitar que la temperatura exceda el límite establecido.
+
+El caudal de diseño se seleccionó como
+
+\begin{equation}
+\dot V_{\mathrm{diseño}}
+=
+S_f
+\max
+\left(
+\dot V_{\mathrm{ACH}},
+\dot V_{\mathrm{hum}},
+\dot V_{\mathrm{term}}
+\right),
+\label{eq:caudal_diseno_actuador}
+\end{equation}
+
+donde $S_f$ es un factor de seguridad asociado con pérdidas, incertidumbres y ensuciamiento.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Pérdidas de carga y punto de operación}
+\label{subsec:perdidas_carga_actuadores}
+
+El caudal real no se obtuvo suponiendo descarga libre. Se consideraron las pérdidas de presión asociadas con:
+
+\begin{itemize}
+    \item aberturas de entrada y salida;
+    \item cambios de sección;
+    \item rejillas o mallas;
+    \item bandejas de café;
+    \item conductos;
+    \item codos y accesorios;
+    \item interacción con el flujo exterior.
+\end{itemize}
+
+La pérdida total se estimó mediante
+
+\begin{equation}
+\Delta p_{\mathrm{sys}}
+=
+\sum_i
+K_i
+\frac{\rho u_i^2}{2}
++
+\sum_j
+f_j
+\frac{L_j}{D_{h,j}}
+\frac{\rho u_j^2}{2},
+\label{eq:perdida_presion_sistema}
+\end{equation}
+
+donde $K_i$ representa coeficientes de pérdidas localizadas y $f_j$ factores de fricción.
+
+El punto de operación quedó definido por la intersección entre
+
+\begin{equation}
+\Delta p_{\mathrm{fan}}(\dot V)
+=
+\Delta p_{\mathrm{sys}}(\dot V).
+\label{eq:punto_operacion_ventilador}
+\end{equation}
+
+En ausencia de la curva del fabricante, la selección definitiva no se consideró cerrada únicamente con los datos de placa.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Análisis CFD de patrones de flujo}
+\label{subsec:analisis_cfd_actuadores}
+
+Los modelos CFD se utilizaron para evaluar cómo cada configuración de actuación modificaba el campo tridimensional de velocidad, temperatura y humedad.
+
+Para cada escenario se analizaron:
+
+\begin{itemize}
+    \item líneas de corriente;
+    \item vectores de velocidad;
+    \item regiones de recirculación;
+    \item zonas de estancamiento;
+    \item corto circuito entre impulsión y extracción;
+    \item velocidad sobre las bandejas;
+    \item gradientes verticales y longitudinales;
+    \item dispersión espacial de temperatura y humedad.
+\end{itemize}
+
+Las configuraciones consideradas incluyeron:
+
+\begin{enumerate}
+    \item ventilación natural;
+    \item extracción mecánica;
+    \item impulsión mecánica;
+    \item recirculación interna;
+    \item operación combinada;
+    \item diferentes posiciones y orientaciones de ventiladores;
+    \item diferentes áreas de apertura.
+\end{enumerate}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Criterios de homogeneización térmica}
+\label{subsec:criterios_homogeneizacion}
+
+La calidad del patrón de flujo no se evaluó únicamente mediante el caudal total. Se definieron indicadores de uniformidad espacial.
+
+La desviación estándar de temperatura fue
+
+\begin{equation}
+\sigma_T
+=
+\sqrt{
+\frac{1}{N}
+\sum_{i=1}^{N}
+\left(
+T_i-\overline{T}
+\right)^2
+},
+\label{eq:desviacion_temperatura_actuador}
+\end{equation}
+
+mientras que el coeficiente de variación térmico se definió como
+
+\begin{equation}
+CV_T
+=
+\frac{\sigma_T}{\overline{T}}.
+\label{eq:cv_temperatura_actuador}
+\end{equation}
+
+Para la humedad se empleó
+
+\begin{equation}
+CV_H
+=
+\frac{\sigma_H}{\overline{H}}.
+\label{eq:cv_humedad_actuador}
+\end{equation}
+
+También se definió una fracción de volumen adecuadamente ventilado:
+
+\begin{equation}
+\Phi_v
+=
+\frac{
+V
+\left(
+u_{\min}
+\leq
+|\mathbf{u}|
+\leq
+u_{\max}
+\right)
+}{
+V_{\mathrm{sec}}
+}.
+\label{eq:fraccion_volumen_ventilado}
+\end{equation}
+
+Una configuración se consideró más favorable cuando reducía simultáneamente:
+
+\begin{itemize}
+    \item $\sigma_T$;
+    \item $\sigma_H$;
+    \item el volumen de zonas estancadas;
+    \item el tiempo de residencia del aire húmedo;
+    \item la existencia de chorros que no interactuaban con el producto.
+\end{itemize}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Análisis de chorros}
+\label{subsec:analisis_jets}
+
+Los ventiladores de impulsión generan chorros cuya trayectoria determina la penetración, mezcla y cobertura del volumen interno.
+
+El flujo de cantidad de movimiento en la descarga se estimó mediante
+
+\begin{equation}
+J
+=
+\rho
+\int_{A_j}
+u^2\,\mathrm{d}A,
+\label{eq:momento_jet}
+\end{equation}
+
+y, bajo una aproximación uniforme,
+
+\begin{equation}
+J
+\approx
+\rho A_j u_j^2.
+\label{eq:momento_jet_uniforme}
+\end{equation}
+
+La velocidad de salida fue estimada como
+
+\begin{equation}
+u_j
+=
+\frac{\dot V}{A_j}.
+\label{eq:velocidad_salida_jet}
+\end{equation}
+
+El análisis buscó evitar dos extremos:
+
+\begin{enumerate}
+    \item chorros con baja penetración, incapaces de alcanzar zonas alejadas;
+    \item chorros excesivamente concentrados, capaces de producir secado localizado o bypass del producto.
+\end{enumerate}
+
+La orientación del chorro se evaluó considerando su interacción con la circulación natural. En lugar de oponerse indiscriminadamente a las corrientes de flotación, se analizaron configuraciones donde la impulsión reforzara el movimiento ascendente, promoviera mezcla lateral o eliminara regiones estratificadas.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Ubicación y orientación de los actuadores}
+\label{subsec:ubicacion_actuadores}
+
+La ubicación de los ventiladores se formuló como un problema de selección de configuración:
+
+\begin{equation}
+\mathbf{p}^{*}
+=
+\arg\min_{\mathbf{p}}
+J_{\mathrm{act}},
+\label{eq:optimizacion_posicion_actuadores}
+\end{equation}
+
+donde $\mathbf{p}$ incluye posición, orientación, caudal y modo de operación.
+
+La función objetivo se definió mediante
+
+\begin{equation}
+J_{\mathrm{act}}
+=
+w_T CV_T
++
+w_H CV_H
++
+w_s \Phi_{\mathrm{stag}}
++
+w_P P_{\mathrm{el}}
++
+w_Q Q_{\mathrm{loss}},
+\label{eq:funcion_objetivo_actuadores}
+\end{equation}
+
+donde
+
+\begin{itemize}
+    \item $\Phi_{\mathrm{stag}}$ es la fracción de volumen con velocidad inferior al umbral mínimo;
+    \item $P_{\mathrm{el}}$ es la potencia eléctrica;
+    \item $Q_{\mathrm{loss}}$ representa pérdidas térmicas inducidas por ventilación.
+\end{itemize}
+
+Las posiciones candidatas incluyeron:
+
+\begin{itemize}
+    \item extracción en la región superior;
+    \item impulsión en la región inferior;
+    \item ventilación longitudinal;
+    \item ventilación transversal;
+    \item recirculación próxima a las bandejas;
+    \item configuraciones simétricas y asimétricas.
+\end{itemize}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Aberturas inteligentes}
+\label{subsec:aberturas_inteligentes}
+
+Las aberturas se consideraron actuadores pasivos regulables, capaces de modificar la resistencia al flujo y la renovación de aire sin requerir necesariamente una variación continua de la velocidad de los ventiladores.
+
+El área efectiva se representó mediante
+
+\begin{equation}
+A_{\mathrm{eff}}
+=
+C_d A_o,
+\label{eq:area_efectiva_abertura}
+\end{equation}
+
+donde $C_d$ es el coeficiente de descarga y $A_o$ el área geométrica disponible.
+
+El caudal inducido por una diferencia de presión se estimó como
+
+\begin{equation}
+\dot V
+=
+C_d A_o
+\sqrt{
+\frac{2\Delta p}{\rho}
+}.
+\label{eq:caudal_abertura}
+\end{equation}
+
+La regulación de aberturas permitió plantear acciones tales como:
+
+\begin{itemize}
+    \item aumentar la evacuación de humedad;
+    \item conservar energía bajo baja irradiancia;
+    \item evitar sobretemperatura;
+    \item reducir la entrada de aire exterior húmedo;
+    \item aprovechar vientos favorables.
+\end{itemize}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Criterio integrado de selección}
+\label{subsec:criterio_integrado_actuadores}
+
+La selección final de actuadores no se basó únicamente en potencia nominal o caudal máximo. Se consideraron:
+
+\begin{enumerate}
+    \item capacidad para satisfacer el caudal de diseño;
+    \item operación frente a las pérdidas de carga reales;
+    \item reducción de heterogeneidad térmica e higrométrica;
+    \item ausencia de zonas estancadas;
+    \item compatibilidad con el hardware de control;
+    \item consumo energético;
+    \item costo de adquisición;
+    \item disponibilidad local;
+    \item facilidad de mantenimiento;
+    \item capacidad de adaptación a distintos escenarios meteorológicos.
+\end{enumerate}
+
+La arquitectura seleccionada se interpretó como una solución de compromiso entre desempeño y complejidad:
+
+\begin{equation}
+\boxed{
+\text{actuación suficiente}
+\neq
+\text{actuación máxima}.
+}
+\end{equation}
+
+El objetivo metodológico fue identificar el conjunto mínimo de actuadores y configuraciones de apertura capaz de modificar de manera efectiva los campos de temperatura, humedad y velocidad dentro del dominio operativo considerado.

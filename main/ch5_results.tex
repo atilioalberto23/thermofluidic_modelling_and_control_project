@@ -1,0 +1,791 @@
+% Capítulo de resultados a partir de 08_reporting.zip.
+% Paquetes requeridos en el preámbulo: amsmath, booktabs, tabularx,
+% graphicx, placeins y natbib (o gestor de citas compatible con \cite).
+% Copiar resultados_recursos/ al directorio de compilación de la tesis.
+\providecommand{\rutafigurasresultados}{resultados_recursos/figures}
+
+\chapter{Resultados}
+\label{ch:resultados}
+
+Los resultados corresponden al estado de las ejecuciones exportadas del proyecto de modelado termo--fluídico del secador solar de café. Se dispone de una serie de sensores procesada, predicciones temporales de modelos basados en datos y pruebas numéricas de la cavidad bidimensional, la red termo--higrométrica de seis estados, el caso tridimensional aire--vapor y la red neuronal informada por la física. La interpretación de cada resultado se vincula con su fuente, la tarea evaluada y las condiciones de la ejecución.
+
+
+Las temperaturas de la serie conservan una unidad de entrada $u_T$, porque el metadato de unidad térmica no está confirmado. De manera análoga, $u_L$ designa la unidad local de coordenadas. La humedad relativa se presenta en porcentaje, y sus diferencias y errores en puntos porcentuales. En los casos físicos de verificación sí se conservan las unidades expresamente exportadas: kelvin, segundos, joule y contenidos de agua en kg/kg con su base indicada. Las cifras de presentación se redondean después de efectuar los cálculos.
+
+\section{Caracterización de la planta, los materiales y la carga de café}
+\label{res:caracterizacion_planta}
+
+\subsection{Geometría representada y distribución de posiciones}
+
+La configuración disponible representa dos superficies laterales de ancho $5{,}55\,u_L$ y altura $1{,}90\,u_L$, y una superficie posterior de ancho $1{,}12\,u_L$ y altura $2{,}05\,u_L$. Las áreas correspondientes son $10{,}545\,u_L^2$ para cada lateral y $2{,}296\,u_L^2$ para la superficie posterior, como se muestra en la Tabla~\ref{tab:res_geometria}. Estos valores proceden de la geometría utilizada por el generador. Su correspondencia con dimensiones medidas del recinto y con una unidad SI permanece sin acreditar en la exportación.
+
+% Fuentes: tab_s01_geometria.csv
+\begin{table}[htbp]
+\centering
+\caption{Dimensiones de las superficies representadas en la configuración del generador.}
+\label{tab:res_geometria}
+\small
+\setlength{\tabcolsep}{5pt}
+\begin{tabular}{lrrr}
+\toprule
+Superficie & Ancho ($u_L$) & Altura ($u_L$) & Área ($u_L^2$) \\
+\midrule
+Izquierda & $5{,}550$ & $1{,}900$ & $10{,}545$ \\
+Derecha & $5{,}550$ & $1{,}900$ & $10{,}545$ \\
+Posterior & $1{,}120$ & $2{,}050$ & $2{,}296$ \\
+\bottomrule
+\end{tabular}
+\par\vspace{3pt}
+\begin{minipage}{0.98\textwidth}\footnotesize
+$u_L$ denota la unidad de coordenadas del archivo, cuya correspondencia con una unidad SI no está confirmada. Estos parámetros no constituyen un levantamiento dimensional de la planta.
+\end{minipage}
+\end{table}
+
+
+Se identificaron $36$ posiciones lógicas: $16$ en la pared izquierda, $16$ en la derecha y $4$ en la posterior. Las superficies laterales utilizan cuatro agrupaciones nodales, con cuatro posiciones por nodo. La pared posterior contiene cuatro posiciones con identificador nodal nulo. La Figura~\ref{fig:res_posiciones} presenta las coordenadas locales, que constituyen el soporte espacial de las estadísticas y de la tarea predictiva.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{\rutafigurasresultados/mapa_posiciones.pdf}
+\caption{Posiciones locales y contornos nominales de las superficies representadas en el generador. La figura no define por sí sola el sistema global tridimensional del secador.}
+\label{fig:res_posiciones}
+\end{figure}
+
+El contraste de coordenadas con los contornos nominales reveló una discrepancia pequeña pero sistemática. En ambas superficies laterales, el intervalo horizontal es $[-0{,}00110589,\;5{,}55110589]\,u_L$ y el vertical $[-0{,}00051191,\;1{,}90051191]\,u_L$. Doce posiciones de cada lateral quedan ligeramente fuera de al menos uno de sus límites nominales; las cuatro posiciones posteriores se encuentran dentro del contorno o sobre él. La máxima excedencia lateral es $1{,}106\times10^{-3}\,u_L$.
+
+La discrepancia es compatible con el uso de centros nodales redondeados y desplazamientos calculados mediante la longitud y el ángulo del cable. Esta explicación constituye una inferencia geométrica a partir de la configuración. La asignación de sensores a un dominio CFD necesita resolver la correspondencia de unidades, contornos y coordenadas antes de interpolar campos en esos puntos.
+
+%\subsection{Materiales y carga}
+
+
+\FloatBarrier
+
+\section{Desempeño metrológico y operativo de la plataforma de sensado}
+\label{res:sensado}
+
+\subsection{Integridad, cobertura e intervalos}
+
+El conjunto procesado contiene $466\,560$ registros posición--instante, distribuidos uniformemente entre las $36$ posiciones. Cada trayectoria contiene $12\,960$ registros y $12\,959$ intervalos consecutivos. Las marcas temporales se extienden desde el 1 de enero de 2026 a las 00:00:00 hasta el 3 de enero de 2026 a las 23:59:40. La ventana nominal comprende tres días, con separación de $20$ s. La zona horaria observada no queda confirmada por los metadatos.
+
+La auditoría registra $466\,524$ intervalos, todos de $20$ s, sin dispersión. No se consignan duplicados exactos o temporales, conflictos de identidad, diferencias entre identificador temporal y fecha, ni valores inválidos o ausentes en los tres canales analizados. La cobertura respecto de los intervalos nominales de cada posición es del $100\%$, de acuerdo con la Tabla~\ref{tab:res_cobertura}.
+
+% Fuentes: measurement_results/coverage.csv
+\begin{table}[htbp]
+\centering
+\caption{Población de posiciones y cobertura nominal de la serie exportada.}
+\label{tab:res_cobertura}
+\small
+\setlength{\tabcolsep}{5pt}
+\begin{tabular}{lrrrr}
+\toprule
+Superficie & Posiciones & Registros & Posiciones--instantes & Cobertura (\%) \\
+\midrule
+Izquierda & $16$ & $207\,360$ & $207\,360$ & $100{,}0$ \\
+Derecha & $16$ & $207\,360$ & $207\,360$ & $100{,}0$ \\
+Posterior & $4$ & $51\,840$ & $51\,840$ & $100{,}0$ \\
+Total & $36$ & $466\,560$ & $466\,560$ & $100{,}0$ \\
+\bottomrule
+\end{tabular}
+\par\vspace{3pt}
+\begin{minipage}{0.98\textwidth}\footnotesize
+Los tres canales poseen la misma cobertura. El denominador corresponde a los intervalos nominales de cada posición dentro del período observado. No representa disponibilidad de un sistema físico de comunicaciones.
+\end{minipage}
+\end{table}
+
+
+
+
+El recálculo de antecedentes modificó $51\,836$ valores por canal anterior. La cantidad coincide con las cuatro posiciones posteriores y sus $12\,959$ antecedentes válidos:
+\begin{equation}
+4(12\,960-1)=51\,836.
+\label{eq:res_antecedentes_posterior}
+\end{equation}
+La corrección resuelve el efecto de excluir los grupos con identificador nodal nulo. El primer registro de cada trayectoria conserva la ausencia natural de antecedente. Esta recuperación es relevante para construir historias temporales sin eliminar de manera sistemática la pared posterior.
+
+\subsection{Concordancia entre canales de temperatura}
+
+La diferencia se definió como $\Delta T=T_{\mathrm{DS}}-T_{\mathrm{DHT}}$. Su media global fue $1{,}4999\,u_T$, con dispersión próxima a $0{,}100\,u_T$, y un intervalo observado entre $1{,}0352$ y $1{,}9773\,u_T$. Las medias por superficie presentan diferencias inferiores a $4{,}1\times10^{-4}\,u_T$, como se observa en la Tabla~\ref{tab:res_concordancia}.
+
+% Fuentes: measurement_results/concordance.csv; measurement_results/coverage.csv
+\begin{table}[htbp]
+\centering
+\caption{Distribución de la diferencia $T_{\mathrm{DS}}-T_{\mathrm{DHT}}$.}
+\label{tab:res_concordancia}
+\small
+\setlength{\tabcolsep}{5pt}
+\begin{tabular}{lrrrrr}
+\toprule
+Superficie & $N$ & Media & Desv. estándar & Mínimo & Máximo \\
+\midrule
+Izquierda & $207\,360$ & $1{,}4999$ & $0{,}100$ & $1{,}0352$ & $1{,}9773$ \\
+Derecha & $207\,360$ & $1{,}5000$ & $0{,}100$ & $1{,}0440$ & $1{,}9318$ \\
+Posterior & $51\,840$ & $1{,}4996$ & $0{,}100$ & $1{,}1067$ & $1{,}9034$ \\
+Total & $466\,560$ & $1{,}4999$ & $0{,}100$ & $1{,}0352$ & $1{,}9773$ \\
+\bottomrule
+\end{tabular}
+\par\vspace{3pt}
+\begin{minipage}{0.98\textwidth}\footnotesize
+Todas las diferencias se expresan en $u_T$, la unidad térmica de entrada. Las medias y extremos se agrupan por posición; la dispersión se reconstruye con convención muestral a partir de las estadísticas exportadas. La comparación cuantifica concordancia entre canales, sin una referencia independiente de calibración.
+\end{minipage}
+\end{table}
+
+
+La configuración del generador establece un desplazamiento DHT de $-1{,}5$ respecto del canal base y un ruido térmico de escala $0{,}1$. La concordancia obtenida es consistente con esa construcción. Su regularidad no demuestra un sesgo físico del instrumento DHT ni constituye una calibración: ambas señales pertenecen al mismo proceso de generación y no se comparan con una referencia metrológica independiente.
+
+\FloatBarrier
+
+\section{Caracterización experimental y meteorológica del secado}
+\label{res:serie_secado}
+
+\subsection{Comportamiento térmico e higrométrico de la serie disponible}
+
+La Tabla~\ref{tab:res_descriptivos} reúne las estadísticas por superficie y del conjunto. En el agregado de registros, las medias son $36{,}161\,u_T$ para el canal DS, $34{,}661\,u_T$ para el canal DHT y $55{,}270\%$ para humedad relativa. Los intervalos globales son $[28{,}516,\;43{,}239]\,u_T$, $[26{,}888,\;41{,}893]\,u_T$ y $[30{,}610,\;79{,}017]\%$, respectivamente.
+
+% Fuentes: measurement_results/spatial.csv
+\begin{table}[htbp]
+\centering
+\caption{Estadísticas de los canales térmicos e higrométricos por superficie.}
+\label{tab:res_descriptivos}
+\small
+\setlength{\tabcolsep}{5pt}
+\begin{tabular}{lrrrrr}
+\toprule
+Superficie & Variable & Media & Desv. poblacional & Mínimo & Máximo \\
+\midrule
+Izquierda & $T_{\mathrm{DS}}$ & $35{,}380$ & $3{,}551$ & $29{,}502$ & $41{,}263$ \\
+Izquierda & $T_{\mathrm{DHT}}$ & $33{,}880$ & $3{,}552$ & $27{,}733$ & $39{,}810$ \\
+Izquierda & $\phi_{\mathrm{DHT}}$ & $55{,}893$ & $13{,}475$ & $32{,}625$ & $78{,}992$ \\
+Derecha & $T_{\mathrm{DS}}$ & $37{,}380$ & $3{,}550$ & $31{,}430$ & $43{,}239$ \\
+Derecha & $T_{\mathrm{DHT}}$ & $35{,}880$ & $3{,}551$ & $29{,}808$ & $41{,}893$ \\
+Derecha & $\phi_{\mathrm{DHT}}$ & $54{,}294$ & $13{,}480$ & $30{,}610$ & $76{,}961$ \\
+Posterior & $T_{\mathrm{DS}}$ & $34{,}409$ & $3{,}563$ & $28{,}516$ & $40{,}255$ \\
+Posterior & $T_{\mathrm{DHT}}$ & $32{,}909$ & $3{,}564$ & $26{,}888$ & $38{,}879$ \\
+Posterior & $\phi_{\mathrm{DHT}}$ & $56{,}678$ & $13{,}475$ & $34{,}337$ & $79{,}017$ \\
+Total & $T_{\mathrm{DS}}$ & $36{,}161$ & $3{,}726$ & $28{,}516$ & $43{,}239$ \\
+Total & $T_{\mathrm{DHT}}$ & $34{,}661$ & $3{,}728$ & $26{,}888$ & $41{,}893$ \\
+Total & $\phi_{\mathrm{DHT}}$ & $55{,}270$ & $13{,}508$ & $30{,}610$ & $79{,}017$ \\
+\bottomrule
+\end{tabular}
+\par\vspace{3pt}
+\begin{minipage}{0.98\textwidth}\footnotesize
+Temperaturas en $u_T$ y humedad relativa en porcentaje. La dispersión incluye variación temporal y entre posiciones. El agregado total pondera cada registro: las superficies laterales representan $16/36$ cada una y la posterior $4/36$. No es un promedio por área o volumen.
+\end{minipage}
+\end{table}
+
+
+La superficie derecha posee la mayor media térmica: $37{,}380\,u_T$ en DS frente a $35{,}380\,u_T$ en la izquierda y $34{,}409\,u_T$ en la posterior. La diferencia derecha--izquierda es aproximadamente $2{,}000\,u_T$. La humedad relativa media sigue el orden inverso, con $54{,}294\%$ en la derecha, $55{,}893\%$ en la izquierda y $56{,}678\%$ en la posterior. Se trata de diferencias de la serie generada, cuya interpretación no identifica orientación solar, ventilación o mecanismos de transferencia en la planta real.
+
+Los promedios horarios presentan un patrón diario repetido de temperatura y humedad, mostrado en la Figura~\ref{fig:res_horarias}. Cada promedio de una posición comprende $180$ registros. En total se dispone de $2592$ combinaciones posición--hora, equivalentes a $36$ posiciones durante $72$ horas. La dispersión global incluye variación temporal y espacial; su valor no representa incertidumbre de un instrumento.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.94\textwidth]{\rutafigurasresultados/series_horarias.pdf}
+\caption{Promedios horarios de los tres canales por superficie. Se utilizan pesos iguales entre posiciones de una misma pared. El tiempo cero corresponde al inicio del archivo; la periodicidad pertenece al caso sintético exportado.}
+\label{fig:res_horarias}
+\end{figure}
+
+El promedio del conjunto pondera registros, con pesos $16/36$ para cada lateral y $4/36$ para la superficie posterior. Ese agregado no equivale a una temperatura media de volumen ni a una media de área del recinto. La distribución de posiciones y el operador espacial condicionan cualquier proyección posterior hacia un nodo térmico único.
+
+\subsection{Meteorología y evolución del producto}
+
+El archivo no contiene temperatura o humedad exteriores, irradiancia, presión atmosférica ni viento. En ausencia de presión y de confirmación de compatibilidad térmica del canal DHT, la exportación tampoco aporta una razón de humedad $W$ experimental trazable. La variación de humedad relativa se describe directamente en su escala porcentual.
+
+No se dispone de gravimetría, masa seca ni contenido de agua del café. Por tanto, la serie no permite obtener una curva observada de secado, una tasa de evaporación o una eficiencia de remoción de agua. El segmento temporal único identificado en el reporte organiza la serie; no corresponde a un lote experimental documentado. La periodicidad térmica e higrométrica registrada describe el generador y no acredita una respuesta meteorológica del secador.
+
+\FloatBarrier
+
+\section{Caracterización de actuadores y distribución del flujo}
+\label{res:actuadores}
+
+\subsection{Información nominal de los equipos}
+
+La información disponible identifica un APK25-5 de $110$ V, $60$ Hz y $40$ W nominales, con diámetro de $250$ mm y velocidad de $1300$ rpm. Para el Zeus 900 se consignan dos modos a $110$--$120$ V y $60$ Hz, con corrientes nominales de $1{,}1$ A y $1{,}8$ A. La Tabla~\ref{tab:res_actuadores} presenta los datos documentados.
+
+% Fuentes: tab_s04_actuadores_modos.csv
+\begin{table}[htbp]
+\centering
+\caption{Especificaciones nominales de los equipos documentados.}
+\label{tab:res_actuadores}
+\small
+\setlength{\tabcolsep}{5pt}
+\begin{tabular}{lrrrrr}
+\toprule
+Equipo & Modo & Tensión (V) & Frecuencia (Hz) & Potencia (W) & Corriente (A) \\
+\midrule
+APK25-5 & Nominal & $110$ & $60$ & $40$ & \textemdash \\
+Zeus 900 & Bajo & $110$--$120$ & $60$ & \textemdash & $1{,}1$ \\
+Zeus 900 & Alto & $110$--$120$ & $60$ & \textemdash & $1{,}8$ \\
+\bottomrule
+\end{tabular}
+\par\vspace{3pt}
+\begin{minipage}{0.98\textwidth}\footnotesize
+El APK25-5 consigna diámetro de $250$ mm y velocidad de $1300$ rpm. El guion identifica una magnitud no aportada en la exportación. Los datos son nominales; no se dispone de caudal ni potencia activa medida.
+\end{minipage}
+\end{table}
+
+
+
+
+\subsection{Dispersión espacial de los puntos}
+
+Se evaluó la dispersión entre posiciones simultáneas mediante la desviación poblacional y la amplitud máxima--mínima. La desviación térmica DS media fue $0{,}3154\,u_T$ en la izquierda, $0{,}3159\,u_T$ en la derecha y $0{,}4244\,u_T$ en la posterior. La máxima amplitud térmica registrada fue $1{,}7995\,u_T$, correspondiente a la izquierda.
+
+En humedad relativa, las desviaciones espaciales medias se situaron entre $0{,}8671$ y $0{,}9894$ puntos porcentuales. La amplitud máxima fue $7{,}9696$ puntos porcentuales en la izquierda. Los resultados se resumen en la Tabla~\ref{tab:res_uniformidad}.
+
+% Fuentes: tab_s04_distribucion_uniformidad.csv
+\begin{table}[htbp]
+\centering
+\caption{Dispersión espacial de los puntos representados en la serie.}
+\label{tab:res_uniformidad}
+\small
+\setlength{\tabcolsep}{5pt}
+\begin{tabular}{lrrrr}
+\toprule
+Superficie & $\langle\sigma_{T_{\mathrm{DS}}}\rangle$ & $\max A_{T_{\mathrm{DS}}}$ & $\langle\sigma_{\phi}\rangle$ & $\max A_\phi$ \\
+\midrule
+Izquierda & $0{,}3154$ & $1{,}7995$ & $0{,}9891$ & $7{,}9696$ \\
+Derecha & $0{,}3159$ & $1{,}7113$ & $0{,}9894$ & $7{,}3642$ \\
+Posterior & $0{,}4244$ & $1{,}6597$ & $0{,}8671$ & $5{,}8968$ \\
+\bottomrule
+\end{tabular}
+\par\vspace{3pt}
+\begin{minipage}{0.98\textwidth}\footnotesize
+$A$ es la diferencia máxima--mínima entre posiciones simultáneas. Temperatura en $u_T$ y humedad en puntos porcentuales. Los pesos son uniformes por posición observada, sin ponderación por área, masa ni volumen.
+\end{minipage}
+\end{table}
+
+
+Los pesos uniformes por posición permiten comparar la dispersión del soporte observado. La pared posterior tiene cuatro puntos y cada lateral dieciséis, de modo que sus estadísticos responden a soportes distintos. Estos indicadores no constituyen mediciones de velocidad, distribución del chorro o uniformidad del producto. Tampoco permiten atribuir una diferencia a un modo de ventilación, porque la serie carece de acciones y estados de operación sincronizados.
+
+\FloatBarrier
+
+\section{Verificación y resultados del modelo CFD tridimensional}
+\label{res:cfd}
+
+\subsection{Ejecución del caso aire--vapor}
+
+El registro exportado consigna la ejecución de un caso de verificación tridimensional con OpenFOAM Foundation 12, código de salida cero y tiempo de cómputo de $17{,}656$ s. El caso corresponde a un recinto vacío y se identifica como prueba numérica de software. Las salidas comprenden seis instantes entre $0$ y $0{,}05$ s, separados $0{,}01$ s.
+
+La temperatura media aumentó desde $300$ hasta $300{,}012322$ K; el máximo alcanzó $300{,}038861$ K. La fracción másica de vapor permaneció en $Y=0{,}005$, equivalente a $W=0{,}00502513$ kg de vapor por kg de aire seco. La Tabla~\ref{tab:res_cfd} muestra la evolución reportada.
+
+% Fuentes: tab_s05_campos_balances.csv
+\begin{table}[htbp]
+\centering
+\caption{Evolución inicial del caso tridimensional de verificación aire--vapor.}
+\label{tab:res_cfd}
+\small
+\setlength{\tabcolsep}{5pt}
+\begin{tabular}{lrrrr}
+\toprule
+Tiempo (s) & $\overline T$ (K) & $T_{\max}$ (K) & $\overline Y$ & $\overline\phi$ (\%) \\
+\midrule
+$0{,}00$ & $300{,}000000$ & $300{,}000000$ & $0{,}005$ & $23{,}019299$ \\
+$0{,}01$ & $300{,}002456$ & $300{,}007773$ & $0{,}005$ & $23{,}016163$ \\
+$0{,}02$ & $300{,}004929$ & $300{,}015559$ & $0{,}005$ & $23{,}013007$ \\
+$0{,}03$ & $300{,}007398$ & $300{,}023335$ & $0{,}005$ & $23{,}009857$ \\
+$0{,}04$ & $300{,}009862$ & $300{,}031103$ & $0{,}005$ & $23{,}006715$ \\
+$0{,}05$ & $300{,}012322$ & $300{,}038861$ & $0{,}005$ & $23{,}003580$ \\
+\bottomrule
+\end{tabular}
+\par\vspace{3pt}
+\begin{minipage}{0.98\textwidth}\footnotesize
+El caso es un recinto vacío de verificación numérica. Durante los seis tiempos exportados, $W=0{,}00502513$ kg de vapor por kg de aire seco. Los promedios son los reportados por la ejecución, sin un operador espacial de la planta acreditado.
+\end{minipage}
+\end{table}
+
+
+Durante el transitorio, la humedad relativa media disminuyó desde $23{,}019299\%$ hasta $23{,}003580\%$, una diferencia de aproximadamente $-0{,}015719$ puntos porcentuales. El contenido másico de vapor exportado permaneció constante. El comportamiento es consistente con una disminución de humedad relativa asociada al calentamiento, y no cuantifica extracción de agua del recinto.
+
+%\subsection{Alcance de la verificación}
+
+%La finalización del ejecutable y la evolución de campos aportan una comprobación inicial de la ruta computacional aire--vapor. La ventana de $0{,}05$ s solo caracteriza el arranque del caso suministrado. No acredita régimen estacionario ni evolución de un episodio de secado.
+
+%La exportación no incluye una secuencia de tres mallas, estudio temporal compatible, datos completos de flujos de frontera o balances globales de energía y agua para la planta. Tampoco aporta geometría real con aberturas, carga evaporativa y posiciones tridimensionales contrastadas. Por ello, no se determina incertidumbre de discretización del secador ni se presenta validación espacial de Coffee Solutions. Los campos del caso vacío no se utilizan como referencia experimental ni como predicciones de la campaña de sensores.
+
+\FloatBarrier
+
+\section{Verificación y resultados del modelo bidimensional}
+\label{res:cavidad}
+
+\subsection{Respuesta de la cavidad sin radiación}
+
+Se obtuvieron soluciones de la cavidad de convección natural para $Pr=0{,}71$ y $Ra=10^3,\;10^4$, con discretizaciones de $17\times17$, $33\times33$ y $65\times65$ puntos. La configuración emplea advección de primer orden y solución del problema discreto de Poisson mediante transformada seno discreta. Todas las ejecuciones de la tabla espacial se registraron como convergidas bajo el criterio estacionario configurado de $10^{-5}$.
+
+La Tabla~\ref{tab:res_cavidad_espacial} presenta el Nusselt medio de la pared caliente, las magnitudes de extremos de velocidad, el residual estacionario y el costo. Para la malla de $65\times65$, se obtuvo $\overline{Nu}_h=1{,}114170$ a $Ra=10^3$ y $\overline{Nu}_h=2{,}202040$ a $Ra=10^4$. El aumento de $Ra$ elevó también los extremos de velocidad exportados.
+
+% Fuentes: tab_s06_benchmark_cavidad.csv
+\begin{table}[htbp]
+\centering
+\caption{Resultados de la cavidad sin radiación para tres discretizaciones espaciales.}
+\label{tab:res_cavidad_espacial}
+\small
+\setlength{\tabcolsep}{5pt}
+\begin{tabular}{lrrrrrr}
+\toprule
+$Ra$ & $n$ & $\overline{Nu}_h$ & $|v_x|_{\mathrm{ext}}$ & $|v_y|_{\mathrm{ext}}$ & Residual & Costo (s) \\
+\midrule
+$1\,000$ & $17$ & $1{,}114915$ & $3{,}4966$ & $3{,}5277$ & $7{,}61\times10^{-8}$ & $0{,}094$ \\
+$1\,000$ & $33$ & $1{,}112544$ & $3{,}5749$ & $3{,}6117$ & $3{,}44\times10^{-6}$ & $0{,}410$ \\
+$1\,000$ & $65$ & $1{,}114170$ & $3{,}6163$ & $3{,}6593$ & $7{,}14\times10^{-6}$ & $2{,}997$ \\
+$10\,000$ & $17$ & $2{,}219769$ & $16{,}0448$ & $18{,}5859$ & $7{,}38\times10^{-6}$ & $0{,}050$ \\
+$10\,000$ & $33$ & $2{,}183301$ & $16{,}2060$ & $19{,}2942$ & $5{,}61\times10^{-6}$ & $0{,}279$ \\
+$10\,000$ & $65$ & $2{,}202040$ & $16{,}2412$ & $19{,}5244$ & $8{,}37\times10^{-6}$ & $2{,}341$ \\
+\bottomrule
+\end{tabular}
+\par\vspace{3pt}
+\begin{minipage}{0.98\textwidth}\footnotesize
+$Pr=0{,}71$; $n$ indica puntos por dirección y $h_*=1/(n-1)$. Velocidades adimensionales según la escala térmica de la metodología. El residual es el indicador estacionario exportado. Los extremos conservan la convención del solver; se muestran sus magnitudes.
+\end{minipage}
+\end{table}
+
+
+La diferencia entre los Nusselt medios de las paredes caliente y fría es del orden de $10^{-15}$ o inferior en los casos sin radiación. Esta consistencia describe el flujo térmico de las paredes opuestas bajo la idealización de referencia. No establece por sí sola exactitud de los campos interiores.
+
+El problema utilizado corresponde al contraste de convección natural asociado al trabajo de de Vahl Davis~\cite{devahl1983}. La exportación identifica como pendiente la tabla numérica primaria de referencia. En consecuencia, se presentan las soluciones calculadas y su comportamiento de refinamiento, sin asignar un porcentaje de error frente a valores de referencia que no están incorporados en el conjunto auditado.
+
+\subsection{Refinamiento espacial y temporal}
+
+El refinamiento espacial no mostró convergencia monótona. A $Ra=10^3$, el Nusselt descendió de $1{,}114915$ a $1{,}112544$ entre las dos primeras mallas y aumentó a $1{,}114170$ en la más fina. A $Ra=10^4$ siguió la secuencia $2{,}219769$, $2{,}183301$ y $2{,}202040$. El cambio de signo de las diferencias impide interpretar estas tres soluciones mediante una estimación monótona simple de Richardson/GCI. El manifiesto clasifica ambos estudios espaciales como inconclusos.
+
+La Figura~\ref{fig:res_refinamiento} muestra esa oscilación y el comportamiento al reducir el paso. La diferencia relativa entre las mallas de $33\times33$ y $65\times65$ fue aproximadamente $0{,}146\%$ a $Ra=10^3$ y $0{,}851\%$ a $Ra=10^4$, tomando la solución más fina como escala. Tales diferencias son descriptivas y no constituyen una cota de incertidumbre asintótica.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{\rutafigurasresultados/refinamiento_cavidad.pdf}
+\caption{Variación del Nusselt con la discretización espacial y el paso medio de integración. La fila superior evidencia refinamiento espacial oscilatorio. En la inferior, de $33\times33$ puntos, se resta el Nusselt del paso menor y se expresa la diferencia en unidades de $10^{-7}$.}
+\label{fig:res_refinamiento}
+\end{figure}
+
+En el refinamiento temporal de $33\times33$, los pasos medios reconstruidos fueron $1{,}953125\times10^{-4}$, $9{,}765625\times10^{-5}$ y $4{,}882813\times10^{-5}$, en tiempo adimensional. La Tabla~\ref{tab:res_cavidad_temporal} conserva los tiempos finales y el número de pasos.
+
+% Fuentes: tab_s06_benchmark_cavidad.csv
+\begin{table}[htbp]
+\centering
+\caption{Refinamiento de paso en la cavidad de $33\times33$ puntos.}
+\label{tab:res_cavidad_temporal}
+\small
+\setlength{\tabcolsep}{5pt}
+\begin{tabular}{lrrrr}
+\toprule
+$Ra$ & $\overline{\Delta t_*}$ & $\overline{Nu}_h$ & $t_*$ final & Pasos \\
+\midrule
+$1\,000$ & $1{,}953125\times10^{-4}$ & $1{,}112543767$ & $0{,}507812$ & $2\,600$ \\
+$1\,000$ & $9{,}765625\times10^{-5}$ & $1{,}112543620$ & $0{,}488281$ & $5\,000$ \\
+$1\,000$ & $4{,}882813\times10^{-5}$ & $1{,}112543498$ & $0{,}478516$ & $9\,800$ \\
+$10\,000$ & $1{,}953125\times10^{-4}$ & $2{,}183300931$ & $0{,}351562$ & $1\,800$ \\
+$10\,000$ & $9{,}765625\times10^{-5}$ & $2{,}183301247$ & $0{,}332031$ & $3\,400$ \\
+$10\,000$ & $4{,}882813\times10^{-5}$ & $2{,}183301289$ & $0{,}332031$ & $6\,800$ \\
+\bottomrule
+\end{tabular}
+\par\vspace{3pt}
+\begin{minipage}{0.98\textwidth}\footnotesize
+$\overline{\Delta t_*}=t_*/N_{\mathrm{pasos}}$ se reconstruye del registro. Los tiempos finales difieren porque se aplicó un criterio de estacionariedad. El estudio no establece por sí solo el orden formal de integración.
+\end{minipage}
+\end{table}
+
+
+Las diferencias entre los Nusselt de los dos pasos menores fueron $1{,}220\times10^{-7}$ a $Ra=10^3$ y $4{,}167\times10^{-8}$ a $Ra=10^4$. El reporte calculó órdenes aparentes de $0{,}2693$ y $2{,}9231$, con estimaciones absolutas de GCI de $7{,}430\times10^{-7}$ y $7{,}911\times10^{-9}$, respectivamente. La propia clasificación indica que el régimen asintótico requiere examen adicional. Además, los tiempos finales difieren por la detención estacionaria. Estas estimaciones no permiten atribuir un orden formal al esquema temporal ni resolver la oscilación del refinamiento espacial.
+
+\subsection{Efecto del acoplamiento radiativo}
+
+El caso radiativo disponible emplea $Ra=10^3$, $Pr=0{,}71$ y $33\times33$ puntos. La configuración consigna temperatura fría de $293{,}15$ K, diferencia térmica de $10$ K, longitud de $0{,}1$ m, conductividad de $0{,}026$ W/(m K) y emisividades de $0{,}1$ para las cuatro superficies.
+
+El Nusselt caliente disminuyó desde $1{,}112544$ en el caso base hasta $1{,}082202$, una variación relativa de $-2{,}727\%$. El Nusselt frío fue $1{,}106559$. La Tabla~\ref{tab:res_cavidad_radiacion} muestra una diferencia convectiva caliente--fría de $-0{,}024357$.
+
+% Fuentes: tab_s06_acoplamiento_radiativo.csv; tab_s06_benchmark_cavidad.csv
+\begin{table}[htbp]
+\centering
+\caption{Comparación del caso radiativo y su referencia sin radiación.}
+\label{tab:res_cavidad_radiacion}
+\small
+\setlength{\tabcolsep}{5pt}
+\begin{tabular}{lrrr}
+\toprule
+Caso & $\overline{Nu}_h$ & $\overline{Nu}_c$ & $\overline{Nu}_h-\overline{Nu}_c$ \\
+\midrule
+Sin radiación & $1{,}112544$ & $1{,}112544$ & $8{,}88\times10^{-16}$ \\
+Con radiación & $1{,}082202$ & $1{,}106559$ & $-0{,}024357$ \\
+\bottomrule
+\end{tabular}
+\par\vspace{3pt}
+\begin{minipage}{0.98\textwidth}\footnotesize
+$Ra=10^3$, $Pr=0{,}71$, malla $33\times33$. La diferencia entre Nusselt convectivos requiere examinar el intercambio radiativo y las fronteras horizontales; la tabla no aporta un balance energético total desglosado.
+\end{minipage}
+\end{table}
+
+
+La activación del acoplamiento modifica la transferencia convectiva y las condiciones térmicas internas. La diferencia entre Nusselt convectivos debe interpretarse junto con el intercambio radiativo y las fronteras horizontales. Al no aportarse un balance total desglosado de esos flujos, el resultado no acredita por sí solo conservación energética del caso radiativo. Tampoco se compara directamente con el caso clásico sin radiación como si compartieran todas sus fronteras.
+
+\FloatBarrier
+
+\section{Identificación y resultados de la red térmica reducida}
+\label{res:red}
+
+\subsection{Evolución de los seis estados}
+
+La prueba de la red integró los estados $(T_c,T_b,T_p,T_a,W,M)$ durante $1200$ s, con salidas programadas cada $10$ s. La configuración utilizó Radau con tolerancia relativa $10^{-7}$, tolerancias absolutas $10^{-7}$ para temperaturas y $10^{-10}$ para contenidos de agua, y paso máximo de $10$ s. La Tabla~\ref{tab:res_red_estados} presenta los intervalos y medias exportados.
+
+% Fuentes: tab_s07_transitorios_red.csv
+\begin{table}[htbp]
+\centering
+\caption{Intervalos de los seis estados en la prueba numérica de la red térmica.}
+\label{tab:res_red_estados}
+\small
+\setlength{\tabcolsep}{5pt}
+\begin{tabular}{lrrrr}
+\toprule
+Estado & Unidad & Mínimo & Máximo & Media \\
+\midrule
+$T_c$ & K & $298{,}150000$ & $300{,}480314$ & $299{,}577756$ \\
+$T_b$ & K & $298{,}150000$ & $300{,}171307$ & $299{,}213025$ \\
+$T_p$ & K & $298{,}076397$ & $299{,}005635$ & $298{,}416732$ \\
+$T_a$ & K & $298{,}150000$ & $299{,}331106$ & $298{,}718578$ \\
+$W$ & kg vapor/kg aire seco & $0{,}007861$ & $0{,}008604$ & $0{,}008369$ \\
+$M$ & kg agua/kg materia seca & $0{,}094780$ & $0{,}100000$ & $0{,}097328$ \\
+\bottomrule
+\end{tabular}
+\par\vspace{3pt}
+\begin{minipage}{0.98\textwidth}\footnotesize
+Prueba de software de $1200$ s con salidas programadas cada $10$ s. Los parámetros y las condiciones corresponden al caso numérico, sin identificación experimental de la planta.
+\end{minipage}
+\end{table}
+
+
+Las máximas temperaturas de cubierta, base, producto y aire fueron $300{,}480314$, $300{,}171307$, $299{,}005635$ y $299{,}331106$ K, respectivamente. La temperatura mínima del producto fue $298{,}076397$ K, inferior al mínimo de $298{,}15$ K reportado para los otros nodos térmicos. El intervalo es compatible con el enfriamiento evaporativo previsto en la formulación, aunque la tabla de extremos no identifica cuándo ocurre cada mínimo ni descompone los flujos que intervienen.
+
+La razón de humedad del aire permaneció entre $0{,}00786141$ y $0{,}00860430$ kg/kg de aire seco. El contenido de agua del producto se situó entre $0{,}09477986$ y $0{,}1$ kg/kg de materia seca. El intervalo describe un caso numérico con cierres y condiciones suministrados; no corresponde a una curva gravimétrica medida en café.
+
+\subsection{Inventario de aire e integración}
+
+Se contrastó la formulación general de inventario variable con la aproximación de inventario constante. La mayor diferencia térmica fue $9{,}279\times10^{-4}$ K en $T_a$. Para $W$ y $M$, las diferencias máximas fueron $5{,}264\times10^{-7}$ y $1{,}815\times10^{-7}$ kg/kg. Los resultados completos se muestran en la Tabla~\ref{tab:res_red_comparacion}.
+
+% Fuentes: tab_s07_inventario_y_cierres.csv
+\begin{table}[htbp]
+\centering
+\caption{Diferencias máximas entre formulaciones e integradores de la red.}
+\label{tab:res_red_comparacion}
+\small
+\setlength{\tabcolsep}{5pt}
+\begin{tabular}{lrrr}
+\toprule
+Estado & General--constante & Refinamiento Radau & Radau--BDF \\
+\midrule
+$T_c$ & $3{,}099\times10^{-4}$ & $3{,}025\times10^{-10}$ & $1{,}218\times10^{-7}$ \\
+$T_b$ & $1{,}342\times10^{-4}$ & $4{,}758\times10^{-11}$ & $1{,}414\times10^{-8}$ \\
+$T_p$ & $3{,}575\times10^{-4}$ & $8{,}072\times10^{-11}$ & $7{,}685\times10^{-8}$ \\
+$T_a$ & $9{,}279\times10^{-4}$ & $9{,}347\times10^{-10}$ & $5{,}686\times10^{-7}$ \\
+$W$ & $5{,}264\times10^{-7}$ & $4{,}506\times10^{-14}$ & $4{,}988\times10^{-11}$ \\
+$M$ & $1{,}815\times10^{-7}$ & $1{,}989\times10^{-14}$ & $2{,}219\times10^{-11}$ \\
+\bottomrule
+\end{tabular}
+\par\vspace{3pt}
+\begin{minipage}{0.98\textwidth}\footnotesize
+Errores absolutos en las unidades de cada estado: K para temperaturas y kg/kg para $W$ y $M$. El caso general recalcula el inventario de aire seco; la aproximación lo mantiene constante. El resultado queda restringido al caso ensayado.
+\end{minipage}
+\end{table}
+
+
+Al refinar la integración Radau, la diferencia máxima en temperatura fue $9{,}347\times10^{-10}$ K, nuevamente en $T_a$. El contraste Radau--BDF produjo una máxima diferencia térmica de $5{,}686\times10^{-7}$ K. Dentro del caso suministrado, las diferencias de formulación superaron las asociadas a esos cambios de integración. La cercanía entre inventarios no permite aceptar la aproximación constante para cualquier episodio: faltan las condiciones y el presupuesto experimental que determinarían su admisibilidad en la planta.
+
+\subsection{Cierre integral e identificación condicional}
+
+Los residuales máximos absolutos fueron $1{,}329\times10^{-6}$ kg para aire seco, $1{,}363\times10^{-7}$ kg para agua total y $0{,}462455$ J para energía. Sus indicadores normalizados máximos fueron $3{,}858\times10^{-4}$, $8{,}314\times10^{-5}$ y $6{,}032\times10^{-6}$, respectivamente, como se resume en la Tabla~\ref{tab:res_red_balances}.
+
+% Fuentes: tab_s07_balances_verificacion.csv; execution_provenance.json
+\begin{table}[htbp]
+\centering
+\caption{Residuales máximos de los balances integrales en la prueba de la red.}
+\label{tab:res_red_balances}
+\small
+\setlength{\tabcolsep}{5pt}
+\begin{tabular}{lrrr}
+\toprule
+Balance & Unidad de $R$ & $\max|R|$ & $\max\eta$ \\
+\midrule
+Aire seco & kg & $1{,}329\times10^{-6}$ & $3{,}858\times10^{-4}$ \\
+Agua total & kg & $1{,}363\times10^{-7}$ & $8{,}314\times10^{-5}$ \\
+Energía & J & $4{,}625\times10^{-1}$ & $6{,}032\times10^{-6}$ \\
+\bottomrule
+\end{tabular}
+\par\vspace{3pt}
+\begin{minipage}{0.98\textwidth}\footnotesize
+$\eta$ es adimensional. Los máximos absolutos y normalizados se reportan separadamente y no se supone que ocurran en el mismo instante. Las escalas de referencia configuradas fueron $10^{-3}$ kg y $100$ J.
+\end{minipage}
+\end{table}
+
+
+La prueba aporta una comprobación cuantitativa del cierre integral de la implementación. Los residuales son indicadores numéricos del caso ensayado, sin una tolerancia metrológica de aceptación experimental asociada. Tampoco se convierten en intervalos de incertidumbre de los parámetros.
+
+La identificación disponible consiste en una recuperación condicional de un único coeficiente, $G_{ce}$, con estimación $5{,}0000$ W/K dentro de cotas $[0{,}1,\;20]$ W/K. El Jacobiano exportado tiene rango uno para un parámetro y número de condición uno. Este resultado describe un problema escalar con las demás cantidades fijadas. No demuestra identificabilidad conjunta de las conductancias, capacidades, propiedades ópticas y parámetros de secado de la red. La exportación no aporta un intervalo independiente para $G_{ce}$ ni un ajuste de la planta frente a una campaña medida.
+
+\FloatBarrier
+
+%\section{Validación experimental de los modelos físicos}
+\label{res:validacion_fisica}
+
+%En el conjunto auditado no se dispone de pares independientes de predicción física y observación experimental de Coffee Solutions. Las tres tablas previstas de validación por variable, equivalencia y cobertura figuran con insumos pendientes. Los resultados de la cavidad, la red y el caso aire--vapor corresponden a verificación numérica; la serie utilizada en aprendizaje está identificada como generada.
+
+%Las carencias relevantes para el contraste son la campaña original, los episodios y cargas, las fronteras exteriores, los parámetros con procedencia y los operadores que relacionan estados o campos con cada medición. Sin esa correspondencia, un error de la red frente a una lectura local puede mezclar discrepancia del modelo con diferencia de soporte espacial. La temperatura media de un nodo y la temperatura de una posición no son intercambiables sin justificar su relación.
+
+%Tampoco se aportan márgenes físicos previos de sesgo y error ni suficientes unidades experimentales independientes. Por ello, no se ejecuta una conclusión de equivalencia mediante TOST ni se asigna una aceptación experimental a las pruebas numéricas. La verificación de los balances y del refinamiento permanece como requisito previo para el contraste, con el alcance indicado en las secciones anteriores.
+
+%Las observaciones de temperatura y humedad relativa tampoco validarían por sí solas temperatura o humedad del café. La evaluación de $T_p$ y $M$ necesita sus referencias específicas, y la de velocidad o caudal requiere mediciones de flujo. Estas magnitudes continúan sin validación experimental en la exportación disponible.
+
+\FloatBarrier
+
+\section{Desempeño predictivo de los modelos basados en datos}
+\label{res:aprendizaje}
+
+\subsection{Tarea temporal y modelos evaluados}
+
+Se evaluaron persistencia, árbol de regresión, XGBoost y LightGBM en una tarea de predicción directa de los tres canales, con horizontes de $20$, $300$ y $1200$ s. La información histórica configurada comprende $20$, $60$ y $300$ s; los orígenes predictivos se separan $300$ s. El manifiesto describe una partición cronológica con purga y fracción de desarrollo de $0{,}5$, acompañada de tres bloques internos de origen rodante.
+
+Cada ajuste final consigna $15\,336$ ejemplos de entrenamiento. El bloque final contiene $15\,516$, $15\,480$ y $15\,372$ pares posición--origen para los tres horizontes, equivalentes a $431$, $430$ y $427$ orígenes comunes de las $36$ posiciones. Estos tamaños representan observaciones dependientes dentro de una serie y no ese número de réplicas experimentales.
+
+La selección del árbol produjo profundidad máxima seis y un mínimo de veinte muestras por hoja a $20$ y $300$ s. A $1200$ s se seleccionó profundidad diez, diez muestras mínimas por hoja y penalización de poda $0{,}001$. XGBoost utilizó $80$ árboles, profundidad cuatro, tasa de aprendizaje $0{,}08$, submuestreo de filas y columnas $0{,}9$ y regularización $\lambda=1$. LightGBM utilizó $80$ estimadores, quince hojas, tasa $0{,}08$, veinte muestras mínimas por hoja y regularización $\lambda=1$. Los resultados se restringen a estas configuraciones y al soporte del generador.
+
+\subsection{Error por variable y horizonte}
+
+La Tabla~\ref{tab:res_rmse} presenta las métricas del bloque final. Los ensambles mantuvieron errores térmicos DS próximos a $0{,}173$--$0{,}176\,u_T$, errores DHT próximos a $0{,}201$--$0{,}202\,u_T$ y errores de humedad entre $1{,}040$ y $1{,}065$ puntos porcentuales. La persistencia mostró mayor deterioro al aumentar el horizonte.
+
+% Fuentes: tab_s09_errores_predictivos.csv
+\begin{table}[htbp]
+\centering
+\caption{RMSE en el bloque cronológico final por canal y horizonte.}
+\label{tab:res_rmse}
+\small
+\setlength{\tabcolsep}{5pt}
+\begin{tabular}{lrrrrr}
+\toprule
+Variable & $h$ (s) & Persistencia & Árbol & XGBoost & LightGBM \\
+\midrule
+$T_{\mathrm{DS}}$ & $20$ & $0{,}2122$ & $0{,}2158$ & $0{,}1731$ & $0{,}1730$ \\
+$T_{\mathrm{DS}}$ & $300$ & $0{,}2258$ & $0{,}2341$ & $0{,}1743$ & $0{,}1738$ \\
+$T_{\mathrm{DS}}$ & $1\,200$ & $0{,}3758$ & $0{,}2862$ & $0{,}1765$ & $0{,}1758$ \\
+$T_{\mathrm{DHT}}$ & $20$ & $0{,}2551$ & $0{,}2378$ & $0{,}2007$ & $0{,}2008$ \\
+$T_{\mathrm{DHT}}$ & $300$ & $0{,}2657$ & $0{,}2549$ & $0{,}2010$ & $0{,}2006$ \\
+$T_{\mathrm{DHT}}$ & $1\,200$ & $0{,}4009$ & $0{,}3033$ & $0{,}2014$ & $0{,}2020$ \\
+$\phi_{\mathrm{DHT}}$ & $20$ & $1{,}4169$ & $1{,}1904$ & $1{,}0442$ & $1{,}0404$ \\
+$\phi_{\mathrm{DHT}}$ & $300$ & $1{,}4489$ & $1{,}2735$ & $1{,}0514$ & $1{,}0536$ \\
+$\phi_{\mathrm{DHT}}$ & $1\,200$ & $1{,}8523$ & $1{,}1725$ & $1{,}0622$ & $1{,}0647$ \\
+\bottomrule
+\end{tabular}
+\par\vspace{3pt}
+\begin{minipage}{0.98\textwidth}\footnotesize
+Temperaturas en $u_T$ y humedad en puntos porcentuales. Se evaluaron $15516$, $15480$ y $15372$ pares posición--origen para $h=20$, $300$ y $1200$ s, respectivamente. Las métricas son las exportadas con pesos iguales por sensor/segmento y duración dentro de cada serie.
+\end{minipage}
+\end{table}
+
+
+A $1200$ s, LightGBM redujo el RMSE DS desde $0{,}3758$ hasta $0{,}1758\,u_T$, aproximadamente $53{,}21\%$. Para temperatura DHT, XGBoost redujo el RMSE desde $0{,}4009$ hasta $0{,}2014\,u_T$, aproximadamente $49{,}77\%$. Para humedad relativa, XGBoost redujo el error desde $1{,}8523$ hasta $1{,}0622$ puntos porcentuales, aproximadamente $42{,}65\%$. La Figura~\ref{fig:res_errores} muestra el comportamiento multihorizonte.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{\rutafigurasresultados/errores_multihorizonte.pdf}
+\caption{RMSE de los cuatro predictores en el bloque cronológico final de la serie sintética. Las unidades se conservan por canal; los segmentos unen únicamente los tres horizontes evaluados.}
+\label{fig:res_errores}
+\end{figure}
+
+El árbol mejoró el canal DHT y la humedad relativa frente a persistencia, pero incrementó el RMSE DS a $20$ y $300$ s: $0{,}2158$ frente a $0{,}2122\,u_T$, y $0{,}2341$ frente a $0{,}2258\,u_T$. Por tanto, el mayor grado de ajuste del predictor no produjo una mejora uniforme de todos los canales y horizontes.
+
+Las diferencias puntuales entre XGBoost y LightGBM fueron pequeñas. LightGBM presentó el menor RMSE DS en los tres horizontes; XGBoost obtuvo los menores valores de humedad a $300$ y $1200$ s. Las comparaciones disponibles con incertidumbre utilizan persistencia como referencia. No se dispone de un contraste emparejado directo que establezca superioridad estadística de un ensamble sobre el otro.
+
+La Tabla~\ref{tab:res_sesgo_mae} complementa el RMSE con sesgo y MAE a $1200$ s. El sesgo de persistencia fue cercano a $0{,}0934\,u_T$ en DS, $0{,}0933\,u_T$ en DHT y $-0{,}3551$ puntos porcentuales en humedad. Los sesgos de los ensambles fueron inferiores a $0{,}007\,u_T$ en temperatura y a $0{,}011$ puntos porcentuales en humedad. Una media de error reducida describe ese bloque, sin demostrar equivalencia física de la predicción.
+
+% Fuentes: tab_s09_errores_predictivos.csv
+\begin{table}[htbp]
+\centering
+\caption{Sesgo, MAE y reducción relativa de RMSE a $1200$ s.}
+\label{tab:res_sesgo_mae}
+\small
+\setlength{\tabcolsep}{5pt}
+\begin{tabular}{lrrrr}
+\toprule
+Variable & Modelo & MBE & MAE & Reducción (\%) \\
+\midrule
+$T_{\mathrm{DS}}$ & Persistencia & $0{,}0934$ & $0{,}3157$ & $0{,}00$ \\
+$T_{\mathrm{DS}}$ & XGBoost & $0{,}0054$ & $0{,}1415$ & $53{,}05$ \\
+$T_{\mathrm{DS}}$ & LightGBM & $0{,}0058$ & $0{,}1405$ & $53{,}21$ \\
+$T_{\mathrm{DHT}}$ & Persistencia & $0{,}0933$ & $0{,}3322$ & $0{,}00$ \\
+$T_{\mathrm{DHT}}$ & XGBoost & $0{,}0064$ & $0{,}1608$ & $49{,}77$ \\
+$T_{\mathrm{DHT}}$ & LightGBM & $0{,}0070$ & $0{,}1612$ & $49{,}61$ \\
+$\phi_{\mathrm{DHT}}$ & Persistencia & $-0{,}3551$ & $1{,}4995$ & $0{,}00$ \\
+$\phi_{\mathrm{DHT}}$ & XGBoost & $-0{,}0082$ & $0{,}8476$ & $42{,}65$ \\
+$\phi_{\mathrm{DHT}}$ & LightGBM & $-0{,}0101$ & $0{,}8490$ & $42{,}52$ \\
+\bottomrule
+\end{tabular}
+\par\vspace{3pt}
+\begin{minipage}{0.98\textwidth}\footnotesize
+MBE y MAE conservan las unidades del canal. La reducción es $100(\mathrm{RMSE}_{\mathrm{persistencia}}-\mathrm{RMSE}_{m})/\mathrm{RMSE}_{\mathrm{persistencia}}$; un valor positivo indica menor error que la referencia.
+\end{minipage}
+\end{table}
+
+
+\subsection{Variabilidad de desarrollo e incertidumbre comparativa}
+
+Los errores internos no fueron constantes entre los tres bloques de origen rodante. Por ejemplo, a $1200$ s, el RMSE DS de XGBoost varió entre $0{,}1765$ y $0{,}3973\,u_T$, y el DHT entre $0{,}2019$ y $0{,}4291\,u_T$. La Tabla~\ref{tab:res_validacion_ml} muestra los rangos internos y el error final. Esta variación evidencia dependencia respecto del bloque de desarrollo; la precisión final no describe de manera uniforme todos los bloques evaluados.
+
+% Fuentes: tab_s09_errores_predictivos.csv
+\begin{table}[htbp]
+\centering
+\caption{Rango de RMSE en tres bloques internos y error del bloque final a $1200$ s.}
+\label{tab:res_validacion_ml}
+\small
+\setlength{\tabcolsep}{5pt}
+\begin{tabular}{lrrrr}
+\toprule
+Variable & Modelo & Mínimo interno & Máximo interno & Prueba final \\
+\midrule
+$T_{\mathrm{DS}}$ & XGBoost & $0{,}1765$ & $0{,}3973$ & $0{,}1765$ \\
+$T_{\mathrm{DS}}$ & LightGBM & $0{,}1765$ & $0{,}3774$ & $0{,}1758$ \\
+$T_{\mathrm{DHT}}$ & XGBoost & $0{,}2019$ & $0{,}4291$ & $0{,}2014$ \\
+$T_{\mathrm{DHT}}$ & LightGBM & $0{,}2016$ & $0{,}4097$ & $0{,}2020$ \\
+$\phi_{\mathrm{DHT}}$ & XGBoost & $1{,}0496$ & $1{,}4591$ & $1{,}0622$ \\
+$\phi_{\mathrm{DHT}}$ & LightGBM & $1{,}0445$ & $1{,}4995$ & $1{,}0647$ \\
+\bottomrule
+\end{tabular}
+\par\vspace{3pt}
+\begin{minipage}{0.98\textwidth}\footnotesize
+Los extremos corresponden a bloques de origen rodante. El rango no es un intervalo de confianza y no se transforma en una media agrupada sin los errores individuales y sus pesos.
+\end{minipage}
+\end{table}
+
+
+La comparación emparejada definió
+\begin{equation}
+\Delta\mathrm{RMSE}
+=\mathrm{RMSE}_{\mathrm{persistencia}}
+-\mathrm{RMSE}_{m}.
+\label{eq:res_mejora}
+\end{equation}
+Se exportaron intervalos por remuestreo temporal con $200$ repeticiones y longitudes de bloque de $6$, $12$ y $24$ orígenes. Dada la separación de $300$ s, esos bloques representan escalas nominales de $30$, $60$ y $120$ min de la secuencia de orígenes. La Tabla~\ref{tab:res_intervalos} presenta la configuración intermedia y dos casos de deterioro del árbol.
+
+% Fuentes: tab_s09_intervalos_emparejados.csv
+\begin{table}[htbp]
+\centering
+\caption{Diferencias de RMSE frente a persistencia e intervalos exploratorios por bloques.}
+\label{tab:res_intervalos}
+\small
+\setlength{\tabcolsep}{5pt}
+\begin{tabular}{lrrrrr}
+\toprule
+Variable & Modelo & $h$ (s) & $\Delta\mathrm{RMSE}$ & Límite inferior & Límite superior \\
+\midrule
+$T_{\mathrm{DS}}$ & XGBoost & $1200$ & $0{,}1993$ & $0{,}1730$ & $0{,}2260$ \\
+$T_{\mathrm{DS}}$ & LightGBM & $1200$ & $0{,}2000$ & $0{,}1731$ & $0{,}2272$ \\
+$T_{\mathrm{DHT}}$ & XGBoost & $1200$ & $0{,}1996$ & $0{,}1807$ & $0{,}2226$ \\
+$T_{\mathrm{DHT}}$ & LightGBM & $1200$ & $0{,}1989$ & $0{,}1802$ & $0{,}2220$ \\
+$\phi_{\mathrm{DHT}}$ & XGBoost & $1200$ & $0{,}7901$ & $0{,}7207$ & $0{,}8802$ \\
+$\phi_{\mathrm{DHT}}$ & LightGBM & $1200$ & $0{,}7876$ & $0{,}7166$ & $0{,}8758$ \\
+$T_{\mathrm{DS}}$ & Árbol & $20$ & $-0{,}0036$ & $-0{,}0060$ & $-0{,}0013$ \\
+$T_{\mathrm{DS}}$ & Árbol & $300$ & $-0{,}0083$ & $-0{,}0129$ & $-0{,}0048$ \\
+\bottomrule
+\end{tabular}
+\par\vspace{3pt}
+\begin{minipage}{0.98\textwidth}\footnotesize
+$\Delta\mathrm{RMSE}=\mathrm{RMSE}_{\mathrm{persistencia}}-\mathrm{RMSE}_{m}$. Intervalos nominales del $95\%$ con $200$ remuestreos y bloques de $12$ orígenes separados $300$ s. La estacionariedad no está establecida; estos intervalos son exploratorios y no corresponden a incertidumbre metrológica ni a equivalencia experimental.
+\end{minipage}
+\end{table}
+
+
+Los intervalos exploratorios de mejora de los ensambles permanecieron positivos en las tres longitudes de bloque para todos los canales y horizontes. Para DS del árbol a $20$ y $300$ s, los intervalos permanecieron negativos. Esa estabilidad de signo es un resultado de sensibilidad del remuestreo dentro de la serie evaluada.
+
+El manifiesto indica que la estacionariedad de los residuos no está establecida. A $1200$ s, la autocorrelación de orden uno del error cuadrático de persistencia fue aproximadamente $0{,}863$ en DS, $0{,}801$ en DHT y $0{,}630$ en humedad. Estos valores respaldan la necesidad de considerar dependencia temporal. Los intervalos conservan un carácter exploratorio y no se interpretan como incertidumbre instrumental, aceptación experimental ni prueba de equivalencia.
+
+\subsection{Costo de ajuste y predicción}
+
+La Tabla~\ref{tab:res_costo_ml} reúne tiempos del ajuste final con predicción por lotes y latencias de evaluación individual. La medición se realizó en Windows 11 sobre la CPU identificada como Intel64 Family 6 Model 183 Stepping 1. Se utilizaron diez repeticiones por configuración.
+
+% Fuentes: tab_s09_incertidumbre_costo.csv
+\begin{table}[htbp]
+\centering
+\caption{Tiempos registrados para los predictores temporales.}
+\label{tab:res_costo_ml}
+\small
+\setlength{\tabcolsep}{5pt}
+\begin{tabular}{lrrrrr}
+\toprule
+Modelo & $h$ (s) & Ajuste/pred. (s) & Mediana (ms) & p95 (ms) & p99 (ms) \\
+\midrule
+Persistencia & $20$ & $0{,}021$ & $0{,}295$ & $0{,}486$ & $0{,}562$ \\
+Árbol & $20$ & $0{,}321$ & $4{,}290$ & $5{,}113$ & $5{,}235$ \\
+XGBoost & $20$ & $0{,}416$ & $4{,}761$ & $5{,}378$ & $5{,}566$ \\
+LightGBM & $20$ & $0{,}384$ & $4{,}936$ & $5{,}854$ & $6{,}176$ \\
+Persistencia & $300$ & $0{,}023$ & $0{,}428$ & $0{,}615$ & $0{,}632$ \\
+Árbol & $300$ & $0{,}292$ & $4{,}135$ & $4{,}734$ & $4{,}773$ \\
+XGBoost & $300$ & $0{,}433$ & $5{,}668$ & $6{,}485$ & $6{,}810$ \\
+LightGBM & $300$ & $0{,}347$ & $4{,}709$ & $5{,}738$ & $6{,}132$ \\
+Persistencia & $1\,200$ & $0{,}023$ & $0{,}286$ & $0{,}388$ & $0{,}433$ \\
+Árbol & $1\,200$ & $0{,}409$ & $3{,}703$ & $4{,}401$ & $4{,}441$ \\
+XGBoost & $1\,200$ & $0{,}423$ & $5{,}562$ & $6{,}667$ & $6{,}744$ \\
+LightGBM & $1\,200$ & $0{,}346$ & $5{,}734$ & $10{,}050$ & $10{,}909$ \\
+\bottomrule
+\end{tabular}
+\par\vspace{3pt}
+\begin{minipage}{0.98\textwidth}\footnotesize
+Windows 11, CPU Intel64 Family 6 Model 183 Stepping 1. Latencia para lote de tamaño $1$ y $10$ repeticiones. El campo de ajuste incluye predicción por lotes. Los percentiles altos tienen precisión limitada por el pequeño número de repeticiones y no describen un ciclo de control.
+\end{minipage}
+\end{table}
+
+
+La persistencia registró medianas entre $0{,}286$ y $0{,}428$ ms. El árbol se situó entre $3{,}703$ y $4{,}290$ ms; XGBoost entre $4{,}761$ y $5{,}668$ ms; y LightGBM entre $4{,}709$ y $5{,}734$ ms. El p99 más alto reportado fue $10{,}909$ ms para LightGBM a $1200$ s.
+
+El número reducido de repeticiones limita la resolución de p95 y p99. Además, los tiempos no incluyen un ciclo de estimación, optimización y actuación. La exportación permite contrastar latencia de predictores bajo esas condiciones, sin establecer todavía factibilidad de un controlador.
+
+\subsection{PINN condicional de seis estados}
+
+La PINN se evaluó en una prueba numérica de la dinámica reducida. La configuración exportada dispone de dos capas ocultas de $32$ unidades, segmentos de $20$ s, tasa de aprendizaje $10^{-3}$, máximo de $300$ épocas y paciencia de $60$. Los pesos configurados fueron uno para datos, uno para física y diez para restricciones. Estos valores describen la configuración; el paquete no incluye la historia de pérdidas necesaria para reconstruir la detención efectiva.
+
+Se consignan $24$ referencias por estado. La Tabla~\ref{tab:res_pinn} presenta RMSE, residual físico RMS por segundo y error de condición inicial. El mayor RMSE térmico fue $9{,}741\times10^{-3}$ K en producto; el del aire fue $4{,}834\times10^{-3}$ K. Los errores de $W$ y $M$ fueron $1{,}738\times10^{-6}$ y $4{,}154\times10^{-6}$ kg/kg, respectivamente.
+
+% Fuentes: tab_s09_pinn_fisica_y_entrenamiento.csv
+\begin{table}[htbp]
+\centering
+\caption{Evaluación de la PINN condicional sobre referencias numéricas de seis estados.}
+\label{tab:res_pinn}
+\small
+\setlength{\tabcolsep}{5pt}
+\begin{tabular}{lrrr}
+\toprule
+Estado & RMSE & Residual RMS por segundo & Error inicial \\
+\midrule
+$T_c$ & $2{,}561\times10^{-3}$ & $2{,}378\times10^{-4}$ & $0$ \\
+$T_b$ & $5{,}481\times10^{-4}$ & $6{,}423\times10^{-5}$ & $0$ \\
+$T_p$ & $9{,}741\times10^{-3}$ & $4{,}839\times10^{-4}$ & $0$ \\
+$T_a$ & $4{,}834\times10^{-3}$ & $4{,}515\times10^{-4}$ & $0$ \\
+$W$ & $1{,}738\times10^{-6}$ & $1{,}172\times10^{-7}$ & $0$ \\
+$M$ & $4{,}154\times10^{-6}$ & $2{,}029\times10^{-7}$ & $0$ \\
+\bottomrule
+\end{tabular}
+\par\vspace{3pt}
+\begin{minipage}{0.98\textwidth}\footnotesize
+Se consignan $24$ referencias por estado. Las temperaturas se expresan en K y los contenidos de agua en kg/kg, con sus respectivas bases. Los residuales tienen unidades del estado por segundo. La fuente se identifica como prueba numérica de software y no como observación experimental.
+\end{minipage}
+\end{table}
+
+
+El error inicial exportado fue cero para las seis componentes, consistente con la imposición estructural de la condición inicial del mapa condicional. Los residuales RMS térmicos se situaron entre $6{,}423\times10^{-5}$ y $4{,}839\times10^{-4}$ K/s. Para $W$ y $M$ fueron $1{,}172\times10^{-7}$ y $2{,}029\times10^{-7}$ kg/kg/s.
+
+Estos resultados describen aproximación y coherencia con una referencia numérica suministrada. No acreditan identificación experimental de estados no medidos. La prueba de PINN y la tarea ML de sensores utilizan referencias, variables y poblaciones distintas; sus RMSE no se incorporan a un mismo ranking de precisión del secador. La independencia detallada de las referencias numéricas y los residuales fuera del dominio entrenado no se puede reconstruir únicamente con las tablas agregadas.
+
+\FloatBarrier
+
+\section{Efecto del enriquecimiento físico--basado en datos}
+\label{res:enriquecimiento}
+
+El manifiesto registra adaptadores para discrepancia y enriquecimiento, pero las tablas de fuentes y ponderaciones, ablaciones y mejora/detención figuran sin resultados ejecutados sobre una tarea común de la planta. No se dispone de predicciones físicas fuera del ajuste sobre desarrollo, trayectorias numéricas proyectadas mediante un operador compatible ni pares de evaluación base--enriquecido.
+
+El entrenamiento de los modelos temporales sobre una serie generada no cuantifica el efecto del enriquecimiento físico. Esa serie constituye su fuente inicial; no se ha exportado un contraste que añada trayectorias de red o CFD manteniendo algoritmo, tarea e información. Tampoco la aproximación PINN de una referencia numérica reemplaza esa ablación.
+
+En este corte no se calcula una ganancia de precisión, una razón de eficiencia del generador ni una regla de detención del bucle. El efecto del enriquecimiento permanece sin determinar hasta disponer de variantes comparables y referencias reales reservadas. Las soluciones de cavidad conservan su función de verificación y no se consideran observaciones adicionales del secador ventilado.
+
+\FloatBarrier
+
+\section{Evaluación comparativa de las estrategias de control}
+\label{res:control}
+
+La evaluación en lazo cerrado quedó aplazada en esta etapa. El conjunto exportado no aporta trayectorias comparables de referencia y salida, acciones ejecutadas, restricciones, potencia activa ni contenido de agua final bajo estrategias de control. Por tanto, no se presentan resultados de PID, MPC o MRAC, ni indicadores de seguimiento, consumo específico o cumplimiento de restricciones.
+
+Los tiempos de inferencia de la Sección~\ref{res:aprendizaje} caracterizan una parte del cálculo de un predictor. Su magnitud no demuestra desempeño de control, cuya evaluación requeriría el ciclo completo y una planta de contraste identificada. Los datos nominales de ventiladores se mantienen como caracterización de equipos y condiciones posibles del modelo.
+
+\FloatBarrier

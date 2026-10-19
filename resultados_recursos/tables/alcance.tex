@@ -1,0 +1,21 @@
+% Fuentes: results_manifest.csv; model_execution_manifest.csv; tab_s12_alcance_limitaciones.csv
+\begin{table}[htbp]
+\centering
+\caption{Alcance de los resultados según la fuente y la tarea evaluada.}
+\label{tab:res_alcance}
+\small
+\setlength{\tabcolsep}{5pt}
+\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{1.7cm}>{\raggedright\arraybackslash}p{2.0cm}>{\raggedright\arraybackslash}p{3.0cm}>{\raggedright\arraybackslash}X}
+\toprule
+Enfoque & Fuente & Resultado disponible & Alcance \\
+\midrule
+Serie de sensores & Sintética & 36 posiciones y tres días & Descripción de datos y preparación temporal \\
+CFD 3D & Caso numérico vacío & Transitorio de 0,05 s & Ejecución inicial aire--vapor, sin validación de planta \\
+Cavidad 2D & Problema de referencia & Dos $Ra$, tres mallas y pasos & Refinamiento espacial inconcluso; contraste numérico primario pendiente \\
+Red térmica & Caso numérico & Seis estados y balances & Coherencia de integración y recuperación condicional de un coeficiente \\
+ML & Serie sintética & Cuatro modelos, tres horizontes & Comparación temporal de observables en un mismo bloque \\
+PINN & Referencias numéricas & Seis estados y residuales & Evaluación del mapa condicional en el caso suministrado \\
+Híbridos y control & Sin evaluación aportada & No hay métricas comparables & Efecto de enriquecimiento y desempeño de control aún no determinados \\
+\bottomrule
+\end{tabularx}
+\end{table}

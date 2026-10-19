@@ -1,0 +1,27 @@
+% Fuentes: tab_s09_errores_predictivos.csv
+\begin{table}[htbp]
+\centering
+\caption{Sesgo, MAE y reducción relativa de RMSE a $1200$ s.}
+\label{tab:res_sesgo_mae}
+\small
+\setlength{\tabcolsep}{5pt}
+\begin{tabular}{lrrrr}
+\toprule
+Variable & Modelo & MBE & MAE & Reducción (\%) \\
+\midrule
+$T_{\mathrm{DS}}$ & Persistencia & $0{,}0934$ & $0{,}3157$ & $0{,}00$ \\
+$T_{\mathrm{DS}}$ & XGBoost & $0{,}0054$ & $0{,}1415$ & $53{,}05$ \\
+$T_{\mathrm{DS}}$ & LightGBM & $0{,}0058$ & $0{,}1405$ & $53{,}21$ \\
+$T_{\mathrm{DHT}}$ & Persistencia & $0{,}0933$ & $0{,}3322$ & $0{,}00$ \\
+$T_{\mathrm{DHT}}$ & XGBoost & $0{,}0064$ & $0{,}1608$ & $49{,}77$ \\
+$T_{\mathrm{DHT}}$ & LightGBM & $0{,}0070$ & $0{,}1612$ & $49{,}61$ \\
+$\phi_{\mathrm{DHT}}$ & Persistencia & $-0{,}3551$ & $1{,}4995$ & $0{,}00$ \\
+$\phi_{\mathrm{DHT}}$ & XGBoost & $-0{,}0082$ & $0{,}8476$ & $42{,}65$ \\
+$\phi_{\mathrm{DHT}}$ & LightGBM & $-0{,}0101$ & $0{,}8490$ & $42{,}52$ \\
+\bottomrule
+\end{tabular}
+\par\vspace{3pt}
+\begin{minipage}{0.98\textwidth}\footnotesize
+MBE y MAE conservan las unidades del canal. La reducción es $100(\mathrm{RMSE}_{\mathrm{persistencia}}-\mathrm{RMSE}_{m})/\mathrm{RMSE}_{\mathrm{persistencia}}$; un valor positivo indica menor error que la referencia.
+\end{minipage}
+\end{table}

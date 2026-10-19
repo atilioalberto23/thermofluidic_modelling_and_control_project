@@ -1,0 +1,1259 @@
+% ============================================================================
+% CAPÍTULO 2: MARCO TEÓRICO
+% Archivo de capítulo para incluir en el documento principal de la tesis.
+% Requiere: amsmath, amssymb y booktabs. No requiere imágenes externas.
+% Referencias: marco_teorico_referencias.bib; integrar este archivo en la
+% bibliografía general del proyecto. Las citas utilizan el comando estándar \cite.
+% BibTeX: añadir marco_teorico_referencias a la orden \bibliography del documento
+% principal. BibLaTeX: añadir \addbibresource{marco_teorico_referencias.bib}
+% en el preámbulo, conservando el estilo bibliográfico de la tesis.
+% Convenciones: temperaturas termodinámicas en K; humedad relativa como fracción;
+% M en base seca; W por unidad de masa de aire seco; Y por masa de aire húmedo.
+% ============================================================================
+
+\clearpage
+\chapter{Marco teórico}
+\label{ch:marco_teorico}
+
+El secado solar de café integra fenómenos de transporte que actúan sobre escalas diferentes. La radiación suministra energía a la cubierta, a las superficies internas y al producto; los intercambios térmicos modifican las temperaturas y la densidad del aire; el movimiento del fluido redistribuye calor y vapor; y la migración de agua en el café determina la evolución de su contenido de humedad. Estas interacciones conforman una dinámica no lineal, espacialmente heterogénea y sometida a perturbaciones meteorológicas. Su descripción requiere relacionar la termodinámica del aire húmedo, los mecanismos de transferencia, las ecuaciones de conservación y la teoría de sistemas dinámicos.
+
+Este capítulo desarrolla esa relación como fundamento del modelado termo-higrométrico y del control inteligente de secadores solares tipo invernadero. La exposición parte del producto y de las variables que caracterizan el secado, establece los mecanismos físicos que gobiernan su evolución y presenta las representaciones distribuidas, reducidas e híbridas que permiten analizarla. La teoría de observación, identificación y control completa el vínculo entre la descripción física y la regulación del proceso.
+
+\section{Fundamentos del secado de café}
+\label{sec:fundamentos_secado}
+
+\subsection{El secador solar como sistema abierto}
+
+El secado es la reducción del agua contenida en un material mediante su transporte hacia el entorno. En un secador solar tipo invernadero, la cubierta permite captar parte de la irradiancia incidente y modifica los intercambios con la atmósfera. El recinto protege el producto y configura un microclima, pero conserva entradas y salidas de aire necesarias para evacuar vapor. Por ello, la planta se describe como un sistema abierto que intercambia energía y masa, incluso cuando opera sin ventilación mecánica. La clasificación de los secadores por captación directa, indirecta o mixta, y por circulación natural o forzada, corresponde a mecanismos de suministro energético y transporte diferentes \cite{fudholi2010}.
+
+La captación solar no determina por sí sola la capacidad de secado. Si el vapor liberado por el producto permanece en el recinto, su presión parcial aumenta y disminuye el potencial para continuar la deshidratación. La renovación del aire permite transportar esa agua al exterior, aunque también modifica las pérdidas de energía. El desempeño resulta, por tanto, de la interacción entre captación, almacenamiento térmico, intercambio con el producto y evacuación de humedad.
+
+La geometría interviene en todos estos mecanismos: establece las áreas expuestas, las distancias de transporte, las trayectorias del aire y las resistencias introducidas por las bandejas y la carga. Una configuración que favorece la captación puede producir regiones de escasa ventilación; una mayor apertura puede aumentar la extracción de vapor y reducir simultáneamente la temperatura. Estas relaciones explican por qué el análisis del secador exige una descripción conjunta de su dinámica térmica e higrométrica.
+
+\subsection{Contenido de humedad y balance de agua del producto}
+\label{subsec:humedad_producto}
+
+Sea $m_s$ la masa de materia seca y $m_w$ la masa de agua del café. Si la pérdida de materia seca es despreciable durante el intervalo considerado, $m_s$ permanece constante. El contenido de humedad en base seca, $M$, y la fracción de humedad en base húmeda, $X$, se definen como
+\begin{equation}
+M=\frac{m_w}{m_s},
+\qquad
+X=\frac{m_w}{m_s+m_w},
+\label{eq:humedad_bases}
+\end{equation}
+y se relacionan mediante
+\begin{equation}
+X=\frac{M}{1+M},
+\qquad
+M=\frac{X}{1-X}.
+\label{eq:conversion_humedad}
+\end{equation}
+Aunque ambas magnitudes son cocientes de masas, sus valores no son intercambiables. Un contenido expresado como porcentaje requiere indicar explícitamente su base. En este capítulo $M$ se expresa en $\mathrm{kg_{agua}\,kg_{seco}^{-1}}$ y constituye la variable de humedad del producto.
+
+La conservación de agua proporciona una relación directa entre la cinética del café y el vapor transferido al aire:
+\begin{equation}
+\dot m_e=-m_s\frac{\mathrm{d}M}{\mathrm{d}t},
+\label{eq:evaporacion_producto}
+\end{equation}
+donde $\dot m_e$ es positiva para la pérdida neta de agua por evaporación. Si el material recupera humedad, el signo se invierte. Esta identidad establece el acoplamiento de masa que debe conservar cualquier representación del secador, independientemente de su resolución espacial.
+
+\subsection{Actividad de agua y equilibrio higroscópico}
+\label{subsec:equilibrio_higroscopico}
+
+El agua del café no se comporta exclusivamente como una reserva de líquido libre. Su interacción con la matriz del producto modifica el potencial químico y, por consiguiente, la presión de vapor en equilibrio. La actividad de agua se define mediante
+\begin{equation}
+a_w=\frac{p_{v,\mathrm{eq}}}{p_{\mathrm{sat}}(T_p)},
+\label{eq:actividad_agua}
+\end{equation}
+donde $T_p$ es la temperatura del producto, $p_{v,\mathrm{eq}}$ la presión parcial de vapor en equilibrio con él y $p_{\mathrm{sat}}$ la presión de saturación del agua pura. El contenido de humedad y la actividad de agua son propiedades diferentes: el primero cuantifica una cantidad de agua y la segunda caracteriza su estado termodinámico.
+
+En equilibrio con un ambiente a la misma temperatura, $a_w$ coincide con la humedad relativa de equilibrio expresada como fracción. La relación entre $M$, $a_w$ y $T_p$ se representa mediante una isoterma de sorción. Los experimentos de Corrêa et al. muestran que las isotermas y las propiedades de sorción del café dependen de su estado de procesamiento, por lo que sus parámetros no deben transferirse indistintamente entre fruto, café despulpado y grano verde \cite{correa2010}.
+
+Una representación constitutiva de uso extendido es la ecuación de Guggenheim--Anderson--de Boer, o GAB:
+\begin{equation}
+M_e(T_p,a_w)=
+\frac{M_m C_G K_G a_w}
+{(1-K_G a_w)(1-K_G a_w+C_G K_G a_w)},
+\label{eq:gab}
+\end{equation}
+donde $M_e$ es la humedad de equilibrio, $M_m$ el contenido de la monocapa y $C_G$ y $K_G$ parámetros que dependen de la temperatura y del material. Su interpretación y aplicabilidad se encuentran condicionadas por el intervalo de actividad de agua y por el ajuste de sus parámetros \cite{timmermann2001}. La ecuación ilustra un cierre posible; no establece una isoterma universal para cualquier presentación del café.
+
+La trayectoria previa también puede ser relevante. La adsorción y la desorción pueden seguir curvas distintas, fenómeno denominado histéresis. En consecuencia, un modelo de secado debe distinguir el equilibrio correspondiente a la pérdida de agua del que caracteriza su recuperación. Cuando el aire y el producto tienen temperaturas diferentes, no es correcto sustituir automáticamente $a_w$ por la humedad relativa medida en el aire: el equilibrio local debe referirse a la temperatura de la superficie del producto.
+
+\subsection{Trayectoria de secado y calidad del café}
+
+La finalidad del secado no se reduce a alcanzar una humedad final. La temperatura del producto, la duración de la exposición y la velocidad de pérdida de agua conforman una trayectoria que puede afectar sus propiedades fisiológicas y sensoriales. Alves et al. analizaron conjuntamente temperatura, caudal de aire y tipo de procesamiento, y encontraron respuestas diferentes para cafés naturales y despulpados bajo las condiciones estudiadas \cite{alves2017}. Esta evidencia justifica tratar la calidad como una restricción del proceso y evita asumir que una mayor temperatura o una menor duración implican necesariamente un mejor producto.
+
+La temperatura del aire tampoco identifica de manera unívoca la temperatura del café. La radiación directa puede calentar el producto, mientras que la evaporación extrae energía de su superficie. Una regulación basada únicamente en el aire puede omitir ambos efectos. Del mismo modo, una humedad relativa interior baja no demuestra que el grano haya alcanzado su humedad objetivo. La evaluación física del secado requiere distinguir las condiciones del agente secante del estado del material.
+
+\section{Psicrometría y potencial termodinámico de secado}
+\label{sec:psicrometria}
+
+\subsection{Composición del aire húmedo}
+
+El aire húmedo puede aproximarse como una mezcla de aire seco y vapor de agua. Para presiones próximas a la atmosférica y temperaturas moderadas, la representación de gas ideal permite expresar
+\begin{equation}
+p=p_{da}+p_v,
+\label{eq:dalton}
+\end{equation}
+donde $p$ es la presión total, $p_{da}$ la presión parcial del aire seco y $p_v$ la del vapor. Las relaciones psicrométricas permiten pasar de las variables instrumentales a las variables conservativas requeridas por los balances \cite{ashrae2021}.
+
+Se distinguen tres magnitudes:
+\begin{equation}
+W=\frac{m_v}{m_{da}},
+\qquad
+Y=\frac{m_v}{m_{da}+m_v},
+\qquad
+\phi=\frac{p_v}{p_{\mathrm{sat}}(T_a)}.
+\label{eq:variables_humedad_aire}
+\end{equation}
+$W$ es la razón de humedad por unidad de masa de aire seco, $Y$ la fracción másica de vapor en la mezcla y $\phi$ la humedad relativa, aquí definida entre cero y uno para aire no sobresaturado. Sus relaciones son
+\begin{equation}
+W=\epsilon_m\frac{p_v}{p-p_v},
+\qquad
+Y=\frac{W}{1+W},
+\qquad
+\epsilon_m=\frac{R_{da}}{R_v}\simeq 0.622,
+\label{eq:razon_humedad}
+\end{equation}
+con $R_{da}$ y $R_v$ las constantes específicas de los gases. Por tanto,
+\begin{equation}
+p_v=\frac{pW}{\epsilon_m+W},
+\qquad
+\phi=\frac{pW}{(\epsilon_m+W)p_{\mathrm{sat}}(T_a)}.
+\label{eq:conversion_psicrometrica}
+\end{equation}
+La definición de $W$ debe mantenerse en los balances que emplean masa de aire seco, mientras que $Y$ corresponde a las ecuaciones de transporte formuladas con la densidad total de la mezcla.
+
+\subsection{Calentamiento sensible y fuerza impulsora de evaporación}
+
+A presión total aproximadamente constante, calentar una corriente sin añadir ni retirar vapor conserva $W$ y $p_v$, pero aumenta $p_{\mathrm{sat}}(T_a)$. Por ello disminuye $\phi$. La relación termodinámica aproximada de Clausius--Clapeyron,
+\begin{equation}
+\frac{\mathrm{d}\ln p_{\mathrm{sat}}}{\mathrm{d}T}
+\simeq\frac{L_v(T)}{R_vT^2},
+\label{eq:clausius_clapeyron}
+\end{equation}
+expresa el aumento de la presión de saturación con la temperatura, suponiendo vapor ideal y volumen específico del líquido pequeño frente al del vapor. $L_v$ es la entalpía de vaporización en $\mathrm{J\,kg^{-1}}$.
+
+El calentamiento del aire no constituye, por sí mismo, una extracción de agua. La evaporación del producto depende del potencial entre la superficie y el aire. En una descripción local de equilibrio superficial,
+\begin{equation}
+p_{v,s}=a_w(M_s,T_{p,s})p_{\mathrm{sat}}(T_{p,s}),
+\qquad
+\Delta p_v=p_{v,s}-p_{v,a},
+\label{eq:potencial_evaporacion}
+\end{equation}
+donde $M_s$ y $T_{p,s}$ son las condiciones superficiales del café. Un $\Delta p_v$ positivo favorece el transporte hacia el aire; si se anula, desaparece esa fuerza impulsora; si cambia de signo, puede producirse recuperación de humedad.
+
+El déficit respecto de la saturación del aire,
+$p_{\mathrm{sat}}(T_a)-p_{v,a}$, es un indicador psicrométrico útil, pero no reemplaza la fuerza impulsora de la Ecuación~\eqref{eq:potencial_evaporacion}. Ambos coinciden únicamente bajo hipótesis particulares sobre la temperatura y la actividad de agua de la superficie. Esta distinción conecta la psicrometría con la cinética del producto.
+
+\subsection{Entalpía y densidad de la mezcla}
+
+La entalpía del aire húmedo, por unidad de masa de aire seco, puede aproximarse como
+\begin{equation}
+h_a(T_a,W)=c_{p,da}\vartheta_a
++W\left(L_0+c_{p,v}\vartheta_a\right),
+\qquad
+\vartheta_a=T_a-T_r,
+\label{eq:entalpia_aire_humedo}
+\end{equation}
+donde $T_r$ es una temperatura de referencia, $L_0$ la diferencia de entalpía entre vapor y líquido en esa referencia, y $c_{p,da}$ y $c_{p,v}$ los calores específicos. La misma referencia debe utilizarse en el agua del producto y en las corrientes de entrada y salida. La dependencia respecto de $W$ muestra por qué un balance de energía del aire húmedo no puede reducirse siempre a un balance de temperatura.
+
+La ecuación de estado de la mezcla proporciona
+\begin{equation}
+\rho_a=\frac{p-p_v}{R_{da}T_a}+\frac{p_v}{R_vT_a}.
+\label{eq:densidad_aire_humedo}
+\end{equation}
+Como $R_v>R_{da}$, a presión y temperatura constantes un incremento de vapor reduce la densidad de la mezcla. Las variaciones térmicas y de composición pueden contribuir, por tanto, a la flotación. El uso de una densidad dependiente únicamente de la temperatura requiere que la contribución higrométrica sea suficientemente pequeña para el fenómeno analizado.
+
+\subsection{Punto de rocío y condensación}
+
+El punto de rocío $T_{dp}$ se define, bajo la aproximación ideal, mediante
+\begin{equation}
+p_{\mathrm{sat}}(T_{dp})=p_v.
+\label{eq:punto_rocio}
+\end{equation}
+Una superficie con temperatura inferior al punto de rocío del aire adyacente puede originar condensación. En un secador, el enfriamiento radiativo de la cubierta o la reducción nocturna de la temperatura pueden generar esta condición. La condensación representa una transferencia de vapor hacia líquido y libera calor latente; debe incorporarse como término de masa y energía cuando deja de ser despreciable. Un modelo sin fase condensada pierde validez si reproduce estados sobresaturados sin representar su relajación física.
+
+\section{Transferencia acoplada de calor y masa}
+\label{sec:transferencia_calor_masa}
+
+\subsection{Conducción e inercia térmica}
+
+Para un medio isotrópico, la ley de Fourier expresa el flujo de calor por unidad de área:
+\begin{equation}
+\mathbf q''=-k\nabla T,
+\label{eq:fourier}
+\end{equation}
+donde $k$ es la conductividad térmica en $\mathrm{W\,m^{-1}\,K^{-1}}$. La conservación de energía en un sólido inmóvil conduce a
+\begin{equation}
+\rho_s c_s\frac{\partial T_s}{\partial t}
+=\nabla\cdot(k_s\nabla T_s)+s_{E,s},
+\label{eq:heatdiffusion}
+\end{equation}
+con $s_{E,s}$ una fuente volumétrica en $\mathrm{W\,m^{-3}}$. Si las propiedades son constantes y no existe generación volumétrica, la ecuación se reduce a
+\begin{equation}
+\frac{\partial T_s}{\partial t}=a_s\nabla^2T_s,
+\qquad
+a_s=\frac{k_s}{\rho_sc_s}.
+\label{eqn:transferenciacalor}
+\end{equation}
+La difusividad $a_s$ caracteriza la propagación de una perturbación térmica, mientras que la capacidad térmica volumétrica $\rho_sc_s$ caracteriza el almacenamiento energético. Una baja difusividad no demuestra por sí sola una elevada capacidad de almacenamiento, pues puede resultar de una conductividad reducida \cite{bergman2017}.
+
+Las escalas $t_{\mathrm{dif}}\sim L_s^2/a_s$ y $t_{\mathrm{cap}}\sim C_s/G_s$, con $C_s$ una capacidad térmica y $G_s$ una conductancia global, permiten distinguir difusión interna y respuesta del componente al entorno. Esta separación resulta útil ante variaciones de irradiancia: un componente puede presentar temperatura interna no uniforme y, simultáneamente, responder con lentitud al calentamiento externo.
+
+\subsection{Intercambio convectivo con las superficies}
+
+La ley de enfriamiento de Newton representa el intercambio entre una superficie y el aire mediante
+\begin{equation}
+\dot Q_{s\rightarrow a}=h_c A_s(T_s-T_a),
+\label{eq:newton}
+\end{equation}
+donde $h_c$ tiene unidades de $\mathrm{W\,m^{-2}\,K^{-1}}$. Este coeficiente sintetiza el transporte en la capa límite y depende de la geometría, del régimen de flujo, de las propiedades del fluido y de las condiciones de frontera. No constituye una propiedad intrínseca del material sólido.
+
+La convección natural se origina en diferencias de densidad; la forzada se asocia a una circulación impuesta; y la mixta combina ambos mecanismos. En el secador pueden coexistir estos regímenes debido a la flotación, al viento y a la actuación mecánica. Su participación relativa debe establecerse mediante las escalas del flujo, en lugar de atribuir a todo el recinto un régimen único e invariable.
+
+\subsection{Transporte externo de vapor}
+
+Una representación de película para el flujo neto de vapor desde el café es
+\begin{equation}
+j_e''=h_m\left(\rho_{v,s}^{*}-\rho_{v,a}^{*}\right),
+\qquad
+\dot m_e=\int_{A_p}j_e''\,\mathrm{d}A,
+\label{eq:flujo_evaporacion}
+\end{equation}
+donde $h_m$ se expresa en $\mathrm{m\,s^{-1}}$, $j_e''$ en $\mathrm{kg\,m^{-2}\,s^{-1}}$ y las concentraciones con asterisco se evalúan bajo una convención común de temperatura de película. Esta aproximación es adecuada cuando la variación térmica a través de la película permite utilizar un coeficiente efectivo. Una formulación basada en presión parcial también es posible, pero requiere un coeficiente con unidades diferentes; ambas expresiones no deben mezclarse sin transformación.
+
+El coeficiente de transferencia de masa y el de calor pueden relacionarse mediante analogías de transporte bajo condiciones específicas. Los números de Sherwood, Schmidt y Lewis,
+\begin{equation}
+Sh=\frac{h_m L}{D_v},
+\qquad
+Sc=\frac{\nu}{D_v},
+\qquad
+Le=\frac{a_a}{D_v},
+\label{eq:adimensionales_masa}
+\end{equation}
+comparan transferencia superficial y difusión, difusión de momento y de vapor, y difusión térmica y másica, respectivamente. La analogía no elimina la necesidad de considerar las diferencias entre las condiciones térmicas y de humedad del producto \cite{bergman2017}.
+
+\subsection{Migración interna y resistencia del producto}
+
+El agua que alcanza la superficie debe migrar desde el interior del café. Una aproximación difusiva, con matriz fija y transporte efectivo isotrópico, es
+\begin{equation}
+\rho_{s,p}\frac{\partial M}{\partial t}
+=\nabla\cdot\left(\rho_{s,p}D_{\mathrm{eff}}\nabla M\right),
+\label{eq:diffusion_humedad_producto}
+\end{equation}
+donde $\rho_{s,p}$ es la masa seca por unidad de volumen de producto y $D_{\mathrm{eff}}$ una difusividad efectiva. En la superficie, la conservación exige
+\begin{equation}
+-\rho_{s,p}D_{\mathrm{eff}}\nabla M\cdot\mathbf n_p=j_e'',
+\label{eq:frontera_humedad_producto}
+\end{equation}
+con $\mathbf n_p$ dirigida desde el producto hacia el aire. El parámetro efectivo reúne mecanismos de migración que una descripción macroscópica no resuelve individualmente; no debe interpretarse necesariamente como una difusividad molecular del agua libre.
+
+La resistencia externa puede reducirse al aumentar la circulación, pero la tasa global no crece indefinidamente si la resistencia interna domina. La escala $t_M\sim L_p^2/D_{\mathrm{eff}}$ permite estimar la lentitud del transporte interno frente a los cambios del microclima. Una formulación difusiva es una aproximación adicional: contracción importante, heterogeneidad del material o desplazamiento de frentes de evaporación pueden requerir modelos más detallados.
+
+\subsection{Modelos cinéticos de secado}
+\label{subsec:cinetica_secado}
+
+Los modelos de capa delgada representan la evolución promedio de humedad bajo condiciones de secado especificadas. Si $M_e$ es aproximadamente constante, se define la razón de humedad
+\begin{equation}
+MR(t)=\frac{M(t)-M_e}{M_0-M_e}.
+\label{eq:moisture_ratio}
+\end{equation}
+Una aproximación de primer orden es
+\begin{equation}
+\frac{\mathrm{d}M}{\mathrm{d}t}=-k_d(M-M_e),
+\qquad
+MR(t)=\exp(-k_dt),
+\label{eq:cinetica_primer_orden}
+\end{equation}
+para $k_d$ constante y $M(0)=M_0$. El modelo de Page generaliza esta forma mediante
+\begin{equation}
+MR(t)=\exp(-k_Pt^{n_P}),
+\label{eq:modelo_page}
+\end{equation}
+donde $k_P$ tiene unidades de $\mathrm{s^{-n_P}}$ si $t$ se mide en segundos. La constante del modelo de Page no posee, en general, las mismas unidades que $k_d$.
+
+Estas expresiones describen trayectorias bajo las condiciones en que se identifican sus parámetros; no sustituyen una ley general para un secador perturbado por meteorología variable. Cuando $M_e$ y $k_d$ cambian con el estado del aire, la ecuación diferencial de primer orden mantiene un significado dinámico, pero deja de tener la solución exponencial simple de la Ecuación~\eqref{eq:cinetica_primer_orden}. Los estudios de secado del café también muestran que la respuesta cinética depende de las condiciones de operación y del procesamiento \cite{alves2017}.
+
+La dependencia térmica de una tasa efectiva puede representarse mediante
+\begin{equation}
+k_d=k_0\exp\left(-\frac{E_a}{R_uT_p}\right)
+g(\phi_a,U_a,M),
+\label{eq:arrhenius_secado}
+\end{equation}
+con $E_a$ una energía de activación efectiva, $R_u$ la constante molar de los gases y $g$ una función adimensional. El uso de esta forma requiere un intervalo de aplicación y parámetros identificados para el material. Una correlación numérica obtenida para otro producto no constituye un cierre válido para el café por analogía de forma.
+
+\subsection{Acoplamiento energético de la evaporación}
+
+La transferencia de agua hacia el aire demanda energía. Para una representación del producto con temperatura uniforme,
+\begin{equation}
+C_p(M)\frac{\mathrm{d}T_p}{\mathrm{d}t}
+=\dot Q_{p,\mathrm{net}}-L_v(T_p)\dot m_e,
+\qquad
+C_p(M)\simeq m_s(c_s+Mc_l),
+\label{eq:energia_producto}
+\end{equation}
+donde $\dot Q_{p,\mathrm{net}}$ reúne los intercambios no asociados al cambio de fase y $c_l$ es el calor específico del agua líquida. El término latente reduce el calentamiento del producto durante la pérdida de agua. En un material higroscópico, una energía efectiva de desorción puede ser necesaria para representar la contribución de agua ligada; su relación con el estado de procesamiento del café se encuentra documentada experimentalmente \cite{correa2010}.
+
+La misma transferencia debe aparecer en el balance de vapor y en el balance de energía del aire. El término latente no puede añadirse independientemente a varios nodos sin una convención común de entalpías. La consistencia se comprueba conservando el agua total y sumando los balances de todos los subsistemas, de modo que los intercambios internos se cancelen.
+
+\section{Captación solar e intercambio radiativo}
+\label{sec:radiacion_solar}
+
+\subsection{Geometría solar e irradiancia sobre una superficie}
+
+La irradiancia es una potencia por unidad de área, en $\mathrm{W\,m^{-2}}$; su integral temporal es la irradiación, en $\mathrm{J\,m^{-2}}$. Sobre una superficie, la energía recibida depende de la posición solar, de la orientación, del sombreado y de las componentes directa, difusa y reflejada. Los algoritmos de posición solar permiten calcular la dirección aparente del Sol a partir de la localización y el tiempo \cite{reda2004}.
+
+Para una superficie de inclinación $\beta_s$, una aproximación isotrópica de transposición es
+\begin{equation}
+\begin{aligned}
+G_s={}&\mathrm{DNI}\max(0,\cos\theta_i)
++\mathrm{DHI}\frac{1+\cos\beta_s}{2}\\
+&+r_g\,\mathrm{GHI}\frac{1-\cos\beta_s}{2},
+\end{aligned}
+\label{eq:globalirradiance}
+\end{equation}
+donde DNI es la irradiancia directa normal, DHI la difusa horizontal, GHI la global horizontal, $r_g$ el albedo del terreno y $\theta_i$ el ángulo de incidencia. Para una superficie horizontal no obstruida,
+\begin{equation}
+\mathrm{GHI}=\mathrm{DNI}\max(0,\cos\theta_z)+\mathrm{DHI},
+\label{eq:ghi}
+\end{equation}
+con $\theta_z$ el ángulo cenital. La transposición isotrópica supone una distribución difusa uniforme y un terreno idealizado; el sombreado y la anisotropía del cielo requieren tratamiento adicional \cite{duffie2013}.
+
+En una cubierta curva, la normal y el ángulo de incidencia varían espacialmente. La potencia incidente se obtiene integrando $G_s$ sobre el área correspondiente. Los modelos de cielo despejado proporcionan una referencia para condiciones atmosféricas determinadas, pero no representan por sí solos las fluctuaciones producidas por nubes ni sustituyen una caracterización local de irradiancia.
+
+\subsection{Propiedades ópticas de la cubierta}
+
+Para cada longitud de onda y dirección de incidencia, la conservación de energía radiativa exige
+\begin{equation}
+\alpha_\lambda+\mathcal R_\lambda+\tau_\lambda=1,
+\label{eq:radiativebalance}
+\end{equation}
+donde $\alpha_\lambda$, $\mathcal R_\lambda$ y $\tau_\lambda$ representan absortancia, reflectancia y transmitancia. Los valores efectivos de onda corta se obtienen ponderando estas propiedades con el espectro solar y las condiciones de incidencia. En una aproximación de banda,
+\begin{equation}
+\dot Q_{\mathrm{sol},c}=\int_{A_c}\alpha_{c,\mathrm{sw}}G_s\,\mathrm{d}A,
+\qquad
+\dot Q_{\mathrm{tr}}=\int_{A_c}\tau_{c,\mathrm{sw}}G_s\,\mathrm{d}A.
+\label{eq:potencia_solar_cubierta}
+\end{equation}
+La primera contribución calienta la cubierta; la segunda ingresa al recinto y se reparte entre las superficies y el producto conforme a la geometría y al sombreado. La suma de potencias solares asignadas a los nodos internos debe ser consistente con la energía transmitida y con las eventuales pérdidas ópticas.
+
+La emisividad infrarroja $\varepsilon_{\mathrm{lw}}$ caracteriza otra región espectral. La ley de Kirchhoff relaciona emisividad y absortancia bajo las mismas condiciones espectrales y direccionales, pero no permite identificar la emisividad de onda larga con la absortancia solar. Tampoco permite deducirla como $1-\tau_{\mathrm{sw}}$. Esta separación es necesaria para representar correctamente una cubierta que transmite radiación solar y participa de manera distinta en el intercambio térmico \cite{duffie2013,bergman2017}.
+
+\subsection{Radiación térmica entre superficies}
+
+La emisión de una superficie gris se representa mediante
+\begin{equation}
+E_i=\varepsilon_i\sigma T_i^4,
+\label{eq:stefan}
+\end{equation}
+con $\sigma$ la constante de Stefan--Boltzmann y $T_i$ en kelvin. En un recinto con medio aproximadamente no participante, la radiación se intercambia principalmente entre superficies. Para superficies opacas, grises y difusas, la radiosidad satisface
+\begin{equation}
+J_i=\varepsilon_i\sigma T_i^4
++(1-\varepsilon_i)\sum_jF_{ij}J_j,
+\label{eq:radiosidad}
+\end{equation}
+y la potencia neta saliente de la superficie $i$ es
+\begin{equation}
+\dot Q_{r,i}=A_i\left(J_i-\sum_jF_{ij}J_j\right).
+\label{eq:potencia_radiosidad}
+\end{equation}
+Los factores de vista $F_{ij}$ deben satisfacer reciprocidad, $A_iF_{ij}=A_jF_{ji}$, y cierre, $\sum_jF_{ij}=1$, incluyendo las aberturas cuando corresponde.
+
+La expresión simplificada para dos superficies que intercambian únicamente entre sí es
+\begin{equation}
+\dot Q_{r,i\rightarrow j}=
+\frac{\sigma(T_i^4-T_j^4)}
+{\dfrac{1-\varepsilon_i}{A_i\varepsilon_i}
++\dfrac{1}{A_iF_{ij}}
++\dfrac{1-\varepsilon_j}{A_j\varepsilon_j}}.
+\label{eq:qrad}
+\end{equation}
+Esta relación no puede aplicarse como conexión independiente entre todos los pares de un recinto con múltiples superficies sin considerar la red de radiosidades. Si la cubierta es semitransparente en el infrarrojo, las Ecuaciones~\eqref{eq:radiosidad} y \eqref{eq:qrad} requieren términos de transmisión y condiciones ópticas adicionales.
+
+Para una superficie frente a un entorno radiativo grande, el flujo neto se escribe como
+\begin{equation}
+q_r''=\varepsilon\sigma(T_s^4-T_{\mathrm{sur}}^4)
+=h_r(T_s-T_{\mathrm{sur}}),
+\qquad
+h_r=\varepsilon\sigma(T_s+T_{\mathrm{sur}})(T_s^2+T_{\mathrm{sur}}^2).
+\label{eq:hr}
+\end{equation}
+La segunda igualdad es una factorización exacta mientras $h_r$ conserve su dependencia de las temperaturas. Fijar $h_r$ alrededor de un estado de referencia introduce una aproximación local y no convierte al intercambio radiativo en un mecanismo lineal global.
+
+\subsection{Participación del medio y temperatura radiativa del cielo}
+
+La aproximación de aire no participante requiere una absorción y emisión volumétricas suficientemente pequeñas en las bandas relevantes. Cuando esta hipótesis no es admisible, la intensidad radiativa debe describirse mediante una ecuación de transferencia que incluya absorción, emisión y, si corresponde, dispersión. La fuente energética del fluido es entonces $s_{E,r}=-\nabla\cdot\mathbf q_r''$. Depositar radiación solar sobre una superficie y asignar esa misma energía como fuente volumétrica independiente produce una doble contabilización.
+
+El intercambio de la cubierta con la atmósfera puede expresarse mediante una temperatura radiativa efectiva $T_{\mathrm{sky}}$. Si $G_{\mathrm{lw},\downarrow}$ es la irradiancia de onda larga descendente sobre una superficie horizontal, una definición equivalente es
+\begin{equation}
+T_{\mathrm{sky}}=
+\left(\frac{G_{\mathrm{lw},\downarrow}}{\sigma}\right)^{1/4}.
+\label{eq:temperatura_cielo}
+\end{equation}
+Esta temperatura representa una condición radiativa del entorno y no la temperatura del aire interior. El flujo de una superficie inclinada también depende de sus factores de vista al cielo y al terreno. Las estimaciones de irradiancia de onda larga deben considerar humedad atmosférica y nubosidad dentro del dominio del modelo utilizado.
+
+\subsection{Interacción entre radiación y convección}
+
+La radiación modifica las temperaturas superficiales y, a través de ellas, los gradientes que generan el flujo convectivo. Los estudios de cavidades muestran que este acoplamiento puede alterar tanto la circulación como la distribución del intercambio térmico \cite{balaji1993}. Su efecto no admite una regla universal de aumento o disminución de la convección: depende de qué superficies intercambian radiación, de las condiciones de frontera y del régimen del flujo.
+
+La potencia total puede descomponerse en contribuciones convectivas y radiativas evaluadas sobre el mismo estado acoplado:
+\begin{equation}
+\dot Q_{\mathrm{tot}}=\dot Q_c+\dot Q_r.
+\label{eq:qtotal}
+\end{equation}
+Esta identidad no autoriza a superponer una solución de convección aislada y otra de radiación aislada, pues ambas modifican las temperaturas que determinan los flujos. De manera análoga, un número de Nusselt total solo puede definirse como suma de contribuciones si comparten área, longitud y diferencia de temperatura de referencia. La distinción resulta esencial al interpretar cavidades térmicas y trasladar sus mecanismos al secador.
+
+\section{Dinámica del aire y transporte distribuido}
+\label{sec:dinamica_aire}
+
+\subsection{Conservación de masa y cantidad de movimiento}
+
+El movimiento del aire enlaza el intercambio térmico con la evacuación de vapor. Para una mezcla tratada como medio continuo, la conservación local de masa se expresa como
+\begin{equation}
+\frac{\partial\rho_a}{\partial t}
++\nabla\cdot(\rho_a\mathbf v)=s_m,
+\label{eq:continuidad}
+\end{equation}
+donde $\mathbf v$ es la velocidad y $s_m$ una fuente volumétrica de masa. La evaporación puede representarse como flujo en la superficie del producto o como fuente distribuida en una región equivalente. En el primer caso $s_m=0$ en el volumen de aire, pero el flujo de masa debe incorporarse en la frontera; en el segundo, su integral debe coincidir con $\dot m_e$.
+
+La forma conservativa de la ecuación de cantidad de movimiento es
+\begin{equation}
+\frac{\partial(\rho_a\mathbf v)}{\partial t}
++\nabla\cdot(\rho_a\mathbf v\otimes\mathbf v)
+=-\nabla p+\nabla\cdot\boldsymbol\tau+\rho_a\mathbf g
++s_m\mathbf v_e+\mathbf s_v,
+\label{eq:navierstokes}
+\end{equation}
+donde $\boldsymbol\tau$ es el tensor de esfuerzos viscosos, $\mathbf v_e$ la velocidad de la masa incorporada y $\mathbf s_v$ reúne fuerzas adicionales. Para un fluido newtoniano con la hipótesis de Stokes,
+\begin{equation}
+\boldsymbol\tau=
+\mu\left[\nabla\mathbf v+(\nabla\mathbf v)^{\mathsf T}
+-\frac{2}{3}(\nabla\cdot\mathbf v)\mathbf I\right].
+\label{eq:esfuerzo_newtoniano}
+\end{equation}
+Estas ecuaciones expresan balances del continuo; el problema se completa mediante relaciones constitutivas y condiciones iniciales y de frontera \cite{versteeg2007,patankar1980}.
+
+Un número de Mach pequeño permite despreciar efectos acústicos dominantes, pero no elimina las variaciones de densidad inducidas por temperatura, composición o incorporación de vapor. La hipótesis $\nabla\cdot\mathbf v=0$ es una simplificación adicional, coherente con una descripción de densidad prácticamente constante. Cuando la expansión térmica o el aporte de masa son importantes, una formulación de bajo Mach y densidad variable resulta conceptualmente diferente de una formulación incompresible.
+
+\subsection{Flotación y aproximación de Boussinesq}
+
+En un gas calentado, las diferencias de densidad producen fuerzas de flotación. La aproximación de Boussinesq utiliza una densidad de referencia constante en los términos de inercia y transporte, y conserva una dependencia lineal de la densidad en la fuerza gravitacional. Para la contribución térmica,
+\begin{equation}
+\rho_a\simeq\rho_0\left[1-\beta_T(T_a-T_0)\right],
+\qquad
+\beta_T=-\frac{1}{\rho_0}
+\left(\frac{\partial\rho_a}{\partial T_a}\right)_{p,Y}.
+\label{eq:boussinesq}
+\end{equation}
+Su aplicación exige variaciones relativas de densidad y propiedades suficientemente pequeñas; la condición $\beta_T|T_a-T_0|\ll1$ es un criterio de escala, pero no sustituye el examen completo de las hipótesis \cite{gray1976}.
+
+Si la variación higrométrica contribuye de manera apreciable, puede introducirse también un coeficiente $\beta_Y$:
+\begin{equation}
+\frac{\rho_a-\rho_0}{\rho_0}
+\simeq-\beta_T(T_a-T_0)-\beta_Y(Y-Y_0).
+\label{eq:boussinesq_termohigrometrico}
+\end{equation}
+Al separar la presión hidrostática de referencia, la ecuación de movimiento adopta la forma
+\begin{equation}
+\begin{aligned}
+\rho_0\left[\frac{\partial\mathbf v}{\partial t}
++(\mathbf v\cdot\nabla)\mathbf v\right]
+={}&-\nabla\pi+\mu\nabla^2\mathbf v\\
+&-\rho_0[\beta_T(T_a-T_0)+\beta_Y(Y-Y_0)]\mathbf g+\mathbf s_v.
+\end{aligned}
+\label{eq:movimiento_boussinesq}
+\end{equation}
+$\mathbf g$ apunta hacia abajo. Por tanto, el signo negativo del término asociado a una temperatura superior a $T_0$ genera una aceleración ascendente. La aproximación incompresible y de vapor diluido que acompaña esta expresión también requiere que la incorporación de masa sea pequeña frente al transporte principal; fuera de ese límite deben conservarse los términos de la Ecuación~\eqref{eq:continuidad}.
+
+\subsection{Régimen de circulación y números adimensionales}
+
+Las escalas de velocidad $U$, longitud $L$ y temperatura $\Delta T$ permiten construir
+\begin{equation}
+Re=\frac{UL}{\nu},
+\qquad
+Pr=\frac{\nu}{a_a},
+\qquad
+Gr=\frac{g\beta_T|\Delta T|L^3}{\nu^2},
+\qquad
+Ra=Gr\,Pr,
+\label{eq:adimensionales_flujo}
+\end{equation}
+donde $\nu=\mu/\rho_0$ y $a_a=k_a/(\rho_0c_{p,a})$. $Re$ compara inercia y difusión viscosa; $Pr$, difusión de momento y térmica; $Gr$, flotación e influencia viscosa; y $Ra$, flotación frente a disipación viscosa y térmica. La longitud característica y la diferencia de temperatura deben especificarse para que estos números tengan una interpretación reproducible.
+
+Cuando existe una velocidad impuesta, el número de Richardson térmico permite comparar flotación e inercia:
+\begin{equation}
+Ri=\frac{Gr}{Re^2}=\frac{g\beta_T|\Delta T|L}{U^2}.
+\label{eq:richardson}
+\end{equation}
+Valores pequeños indican predominio relativo de la circulación impuesta y valores grandes una contribución importante de la flotación. En el régimen intermedio se habla de convección mixta. El sentido relativo de ambas fuerzas también importa: una corriente puede favorecer u oponerse a la circulación natural.
+
+El número de Nusselt,
+\begin{equation}
+Nu_c=\frac{h_cL}{k_a},
+\label{eq:nuc}
+\end{equation}
+caracteriza el intercambio térmico superficial respecto de una escala conductiva. Las correlaciones $Nu_c=f(Ra,Pr,\text{geometría})$ o $Nu_c=f(Re,Pr,\text{geometría})$ corresponden a configuraciones específicas. Ni la transición a turbulencia ni un valor de $Nu_c$ poseen umbrales universales válidos para cualquier secador; dependen de las fronteras térmicas, de las aberturas y de la geometría \cite{bergman2017,devahl1983}.
+
+\subsection{Ventilación natural, viento y actuación mecánica}
+
+La diferencia de densidad entre el aire interior y exterior puede producir una diferencia de presión hidrostática sobre una separación vertical $H_v$:
+\begin{equation}
+|\Delta p_{\mathrm{stack}}|\simeq
+\rho_0gH_v\beta_T|T_a-T_{\mathrm{amb}}|.
+\label{eq:presion_flotacion}
+\end{equation}
+Para una abertura idealizada, una relación de orificio proporciona
+\begin{equation}
+|\dot V|\simeq C_dA_{\mathrm{eff}}
+\sqrt{\frac{2|\Delta p|}{\rho_0}},
+\label{eq:caudal_abertura}
+\end{equation}
+con $C_d$ un coeficiente de descarga y $A_{\mathrm{eff}}$ un área equivalente. Las presiones sobre las distintas aberturas, el plano de presión neutra y las pérdidas internas determinan la dirección y el caudal de la red; una única fórmula de orificio no describe por sí sola todo el recinto.
+
+El viento añade presiones de escala $\rho_0U_w^2/2$ y modifica simultáneamente el intercambio convectivo exterior. En ventilación mecánica, el punto de operación resulta de la intersección entre la curva presión--caudal del ventilador y la resistencia del sistema. La potencia nominal no permite deducir directamente el caudal efectivo. Además, la recirculación interna mezcla el aire, mientras que la extracción renueva masa con el exterior: sus efectos sobre el balance global de vapor son distintos.
+
+\subsection{Ecuaciones de energía y transporte de vapor}
+
+En una aproximación de bajo Mach, con propiedades efectivas y disipación viscosa despreciable, una ecuación sensible para el fluido es
+\begin{equation}
+\rho_ac_{p,a}\left(
+\frac{\partial T_a}{\partial t}+\mathbf v\cdot\nabla T_a\right)
+=\nabla\cdot(k_a\nabla T_a)+s_{E,r}+s_{E,h}.
+\label{eq:energia}
+\end{equation}
+Las fuentes y los flujos energéticos deben ser compatibles con la formulación de entalpía y con el transporte de especies. Cuando los efectos de composición son relevantes, un balance de entalpía de mezcla con los flujos difusivos correspondientes ofrece una descripción más completa que esta ecuación de temperatura.
+
+La fracción másica de vapor satisface
+\begin{equation}
+\frac{\partial(\rho_aY)}{\partial t}
++\nabla\cdot(\rho_a\mathbf vY)
+=\nabla\cdot(\rho_aD_v\nabla Y)+s_v,
+\label{eq:species}
+\end{equation}
+donde $D_v$ es una difusividad molecular o efectiva y $s_v$ una fuente de vapor en $\mathrm{kg\,m^{-3}\,s^{-1}}$. Si la evaporación se representa mediante una fuente volumétrica, esta debe aparecer consistentemente en el balance de masa total y de energía; si se representa en la superficie del café, el flujo correspondiente debe imponerse allí. La humedad relativa se calcula posteriormente a partir de $Y$, $T_a$ y $p$, y no se trata como un escalar conservativo independiente.
+
+Considerar el vapor como escalar pasivo significa despreciar su influencia sobre el flujo y las propiedades de la mezcla. No equivale a eliminar la evaporación, su costo energético o su acumulación. Esta simplificación depende de la magnitud de los acoplamientos higrométricos, no de que el agua se represente mediante una ecuación escalar \cite{versteeg2007}.
+
+\subsection{Turbulencia y cierre de las ecuaciones promediadas}
+
+Un secador puede contener regiones laminares, transicionales y turbulentas. La geometría, la flotación, las corrientes impuestas y los obstáculos condicionan su presencia. Para flujo turbulento de densidad aproximadamente constante, la descomposición de Reynolds,
+\begin{equation}
+\mathbf v=\overline{\mathbf v}+\mathbf v',
+\qquad
+T_a=\overline T_a+T_a',
+\qquad
+Y=\overline Y+Y',
+\label{eq:descomposicion_reynolds}
+\end{equation}
+introduce correlaciones que deben modelarse. En particular, el esfuerzo de Reynolds aparece en la ecuación de momento como $-\rho_0\overline{v_i'v_j'}$.
+
+La hipótesis de viscosidad turbulenta aproxima
+\begin{equation}
+-\rho_0\overline{v_i'v_j'}
+=2\mu_t\overline S_{ij}
+-\frac{2}{3}\rho_0k_t\delta_{ij},
+\qquad
+k_t=\frac12\overline{v_i'v_i'},
+\label{eq:cierre_reynolds}
+\end{equation}
+para flujo medio incompresible, con $\overline S_{ij}$ el tensor de deformación medio. Esta hipótesis de Boussinesq para esfuerzos turbulentos es distinta de la aproximación de Boussinesq para flotación.
+
+El modelo $k$--$\varepsilon$ estándar relaciona la viscosidad turbulenta con la energía cinética turbulenta y su disipación:
+\begin{equation}
+\mu_t=\rho_0C_\mu\frac{k_t^2}{\varepsilon_t}.
+\label{eq:viscosidad_turbulenta}
+\end{equation}
+Una forma del balance de $k_t$ es
+\begin{equation}
+\rho_0\left(\frac{\partial k_t}{\partial t}
++\overline{\mathbf v}\cdot\nabla k_t\right)
+=\nabla\cdot\left[\left(\mu+\frac{\mu_t}{\sigma_k}\right)\nabla k_t\right]
++P_k+G_b-\rho_0\varepsilon_t,
+\label{eq:balance_k_turbulento}
+\end{equation}
+donde $P_k$ es la producción por deformación del flujo medio y $G_b$ la contribución de flotación. El modelo requiere además una ecuación de disipación y un tratamiento coherente de pared. Las variantes realizables y otros cierres modifican relaciones constitutivas y coeficientes; no pueden identificarse únicamente por la Ecuación~\eqref{eq:viscosidad_turbulenta} \cite{launder1974}.
+
+El transporte turbulento de calor y vapor suele aproximarse con difusión de gradiente:
+\begin{equation}
+k_{a,\mathrm{eff}}=k_a+\frac{\mu_tc_{p,a}}{Pr_t},
+\qquad
+D_{v,\mathrm{eff}}=D_v+\frac{\mu_t}{\rho_0Sc_t},
+\label{eq:difusion_turbulenta}
+\end{equation}
+con $Pr_t$ y $Sc_t$ números turbulentos de Prandtl y Schmidt. Los cierres pueden introducir incertidumbre en regiones de estratificación, recirculación o anisotropía intensa. En mezclas de densidad variable, el promedio ponderado de Favre y las correlaciones asociadas requieren una formulación diferente del promedio de densidad constante.
+
+\subsection{Resistencia del lecho y transferencia conjugada}
+
+La carga de café y las bandejas pueden reducir la sección útil y modificar la circulación. Si no se resuelven los intersticios, una representación de medio poroso aproxima la resistencia mediante relaciones de Darcy--Forchheimer. Para un lecho idealizado de partículas, la ecuación de Ergun expresa
+\begin{equation}
+\frac{\Delta p_b}{L_b}=
+150\frac{\mu(1-\epsilon_b)^2}{\epsilon_b^3d_p^2}U_b
++1.75\frac{\rho_a(1-\epsilon_b)}{\epsilon_b^3d_p}U_b|U_b|,
+\label{eq:ergun}
+\end{equation}
+donde $\epsilon_b$ es la porosidad, $d_p$ un diámetro representativo y $U_b$ la velocidad superficial sobre el área total del lecho. La forma y distribución de los granos condicionan la aplicabilidad de sus coeficientes \cite{ergun1952}. Una representación del recinto vacío no incorpora automáticamente la resistencia, la inercia térmica ni la generación de vapor de la carga.
+
+En una interfaz ideal entre sólido y fluido, sin resistencia de contacto ni fuentes superficiales, la transferencia conjugada exige continuidad de temperatura y flujo:
+\begin{equation}
+T_s=T_f,
+\qquad
+-k_s\nabla T_s\cdot\mathbf n
+=-k_f\nabla T_f\cdot\mathbf n,
+\label{eq:interfaz_cht}
+\end{equation}
+utilizando la misma normal $\mathbf n$, orientada del sólido al fluido. La igualdad del flujo debe modificarse mediante un balance superficial cuando intervienen absorción solar, intercambio radiativo, evaporación o almacenamiento en la interfaz.
+
+Si el aire exterior se sustituye por un coeficiente convectivo, una condición energética sobre una superficie sólida, con normal saliente, es
+\begin{equation}
+-k_s\nabla T_s\cdot\mathbf n
+=h_{\mathrm{ext}}(T_s-T_{\mathrm{amb}})
++q_{r,\mathrm{out}}''-q_{\mathrm{sol},\mathrm{abs}}''.
+\label{eqn:neumannexterno}
+\end{equation}
+El signo de cada término responde a esa orientación: convección y radiación netas salientes se oponen a la entrada solar. En una interfaz cuya capa límite se resuelve directamente, imponer además un coeficiente convectivo independiente puede contabilizar dos veces el mismo intercambio.
+
+Las aberturas conectan presión, caudal, temperatura y composición del aire con el exterior. Los estados de entrada deben distinguirse de los de salida y del posible flujo inverso. Las paredes cerradas imponen restricciones cinemáticas distintas de una abertura. Por ello, una cavidad sellada constituye una idealización de mecanismo y no una descripción completa del secador ventilado.
+
+\section{Fundamentos del modelado multiescala}
+\label{sec:modelado_multiescala}
+\suppressfloats[t]
+
+\subsection{Fidelidad espacial y complejidad dinámica}
+\label{subsec:jerarquia_modelos}
+
+Las ecuaciones anteriores permiten diferentes representaciones del mismo proceso. La fidelidad espacial, la cantidad de parámetros y el costo de solución condicionan qué información conserva cada modelo. Una discretización más fina puede aproximar mejor un conjunto dado de ecuaciones, pero no corrige automáticamente una fuente física omitida o una condición de frontera incorrecta.
+
+\begin{table}[htbp]
+\centering
+\small
+\caption{Información y limitaciones de las representaciones pertinentes al secador solar.}
+\label{tab:jerarquia_conceptual_modelos}
+\begin{tabular}{p{0.19\linewidth}p{0.31\linewidth}p{0.36\linewidth}}
+\toprule
+Representación & Información principal & Limitación física o matemática \\
+\midrule
+Modelo distribuido tridimensional & Campos de temperatura, velocidad y vapor; intercambio local. & Costo de solución y dependencia de fronteras, propiedades y cierres. \\
+Cavidad bidimensional idealizada & Mecanismos de flotación y acoplamiento radiación--convección. & Ausencia de efectos tridimensionales y de intercambios no representados. \\
+Red térmica e higrométrica & Evolución de temperaturas y cantidades de agua agregadas. & Pérdida de gradientes dentro de cada nodo. \\
+Modelo basado en datos & Relaciones predictivas entre estados, entradas y perturbaciones. & Dependencia de cobertura y ausencia de conservación automática. \\
+Modelo híbrido & Estructura física con parámetros o discrepancias aprendidas. & Consistencia de la hibridación y evidencia del dominio de aplicación. \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+La complementariedad de estos niveles permite relacionar la heterogeneidad del recinto con una dinámica apta para predicción y control. La cavidad idealizada facilita aislar un mecanismo; el modelo tridimensional describe su interacción con la geometría; y la representación reducida conserva los estados relevantes para la evolución temporal. Ningún nivel adquiere validez experimental por el solo hecho de coincidir con otro modelo.
+
+\subsection{Fundamento conservativo del método de volúmenes finitos}
+
+La dinámica de fluidos computacional aproxima las ecuaciones distribuidas sobre un dominio discretizado. Para una magnitud transportada $\chi$, la ecuación general puede escribirse como
+\begin{equation}
+\frac{\partial(\rho\chi)}{\partial t}
++\nabla\cdot(\rho\mathbf v\chi)
+=\nabla\cdot(\Gamma_\chi\nabla\chi)+s_\chi.
+\label{eq:transporte_general_fvm}
+\end{equation}
+Al integrar sobre una celda $V_P$ y aplicar el teorema de la divergencia,
+\begin{equation}
+\frac{\mathrm{d}}{\mathrm{d}t}\int_{V_P}\rho\chi\,\mathrm{d}V
++\sum_f\int_{A_f}\rho\chi\mathbf v\cdot\mathbf n_f\,\mathrm{d}A
+=\sum_f\int_{A_f}\Gamma_\chi\nabla\chi\cdot\mathbf n_f\,\mathrm{d}A
++\int_{V_P}s_\chi\,\mathrm{d}V.
+\label{eq:balance_celda_fvm}
+\end{equation}
+La aproximación de los flujos en cada cara transforma este balance en un sistema algebraico. Un flujo compartido por dos celdas aparece con signos opuestos, lo que proporciona la base de la conservación discreta \cite{patankar1980,versteeg2007}.
+
+La precisión depende de la representación de la geometría, del esquema de interpolación, de la integración temporal y del error de solución. El acoplamiento presión--velocidad debe satisfacer la restricción de masa simultáneamente con el movimiento. La convergencia iterativa indica que se aproxima la solución del sistema discretizado; la convergencia espacial y temporal analiza su relación con el problema continuo. Son propiedades diferentes.
+
+Un régimen estacionario determinista tiene derivadas temporales nulas, pero puede conservar gradientes y flujos permanentes; no equivale al equilibrio termodinámico. La estacionariedad estadística se refiere, en cambio, a propiedades estadísticas invariantes y puede coexistir con fluctuaciones instantáneas. Fijar una condición meteorológica representativa no produce necesariamente la respuesta promedio de un sistema no lineal sometido a condiciones variables.
+
+\subsection{Cavidad bidimensional y formulación corriente--vorticidad}
+\label{subsec:cavidad_2d}
+
+Una cavidad bidimensional con aire, gravedad vertical y calentamiento diferencial constituye un problema de referencia para la convección natural. El trabajo de de Vahl Davis proporciona soluciones de comparación para una cavidad cuadrada con fronteras térmicas definidas \cite{devahl1983}. Su uso como problema de referencia permite examinar un mecanismo o una implementación, pero no incorpora por sí mismo la geometría ni la ventilación del secador.
+
+Para flujo bidimensional incompresible, la función de corriente $\psi$ y la vorticidad $\omega_v$ se definen por
+\begin{equation}
+v_x=\frac{\partial\psi}{\partial y},
+\qquad
+v_y=-\frac{\partial\psi}{\partial x},
+\qquad
+\omega_v=\frac{\partial v_y}{\partial x}-\frac{\partial v_x}{\partial y}
+=-\nabla^2\psi.
+\label{eq:corriente_vorticidad}
+\end{equation}
+Esta construcción satisface automáticamente la continuidad. Tomar el rotacional de la ecuación de movimiento elimina la presión en una descripción laminar de densidad de referencia constante.
+
+Con escalas $L$, $L^2/a_a$, $a_a/L$, $a_a$ y $a_a/L^2$ para longitud, tiempo, velocidad, corriente y vorticidad, respectivamente, y
+$\Theta=(T-T_{\mathrm{fr}})/(T_{\mathrm{cal}}-T_{\mathrm{fr}})$, donde $T_{\mathrm{cal}}$ y $T_{\mathrm{fr}}$ son las temperaturas de las paredes caliente y fría, se obtiene
+\begin{align}
+\nabla_*^2\psi_*&=-\omega_*,\label{eq:poisson_corriente}\\
+\frac{\partial\omega_*}{\partial t_*}
++\mathbf v_*\cdot\nabla_*\omega_*
+&=Pr\nabla_*^2\omega_*+Ra\,Pr\frac{\partial\Theta}{\partial x_*},
+\label{eq:vorticidad_adimensional}\\
+\frac{\partial\Theta}{\partial t_*}
++\mathbf v_*\cdot\nabla_*\Theta
+&=\nabla_*^2\Theta.
+\label{eq:energia_cavidad}
+\end{align}
+El signo del término de flotación corresponde a $y$ ascendente y a las definiciones de la Ecuación~\eqref{eq:corriente_vorticidad}. Cambiar la convención de corriente o de vorticidad modifica ese signo y debe hacerse consistentemente.
+
+Las paredes impermeables son líneas de corriente y la condición de no deslizamiento determina la relación entre la corriente y la vorticidad en la frontera. Al incluir radiación superficial, una pared aislada del exterior puede intercambiar energía con las otras paredes: su condición local debe equilibrar conducción y radiación, en lugar de anular necesariamente el gradiente normal de temperatura. Emisividades, factores de vista y escalas de radiación introducen parámetros adicionales a $Ra$ y $Pr$ \cite{balaji1993}.
+
+\subsection{Redes térmicas y condición de concentración}
+
+Una red térmica aproxima componentes mediante temperaturas nodales y conexiones de intercambio. Para un nodo sólido $i$,
+\begin{equation}
+C_i\frac{\mathrm{d}T_i}{\mathrm{d}t}
+=\sum_jG_{ij}(T_j-T_i)+\dot Q_{i,\mathrm{ext}},
+\qquad
+C_i=\rho_ic_iV_i,
+\label{eq:generalbalance}
+\end{equation}
+donde $C_i$ se expresa en $\mathrm{J\,K^{-1}}$ y $G_{ij}$ en $\mathrm{W\,K^{-1}}$. Para intercambios recíprocos, una misma conexión debe aparecer con magnitudes iguales y signos opuestos en los dos nodos. La radiación puede representarse con una conductancia dependiente de temperatura o mediante el balance de radiosidad previamente establecido.
+
+La hipótesis de temperatura uniforme en un sólido se relaciona con el número de Biot,
+\begin{equation}
+Bi_s=\frac{h_{\mathrm{eff}}L_c}{k_s},
+\qquad
+L_c=\frac{V_s}{A_s}.
+\label{eq:biot}
+\end{equation}
+Un $Bi_s$ pequeño indica que la resistencia interna por conducción es reducida frente a la superficial y favorece la concentración de temperatura \cite{bergman2017}. En el café, esta condición térmica no demuestra uniformidad de humedad: la migración de agua posee una escala distinta. En el aire, la mezcla aproximadamente uniforme debe justificarse mediante circulación y comparación entre escalas de mezcla y de excitación.
+
+La concentración reduce grados de libertad y descarta gradientes internos. Por ello, un modelo de un único nodo de aire no permite reconstruir por sí solo la uniformidad espacial. Cuando esa propiedad interviene en el control, se requieren varios nodos, variables de dispersión o una relación adicional apoyada en información espacial.
+
+\subsection{Representación termo-higrométrica de seis estados}
+\label{subsec:estado_termohigrometrico}
+
+Una representación reducida pertinente distingue cubierta, superficie absorbedora equivalente, producto y aire, junto con las cantidades de agua del aire y del café:
+\begin{equation}
+\mathbf x=
+\begin{bmatrix}
+T_c&T_b&T_p&T_a&W&M
+\end{bmatrix}^{\mathsf T}.
+\label{eq:estado_secador}
+\end{equation}
+El nodo $b$ puede representar la base o una superficie absorbente equivalente; su existencia física y sus intercambios dependen de la configuración del secador. Ambiente y cielo son condiciones externas, y no temperaturas internas independientes.
+
+Una formulación de balances, con potencias solares distribuidas conservativamente, es
+\begin{align}
+C_c\dot T_c={}&\dot Q_{\mathrm{sol},c}
+-h_{ca}A_c(T_c-T_a)-G_{ce}(T_c-T_{\mathrm{amb}})-\dot Q_{r,c},
+\label{eq:nodo_cubierta}\\
+C_b\dot T_b={}&\dot Q_{\mathrm{sol},b}
+-h_{ba}A_b(T_b-T_a)-G_{bp}(T_b-T_p)
+-G_{be}(T_b-T_{\mathrm{amb}})-\dot Q_{r,b},
+\label{eq:nodo_absorbedor}\\
+C_p(M)\dot T_p={}&\dot Q_{\mathrm{sol},p}
++h_{pa}A_p(T_a-T_p)+G_{bp}(T_b-T_p)
+-\dot Q_{r,p}-L_v(T_p)\dot m_e.
+\label{eq:nodo_producto}
+\end{align}
+Los términos $\dot Q_{r,i}$ son potencias radiativas netas salientes, calculadas con una misma descripción de intercambio; sus componentes internas se cancelan al sumar nodos. $G_{ce}$ representa pérdidas no contenidas en la convección interior ni en $\dot Q_{r,c}$, y $G_{be}$ las pérdidas del nodo absorbedor hacia el entorno. Un contacto ausente se representa con conductancia nula. Esta forma explicita mecanismos sin imponer una geometría particular ni valores universales de coeficientes.
+
+Para el aire perfectamente mezclado, sea $m_{da}$ la masa de aire seco almacenada. Su balance y el del vapor son
+\begin{align}
+\dot m_{da}&=\dot m_{da,\mathrm{in}}-\dot m_{da,\mathrm{out}},
+\label{eq:balance_aire_seco}\\
+\frac{\mathrm{d}(m_{da}W)}{\mathrm{d}t}
+&=\dot m_{da,\mathrm{in}}W_{\mathrm{in}}
+-\dot m_{da,\mathrm{out}}W+\dot m_e-\dot m_{\mathrm{cond}}.
+\label{eq:balance_vapor_lumped}
+\end{align}
+La masa de aire seco puede variar por expansión y renovación. Para un volumen $V_a$ fijo y presión uniforme, el gas ideal proporciona la relación algebraica
+\begin{equation}
+m_{da}=\frac{pV_a}{R_{da}T_a(1+W/\epsilon_m)}.
+\label{eq:inventario_aire_seco}
+\end{equation}
+Así, $m_{da}$ no necesita introducirse como estado independiente si se utilizan los seis estados y una presión conocida. La continuidad del aire seco y esta relación restringen los caudales admisibles en una aproximación de presión constante.
+
+Para volumen y presión constantes, sin condensación y despreciando energías cinética y potencial, el balance energético del aire puede expresarse como
+\begin{equation}
+\begin{aligned}
+\frac{\mathrm{d}[m_{da}h_a(T_a,W)]}{\mathrm{d}t}
+={}&\sum_{j\in\{c,b,p\}}h_{ja}A_j(T_j-T_a)\\
+&+\dot m_{da,\mathrm{in}}h_{\mathrm{in}}
+-\dot m_{da,\mathrm{out}}h_a(T_a,W)
++\dot m_e h_v(T_p),
+\end{aligned}
+\label{eq:balance_entalpia_aire}
+\end{equation}
+donde $h_v(T_p)$ es la entalpía del vapor incorporado desde el producto. La entalpía almacenada y la energía interna tienen igual derivada bajo estas condiciones porque $pV_a$ permanece constante. Si la presión varía, debe incorporarse el término $V_a\dot p$ al convertir el balance de energía interna en esta forma de entalpía.
+
+Si, adicionalmente, se aproxima $m_{da}$ por un inventario constante y se representan los caudales de entrada y salida por un mismo caudal $\dot m_{da,v}$, la humedad satisface
+\begin{equation}
+m_{da}\dot W=\dot m_{da,v}(W_{\mathrm{in}}-W)+\dot m_e,
+\label{eq:balance_humedad_simplificado}
+\end{equation}
+y, con la entalpía de la Ecuación~\eqref{eq:entalpia_aire_humedo}, se obtiene
+\begin{equation}
+\begin{aligned}
+m_{da}(c_{p,da}+Wc_{p,v})\dot T_a
+={}&\sum_jh_{ja}A_j(T_j-T_a)\\
+&+\dot m_{da,v}(c_{p,da}+W_{\mathrm{in}}c_{p,v})(T_{\mathrm{in}}-T_a)
++\dot m_ec_{p,v}(T_p-T_a).
+\end{aligned}
+\label{eq:balance_lumped_aire}
+\end{equation}
+Esta simplificación de inventario es válida dentro de una aproximación de variaciones de densidad reducidas, y no debe confundirse con el balance general. El término latente ya se encuentra representado mediante la entalpía del vapor y el enfriamiento del producto: añadir de nuevo $-L_v\dot m_e$ en la Ecuación~\eqref{eq:balance_lumped_aire} produciría una inconsistencia energética.
+
+La renovación del aire puede originarse por flotación, viento o ventiladores. El término de caudal no desaparece al operar en convección natural, salvo en la idealización de recinto sellado. En esta última, la evaporación aumenta el vapor acumulado y tiende a reducir su propio potencial, sin proporcionar un mecanismo de evacuación al exterior.
+
+\subsection{Balances integrales y estructura de estados}
+
+Las ecuaciones reducidas deben preservar relaciones integrales del sistema distribuido. En particular,
+\begin{equation}
+\frac{\mathrm{d}}{\mathrm{d}t}(m_sM+m_{da}W+m_{\mathrm{cond},\mathrm{alm}})
+=\dot m_{da,\mathrm{in}}W_{\mathrm{in}}
+-\dot m_{da,\mathrm{out}}W-\dot m_{\mathrm{cond},\mathrm{dren}},
+\label{eq:agua_total}
+\end{equation}
+si la condensación interna se almacena o se drena según los términos indicados. La evaporación se cancela porque transfiere agua entre producto y aire sin crearla.
+
+El balance de energía de un volumen de control que contiene la planta completa es
+\begin{equation}
+\frac{\mathrm{d}E_{\mathrm{pl}}}{\mathrm{d}t}
+=\dot Q_{\mathrm{ext}}+\dot W_{\mathrm{in}}
++\sum_{\mathrm{in}}\dot m h
+-\sum_{\mathrm{out}}\dot m h,
+\label{eq:balance_energia_recinto}
+\end{equation}
+despreciando contribuciones cinéticas y potenciales frente a las entalpías. $\dot W_{\mathrm{in}}$ es trabajo aportado al volumen de control. Los intercambios de conducción, convección y radiación entre componentes internos deben cancelarse; la energía que cruza la frontera exterior permanece en $\dot Q_{\mathrm{ext}}$ y en las corrientes de masa.
+
+Una vez especificados los cierres de intercambio, la cinética y las relaciones de caudal, la dinámica puede organizarse como
+\begin{equation}
+\dot{\mathbf x}=\mathbf f(\mathbf x,\mathbf u,\mathbf d,\boldsymbol\theta),
+\qquad
+\mathbf y=\mathbf h(\mathbf x,\mathbf u,\mathbf d,\boldsymbol\theta),
+\label{eq:modelo_general_control}
+\end{equation}
+o conservar una forma diferencial--algebraica si las restricciones se mantienen implícitas. $\mathbf u$ contiene variables manipuladas, $\mathbf d$ perturbaciones meteorológicas y $\boldsymbol\theta$ parámetros. Su distinción evita tratar irradiancia o temperatura ambiente como acciones disponibles para el controlador.
+
+La reducción espacial puede expresarse como una proyección de campos sobre estados agregados, $\mathbf x_r=\mathcal P\mathbf x_d$. En general, la proyección no produce una dinámica cerrada sin aproximaciones: los flujos promedio dependen de correlaciones y gradientes descartados. Los coeficientes efectivos o las correcciones híbridas representan parte de ese problema de cierre, y deben conservar un significado compatible con el propósito del modelo reducido.
+
+\section{Observación, identificación e incertidumbre del modelo}
+\label{sec:observacion_validez}
+
+\subsection{Relación entre campos físicos y mediciones}
+
+Un campo distribuido contiene más grados de libertad que una red finita de sensores. Una medición puede representarse como
+\begin{equation}
+y_j(t)=\mathcal H_j[\mathbf q(\mathbf r,t)]+b_j+\eta_j(t),
+\label{eq:operador_medicion}
+\end{equation}
+donde $\mathbf q$ reúne los campos de interés, $\mathcal H_j$ describe la posición, el volumen de sensibilidad y la respuesta del instrumento, $b_j$ es un sesgo y $\eta_j$ una componente variable de error. El valor medido no equivale necesariamente al valor instantáneo de una celda ni al promedio del recinto.
+
+La respuesta dinámica del sensor también puede introducir un retardo. Una aproximación de primer orden,
+\begin{equation}
+\tau_s\dot y_s+y_s=y_{\mathrm{local}},
+\label{eq:dinamica_sensor}
+\end{equation}
+separa el cambio real de la variable de la rapidez con la que el instrumento responde. La radiación incidente, la ventilación alrededor del sensor y el contacto con una superficie pueden modificar lo que se interpreta como temperatura del aire. En termografía, la señal corresponde a radiación superficial y depende de emisividad y radiación reflejada; no representa directamente la temperatura interna ni la humedad del grano.
+
+Estas relaciones justifican distinguir observación y estado. Medir temperatura y humedad relativa del aire permite estimar $W$ bajo una presión conocida, pero no determina unívocamente $M$ durante un proceso transitorio. La humedad del café requiere una observación propia o una estimación dinámica cuya incertidumbre incluya el cierre cinético y el estado inicial.
+
+\subsection{Identificabilidad de parámetros}
+
+La identificación busca estimar parámetros de una estructura de modelo a partir de sus respuestas. Un ajuste pequeño no asegura que cada parámetro haya sido determinado de manera única. Para una predicción $\widehat{\mathbf y}(t;\boldsymbol\theta)$, la sensibilidad local es
+\begin{equation}
+S_\theta(t)=\frac{\partial\widehat{\mathbf y}}{\partial\boldsymbol\theta},
+\qquad
+\mathcal F_\theta=
+\int S_\theta^{\mathsf T}(t)R_\eta^{-1}S_\theta(t)\,\mathrm{d}t,
+\label{eq:informacion_parametrica}
+\end{equation}
+donde $R_\eta$ representa la covarianza de medición en una aproximación local. Columnas dependientes o una matriz muy mal condicionada indican parámetros difíciles de distinguir a partir de esas observaciones. La identificabilidad estructural corresponde a la posibilidad ideal de distinguir parámetros; la práctica incorpora cobertura, excitación y ruido \cite{ljung1999}.
+
+Por ejemplo, si un balance térmico contiene únicamente el cociente $hA/C$, observar una temperatura puede identificar ese cociente sin separar $h$, $A$ y $C$. De forma semejante, una correlación entre irradiancia, temperatura ambiente y actuación puede impedir atribuir una respuesta a cada mecanismo. La excitación de entradas y la observación de estados adicionales pueden aportar información independiente, siempre dentro de las restricciones del proceso.
+
+El dominio de identificación también importa: un coeficiente efectivo puede compensar un mecanismo no resuelto y variar cuando cambian carga, ventilación o geometría. Interpretarlo como propiedad universal del material puede ocultar una dependencia de la representación reducida.
+
+\subsection{Propagación de incertidumbre}
+
+Las predicciones contienen incertidumbre de medición, de parámetros, de fronteras, de aproximación numérica y de estructura física. Para una magnitud derivada $z=g(\mathbf a)$, una propagación lineal local proporciona
+\begin{equation}
+u_z^2\simeq\nabla g^{\mathsf T}\Sigma_a\nabla g,
+\label{eq:propagacion_incertidumbre}
+\end{equation}
+con $\Sigma_a$ la matriz de covarianzas de las entradas. Las correlaciones no deben omitirse cuando varias magnitudes comparten sensores, parámetros o transformaciones. Este enfoque se apoya en la teoría de evaluación de incertidumbre de medición \cite{jcgm2008}.
+
+La conversión de humedad relativa a $W$ depende de temperatura y presión, de modo que sus errores se propagan conjuntamente. La transformación no lineal puede aumentar la sensibilidad en determinadas condiciones. Cuando una aproximación lineal deja de ser suficiente, la distribución conjunta de entradas debe propagarse mediante una representación probabilística compatible con el modelo.
+
+La incertidumbre predictiva tampoco coincide necesariamente con la variación de los datos. Una serie puede mostrar grandes oscilaciones meteorológicas y, aun así, estar bien caracterizada; un período estable puede contener un sesgo persistente. Para el control, importa cómo la incertidumbre altera la predicción de estados y de efectos de las acciones, especialmente cerca de restricciones operativas.
+
+\subsection{Verificación, calibración y validación}
+
+La verificación numérica examina si la implementación y la solución aproximan las ecuaciones planteadas. Incluye consistencia de unidades, conservación, convergencia iterativa y sensibilidad a la resolución espacial y temporal. Los estudios de refinamiento permiten estimar incertidumbre de discretización, siempre que se examinen las condiciones bajo las cuales las estimaciones resultan válidas \cite{celik2008}.
+
+La calibración estima parámetros frente a observaciones. La validación contrasta la capacidad del modelo para representar magnitudes relevantes del sistema real dentro de un contexto de aplicación. La coincidencia con los datos utilizados para calibrar no constituye una prueba independiente de esa capacidad. Asimismo, una solución numéricamente conservativa puede corresponder a un modelo físico insuficiente.
+
+Para residuos definidos como $e_i=\hat y_i-y_i$, algunas medidas de discrepancia son
+\begin{align}
+\mathrm{MBE}&=\frac1N\sum_{i=1}^Ne_i,
+&\mathrm{MAE}&=\frac1N\sum_{i=1}^N|e_i|,
+\label{eq:metricas_sesgo_mae}\\
+\mathrm{RMSE}&=\left(\frac1N\sum_{i=1}^Ne_i^2\right)^{1/2},
+&R^2&=1-\frac{\sum_i e_i^2}{\sum_i(y_i-\bar y)^2}.
+\label{eq:metricas_rmse_r2}
+\end{align}
+MBE conserva el signo del sesgo, MAE expresa una magnitud media de error y RMSE otorga mayor peso a desviaciones grandes. $R^2$ solo se define si la variación de referencia es distinta de cero y puede ser negativo fuera de los datos de ajuste. Ninguna de estas métricas demuestra, por sí sola, conservación física ni capacidad de predicción multietapa.
+
+Las series de secado presentan dependencia temporal y las mediciones distribuidas pueden compartir perturbaciones. Por ello, el número de registros no equivale automáticamente a un número igual de observaciones independientes. La ausencia de una diferencia estadísticamente detectable tampoco prueba equivalencia; esta exige definir una tolerancia físicamente relevante y considerar incertidumbre y potencia de comparación. La evaluación debe relacionar el error con el propósito del modelo, la escala del proceso y la incertidumbre experimental.
+
+\subsection{Dominio de aplicación y extrapolación}
+\label{subsec:dominio_operacional_validez}
+
+Sea $\mathcal D_{\mathrm{op}}$ el dominio operativo de interés, $\mathcal D_{\mathrm{sim}}$ la región explorada mediante simulación y $\mathcal D_{\mathrm{val}}$ aquella respaldada por contraste experimental para una finalidad determinada. Es posible definir
+\begin{equation}
+\mathcal D_{\mathrm{sim}}\subseteq\mathcal D_{\mathrm{op}},
+\qquad
+\mathcal D_{\mathrm{val}}\subseteq\mathcal D_{\mathrm{op}},
+\label{eq:dominios_modelo}
+\end{equation}
+sin exigir una inclusión universal de un conjunto en el otro. La cobertura de simulaciones y experimentos puede ser diferente, y una región simulada no adquiere respaldo experimental únicamente por haber sido calculada.
+
+El dominio comprende combinaciones de estados, perturbaciones, carga, configuración y acciones. No se describe adecuadamente mediante intervalos marginales independientes si algunas combinaciones nunca se han observado o son físicamente imposibles. También debe distinguirse cobertura de condiciones individuales y cobertura de trayectorias dinámicas.
+
+Extrapolar implica aplicar una relación fuera de la región respaldada por la evidencia utilizada. La conservación y las restricciones físicas pueden descartar respuestas imposibles, pero no garantizan exactitud en esa región. Del mismo modo, aumentar la cantidad de datos sintéticos mejora la descripción del modelo generador y no necesariamente la del secador real.
+
+\section{Aprendizaje automático y modelos híbridos}
+\label{sec:ml_procesos_termicos}
+
+\subsection{Predicción de un sistema dinámico}
+
+El aprendizaje supervisado aproxima una relación entre características disponibles y una magnitud objetivo. Para el secador, esa relación debe conservar información sobre inercia térmica, humedad inicial, actuación y perturbaciones. Cuando todos los estados relevantes están disponibles, un predictor discreto puede expresarse como
+\begin{equation}
+\widehat{\mathbf x}_{k+1}
+=F_{\boldsymbol\vartheta}(\mathbf x_k,\mathbf u_k,\mathbf d_k),
+\label{eq:ml_general}
+\end{equation}
+donde $\boldsymbol\vartheta$ contiene parámetros aprendidos y $k$ representa un instante de muestreo. Si solo se observan algunas salidas, una representación con historia es
+\begin{equation}
+\widehat{\mathbf y}_{k+1}
+=G_{\boldsymbol\vartheta}(\mathbf y_k,\ldots,\mathbf y_{k-\ell},
+\mathbf u_k,\ldots,\mathbf u_{k-\ell},
+\mathbf d_k,\ldots,\mathbf d_{k-\ell}).
+\label{eq:predictor_con_memoria}
+\end{equation}
+Los retardos aproximan parte de la memoria no observada; su incorporación no garantiza que se haya reconstruido un estado suficiente.
+
+Una relación estática entre meteorología y temperatura puede confundir excitación y estado. Con irradiancia semejante, la respuesta puede diferir entre calentamiento matutino y enfriamiento vespertino por almacenamiento energético y humedad del producto. Esta dependencia justifica utilizar estados o historia, y distinguir estimación contemporánea de predicción futura.
+
+La causalidad informacional exige que las características pertenezcan a la información disponible en el instante de decisión. Las observaciones futuras, las ventanas centradas que las contienen o un preprocesamiento ajustado sobre datos reservados pueden inducir fuga de información. Las perturbaciones futuras pueden incorporarse como pronósticos, con su incertidumbre, pero no como observaciones futuras disponibles de manera retrospectiva.
+
+\subsection{Árboles de regresión y boosting}
+\label{subsec:arboles_boosting}
+
+Un árbol de regresión divide el espacio de características $\mathbf z$ en regiones $R_j$ y asigna una respuesta a cada hoja:
+\begin{equation}
+f(\mathbf z)=\sum_{j=1}^{J}w_j\mathbb I(\mathbf z\in R_j).
+\label{eq:prediccion_arbol}
+\end{equation}
+Las particiones permiten representar relaciones no lineales e interacciones. Su complejidad debe limitarse para evitar que la respuesta siga peculiaridades del ruido o de las trayectorias disponibles.
+
+El boosting combina árboles de forma aditiva. En su interpretación de descenso funcional, cada nueva función aproxima el gradiente negativo de la pérdida:
+\begin{equation}
+F_m=F_{m-1}+\eta f_m,
+\qquad
+r_{im}=-\left.
+\frac{\partial\ell(y_i,F)}{\partial F}\right|_{F=F_{m-1}(\mathbf z_i)}.
+\label{eq:gradient_boosting}
+\end{equation}
+Para la pérdida $\ell(y,F)=\tfrac12(y-F)^2$, los pseudo-residuos coinciden con los residuos ordinarios. La tasa $\eta$, el número de árboles y la complejidad de cada árbol regulan el ajuste \cite{friedman2001}.
+
+XGBoost incorpora una formulación regularizada del objetivo. Una forma característica es
+\begin{equation}
+\mathcal J=\sum_i\ell(y_i,\hat y_i)
++\sum_m\left[\gamma J_m+\frac{\lambda}{2}\sum_jw_{mj}^2\right],
+\label{eq:objetivo_xgboost}
+\end{equation}
+que penaliza el tamaño de los árboles y las magnitudes de sus hojas \cite{chen2016}. LightGBM desarrolla técnicas de construcción eficientes, incluyendo aproximaciones por histogramas y estrategias para reducir el costo de evaluación de particiones \cite{ke2017}. La eficiencia de estas formulaciones no elimina el riesgo de sobreajuste ni determina cuál tendrá mejor desempeño en un secador concreto.
+
+Los árboles pueden utilizarse como predictores de estados, indicadores espaciales o discrepancias de un modelo físico. Diferencias de temperatura, presión parcial de vapor, razón de humedad, estados retardados y energía solar acumulada aportan características con significado físico. Sin embargo, introducir esas características no impone automáticamente conservación, estabilidad ni una relación causal entre la actuación y la salida.
+
+Los árboles con hojas constantes producen funciones por tramos, normalmente discontinuas en las fronteras de partición. Esta propiedad puede dificultar la optimización del control basada en gradientes. Además, las extrapolaciones conservan valores de regiones aprendidas sin reproducir necesariamente tendencias físicas fuera de cobertura. La selección de un predictor para control debe considerar esas propiedades junto con su error estadístico.
+
+\subsection{Hibridación mediante discrepancias y parámetros}
+\label{subsec:control_modelos_hibridos}
+
+Los modelos híbridos combinan una estructura física con relaciones aprendidas. Psichogios y Ungar desarrollaron una arquitectura en la que una red neuronal estima relaciones difíciles de determinar mientras los balances conservan parte de la estructura del proceso \cite{psichogios1992}. En un secador, la hibridación puede aplicarse a coeficientes efectivos de intercambio, tasas de desorción o términos de discrepancia asociados a una reducción espacial.
+
+Una arquitectura de corrección de salida utiliza
+\begin{equation}
+\mathbf r_i=\mathbf y_i-\widehat{\mathbf y}_{\mathrm{fis},i},
+\qquad
+\widehat{\mathbf y}_{\mathrm{hib}}
+=\widehat{\mathbf y}_{\mathrm{fis}}+\widehat{\mathbf r}_{\boldsymbol\vartheta}.
+\label{eq:residuo_modelo_fisico}
+\end{equation}
+Esta forma corrige una observación o indicador, pero no define necesariamente una dinámica de estados conservativa. Una arquitectura dinámica puede escribirse como
+\begin{equation}
+\dot{\mathbf x}
+=\mathbf f_{\mathrm{fis}}(\mathbf x,\mathbf u,\mathbf d,\boldsymbol\theta)
++\mathbf r_{\boldsymbol\vartheta}(\mathbf x,\mathbf u,\mathbf d).
+\label{eq:modelo_hibrido_dinamico}
+\end{equation}
+Sus correcciones deben respetar las restricciones del sistema. Aprender de manera independiente un aporte de vapor al aire y una pérdida de humedad del producto puede violar la identidad de la Ecuación~\eqref{eq:evaporacion_producto}; una tasa compartida en ambos balances preserva ese acoplamiento por construcción.
+
+Otra posibilidad consiste en aprender parámetros o cierres manteniendo los balances:
+\begin{equation}
+\dot{\mathbf x}
+=\mathbf f_{\mathrm{fis}}
+\left(\mathbf x,\mathbf u,\mathbf d,
+\widehat{\boldsymbol\theta}_{\boldsymbol\vartheta}(\mathbf x,\mathbf u,\mathbf d)\right).
+\label{eq:parametros_aprendidos}
+\end{equation}
+Las parametrizaciones deben conservar propiedades admisibles, como capacidades y conductancias positivas, intercambios recíprocos y cantidades de agua no negativas. Una transformación positiva de un coeficiente impide valores negativos, pero no prueba por sí sola su identificabilidad ni su interpretación física.
+
+La hibridación tiene dos propósitos distintos: compensar limitaciones cuantitativas de un modelo y reducir el costo de su evaluación. Un sustituto entrenado para reproducir CFD cumple el segundo propósito respecto del modelo numérico; su concordancia con CFD no constituye una validación directa de la planta.
+
+\subsection{Redes neuronales informadas por la física}
+\label{subsec:pinn}
+
+Las redes neuronales informadas por la física, o PINNs, aproximan campos o estados y penalizan residuos de ecuaciones gobernantes junto con discrepancias de datos y de fronteras \cite{raissi2019}. Para una solución $\mathbf q$ gobernada por un operador $\mathcal N$, se define
+\begin{equation}
+\mathbf q(\mathbf r,t)\simeq\mathbf q_{\boldsymbol\vartheta}(\mathbf r,t),
+\qquad
+\mathbf r_f=\mathcal N[\mathbf q_{\boldsymbol\vartheta}],
+\label{eq:pde_general}
+\end{equation}
+y una pérdida genérica es
+\begin{equation}
+\mathcal L=\lambda_d\mathcal L_d
++\lambda_f\mathcal L_f+\lambda_b\mathcal L_b
++\lambda_0\mathcal L_0,
+\label{eq:loss_total}
+\end{equation}
+donde los términos corresponden a datos, ecuaciones, condiciones de frontera e iniciales. Los residuos deben normalizarse mediante escalas compatibles, pues masa, momento y energía poseen unidades y magnitudes diferentes.
+
+La diferenciación automática calcula derivadas de la función representada por la red mediante reglas de composición, sujetas a la precisión aritmética y a la regularidad de la arquitectura. No proporciona automáticamente las derivadas exactas de la solución física. El error de representación y el de entrenamiento permanecen presentes.
+
+La penalización suave busca reducir residuos en los puntos considerados, pero una pérdida pequeña no demuestra satisfacción uniforme de las ecuaciones en todo el dominio. Las restricciones impuestas mediante una parametrización admisible pueden cumplirse por construcción; aun así, deben distinguirse de las propiedades que solo se penalizan. El entrenamiento también puede presentar desequilibrios entre gradientes de distintos términos y dificultades asociadas a escalas múltiples \cite{wang2021}.
+
+Una PINN puede aproximar la solución de un problema específico o una familia parametrizada. Para predecir respuestas a distintas meteorologías y acciones, esa dependencia debe incorporarse en sus entradas, condiciones o estructura. Una red ajustada a una única trayectoria no se convierte automáticamente en un modelo de respuesta para cualquier acción del controlador.
+
+La formulación física tampoco garantiza que las ecuaciones utilizadas representen todos los mecanismos de la planta. Un residuo pequeño de un modelo sin evaporación, carga o renovación de aire describe consistencia con ese modelo limitado. La evaluación física requiere relacionar los residuos con balances integrales y con observaciones del sistema real.
+
+\subsection{Datos sintéticos, generalización y efecto de las acciones}
+
+Los datos numéricos pueden ampliar la exploración de escenarios, pero contienen los supuestos y sesgos del generador. Una pérdida conjunta puede representarse como
+\begin{equation}
+\mathcal L_H=
+\frac{1}{N_e}\sum_{i\in\mathcal D_e}\ell_i
++\lambda_s\frac{1}{N_s}\sum_{i\in\mathcal D_s}w_i\ell_i
++\lambda_p\mathcal L_{\mathrm{fis}},
+\label{eq:perdida_datos_hibridos}
+\end{equation}
+donde $\mathcal D_e$ y $\mathcal D_s$ contienen datos experimentales y sintéticos. Normalizar por conjunto evita que su tamaño determine por sí solo la contribución relativa. Los pesos expresan decisiones sobre representatividad y fidelidad; no convierten los datos sintéticos en evidencia experimental adicional.
+
+Las mediciones y las simulaciones pueden representar magnitudes diferentes: un sensor tiene volumen de sensibilidad, un campo numérico posee una resolución y un nodo reducido representa un agregado. La relación entre esas magnitudes debe definirse mediante operadores de observación o proyección antes de interpretar sus discrepancias como error del aprendizaje.
+
+Para control, interesa estimar el efecto de cambiar $\mathbf u$, además de predecir una trayectoria habitual. Si un ventilador se activa sistemáticamente cuando la temperatura aumenta, los datos pueden asociar funcionamiento del ventilador con alta temperatura, aunque su efecto físico sea enfriar. Un predictor entrenado sobre ese patrón no identifica necesariamente la respuesta a una intervención distinta. La cobertura de actuaciones, la identificación dinámica y la estructura física ayudan a examinar esa limitación.
+
+La interpretación de características describe contribuciones dentro de un modelo y bajo una distribución de datos; no constituye por sí sola una explicación causal del fenómeno. Las variables meteorológicas correlacionadas y la dependencia entre estado y actuación refuerzan esa distinción.
+
+\subsection{Error multietapa y compatibilidad con control}
+
+El error a un paso puede acumularse cuando el predictor utiliza sus propias salidas. Para una dinámica real $F$ y un predictor $\widehat F$, con las mismas entradas, supóngase un error de aproximación acotado por $\varepsilon_F$ y una constante de Lipschitz $L_F$ de $F$ respecto del estado. Si $E_h$ es la norma del error al paso $h$,
+\begin{equation}
+E_{h+1}\leq L_FE_h+\varepsilon_F,
+\qquad
+E_h\leq L_F^hE_0
++\varepsilon_F\sum_{j=0}^{h-1}L_F^j.
+\label{eq:propagacion_error_predictor}
+\end{equation}
+Esta cota, condicionada al dominio en que se cumplen las hipótesis, muestra que un error pequeño a un paso no asegura una trayectoria precisa sobre cualquier horizonte. Los errores de pronóstico de perturbaciones y de actuación agregan contribuciones adicionales.
+
+Un predictor operativo debe conservar estados admisibles y una respuesta útil frente a acciones factibles. La velocidad de inferencia, la regularidad de la función, la estabilidad de la simulación repetida y la cobertura del dominio son propiedades distintas de su precisión promedio. Estas condiciones conectan el aprendizaje con la formulación del control predictivo.
+
+\section{Control termo-higrométrico del secador solar}
+\label{sec:control_termohigrometrico}
+
+\subsection{Entradas, salidas y referencias físicamente realizables}
+
+Las entradas manipuladas actúan principalmente sobre mezcla y renovación del aire. Las perturbaciones suministran energía o modifican los intercambios externos. Una descripción pertinente de estas últimas es
+\begin{equation}
+\mathbf d(t)=
+\begin{bmatrix}
+G(t)&T_{\mathrm{amb}}(t)&W_{\mathrm{amb}}(t)&\mathbf v_w(t)
+\end{bmatrix}^{\mathsf T},
+\label{eq:estado_entorno}
+\end{equation}
+entendiendo la expresión como agrupación de variables escalares y componentes del viento. Las salidas pueden incluir temperaturas, humedad del aire, estimaciones de $M$ e indicadores espaciales.
+
+La regulación persigue mantener condiciones compatibles con el secado y modificar su trayectoria mediante acciones disponibles. Una referencia debe ser alcanzable bajo la energía solar, la humedad exterior y la capacidad de los actuadores. Sin calentamiento auxiliar, la ventilación no permite imponer arbitrariamente una temperatura superior a la que sostiene el balance energético. La entrada de aire exterior tampoco garantiza deshumidificación si su razón de humedad es elevada respecto de la interior.
+
+La recirculación puede reducir gradientes y aumentar coeficientes de intercambio, pero no extrae vapor del volumen de control por sí sola. La extracción y la apertura de compuertas afectan masa y entalpía con el exterior. Por ello, dos actuadores de movimiento de aire pueden tener funciones físicas diferentes aun cuando ambos modifiquen la velocidad local.
+
+\subsection{Observabilidad y controlabilidad local}
+
+La disponibilidad de sensores y actuadores puede examinarse mediante la teoría de estados. Al linealizar alrededor de un punto de operación,
+\begin{equation}
+\delta\dot{\mathbf x}=A\delta\mathbf x+B\delta\mathbf u+E\delta\mathbf d,
+\qquad
+\delta\mathbf y=C\delta\mathbf x+D\delta\mathbf u,
+\label{eq:linealizacion_control}
+\end{equation}
+con matrices obtenidas de los Jacobianos del modelo. Para un sistema lineal invariante de dimensión $n$, las matrices
+\begin{equation}
+\mathcal O=
+\begin{bmatrix}C\\CA\\\vdots\\CA^{n-1}\end{bmatrix},
+\qquad
+\mathcal C=
+\begin{bmatrix}B&AB&\cdots&A^{n-1}B\end{bmatrix}
+\label{eq:observabilidad_controlabilidad}
+\end{equation}
+permiten establecer observabilidad y controlabilidad cuando sus rangos son $n$ \cite{astrom2008}.
+
+Estos criterios corresponden al sistema lineal considerado. No demuestran por sí solos observabilidad global de una planta no lineal ni alcanzabilidad con actuadores saturados. Un rango completo también puede coexistir con una configuración mal condicionada, en la que ruido o limitaciones de actuación dificultan la reconstrucción o modificación de ciertos estados.
+
+La elección de sensores depende, por tanto, de la información dinámica aportada y de la cobertura espacial. La elección de actuadores depende de su efecto sobre los modos relevantes, además de su potencia. La independencia de referencias de temperatura y humedad también requiere examinar la interacción entre canales: un único caudal no suele proporcionar dos grados de libertad independientes para imponer ambas variables.
+
+\subsection{Uniformidad y exposición del producto}
+\label{subsec:uniformidad_desempeno}
+
+La media interior puede ocultar regiones del producto sometidas a condiciones distintas. Para una variable $z$ distribuida sobre una región pertinente $\Omega_p$, se definen
+\begin{equation}
+\bar z_p(t)=\int_{\Omega_p}w_p(\mathbf r)z(\mathbf r,t)\,\mathrm{d}\Omega,
+\qquad
+\sigma_{z,p}^2(t)=\int_{\Omega_p}w_p(\mathbf r)
+[z(\mathbf r,t)-\bar z_p(t)]^2\,\mathrm{d}\Omega,
+\label{eq:uniformidad_ponderada}
+\end{equation}
+con $w_p\geq0$ y $\int_{\Omega_p}w_p\,\mathrm{d}\Omega=1$. La ponderación puede corresponder a área de bandejas, volumen o masa de café, según la magnitud de interés. Un promedio volumétrico del aire y uno ponderado por la carga no representan necesariamente la misma exposición.
+
+Además de la dispersión, la máxima temperatura del producto y la distribución de humedad final describen condiciones que una media no resuelve. Con sensores finitos, estos indicadores son estimaciones condicionadas por ubicación, ponderación y capacidad de reconstrucción. Un modelo concentrado con una sola temperatura no permite asignar una varianza espacial sin introducir información adicional.
+
+La uniformidad termohigrométrica constituye un criterio relevante para la consistencia de secado, pero no determina por sí sola la calidad sensorial. La relación entre trayectoria física y atributos del producto requiere una caracterización compatible con variedad y procesamiento, como muestran los estudios experimentales del café \cite{alves2017}.
+
+\subsection{Control proporcional, integral y derivativo}
+\label{subsec:control_clasico}
+
+El control PID utiliza el error entre referencia y medición. Una forma con derivada sobre la salida filtrada es
+\begin{equation}
+u_{\mathrm{cmd}}=u_0+K_Pe+K_I\int_0^te(\tau)\,\mathrm{d}\tau
+-K_D\dot y_f,
+\qquad
+e=r-y,
+\label{eq:control_pid}
+\end{equation}
+con $\tau_f\dot y_f+y_f=y$. La acción proporcional responde al error, la integral compensa desviaciones persistentes y la derivativa aporta amortiguamiento dependiente de la variación de salida. Su efecto requiere una elección de ganancias y signo coherente con la planta \cite{astrom2008}.
+
+Si aumentar la ventilación reduce la temperatura, la ganancia estática del canal es negativa; con la definición $e=r-y$, las ganancias deben respetar esa dirección de actuación. Una implementación que ignora el signo puede reforzar la desviación. Las interacciones con humedad y evaporación también limitan la interpretación de la planta como un único canal térmico constante.
+
+La acción aplicada satisface $u=\operatorname{sat}(u_{\mathrm{cmd}})$ según las restricciones del actuador. Para un estado integral $z_I$, una forma de compensación por saturación es
+\begin{equation}
+\dot z_I=K_Ie+K_{aw}(u-u_{\mathrm{cmd}}),
+\qquad
+u_{\mathrm{cmd}}=u_0+K_Pe+z_I-K_D\dot y_f.
+\label{eq:antiwindup}
+\end{equation}
+Esta estructura reduce la acumulación integral durante saturación. La derivada filtrada limita la amplificación de ruido, mientras que retardos y muestreo condicionan el margen de estabilidad.
+
+El PID ofrece una referencia de realimentación con complejidad moderada. Su desempeño varía cuando cambian las ganancias del proceso o cuando dos lazos utilizan actuadores con efectos cruzados. La anticipación meteorológica puede añadirse mediante una acción de prealimentación, aunque el controlador por error no resuelve por sí mismo un problema multivariable con restricciones futuras.
+
+\subsection{Control predictivo basado en modelos}
+\label{subsec:control_predictivo}
+
+El control predictivo basado en modelos, o MPC, selecciona una secuencia de acciones a partir de predicciones y restricciones, aplica la primera acción y vuelve a resolver el problema con información actualizada. Para un modelo discreto,
+\begin{equation}
+\widehat{\mathbf x}_{i+1|k}
+=F(\widehat{\mathbf x}_{i|k},\mathbf u_{i|k},\widehat{\mathbf d}_{i|k}),
+\qquad
+\widehat{\mathbf y}_{i|k}=H(\widehat{\mathbf x}_{i|k},\mathbf u_{i|k},\widehat{\mathbf d}_{i|k}),
+\label{eq:modelo_estado_mpc}
+\end{equation}
+la condición inicial utiliza una estimación del estado actual. Los pronósticos de perturbaciones permiten anticipar cambios de energía disponible o de condiciones de ventilación \cite{rawlings2017}.
+
+Una función de costo pertinente puede tomar la forma
+\begin{equation}
+\begin{aligned}
+J_k=\sum_{i=0}^{N-1}\Big[
+&\|S_y(\widehat{\mathbf y}_{i|k}-\mathbf r_{i|k})\|_Q^2
++\|S_u\Delta\mathbf u_{i|k}\|_R^2\\
+&+\lambda_T\frac{\widehat\sigma_{T,p,i|k}^2}{s_T^2}
++\lambda_W\frac{\widehat\sigma_{W,p,i|k}^2}{s_W^2}
++\lambda_EP_{i|k}\Delta t\Big]
++V_f(\widehat{\mathbf x}_{N|k}),
+\end{aligned}
+\label{eq:costo_mpc}
+\end{equation}
+donde $\|\mathbf z\|_Q^2=\mathbf z^{\mathsf T}Q\mathbf z$, $S_y$ y $S_u$ normalizan variables y acciones, $s_T$ y $s_W$ son escalas de dispersión, $P$ es potencia de actuación y $V_f$ un costo terminal. Los pesos deben hacer compatibles las unidades de todos los términos. La predicción de dispersión exige un modelo espacial o un cierre específico; no puede deducirse de un único nodo uniforme.
+
+Las restricciones incluyen límites de acciones y de su variación, cantidades de agua no negativas, condiciones térmicas admisibles y relaciones físicas del aire húmedo. Si no se modela condensación, el dominio admisible debe evitar trayectorias que requieren una fase líquida no representada. Las metas sobre $M$ deben considerar la cinética y la energía disponible, de modo que una restricción terminal no imponga un secado físicamente inalcanzable.
+
+La no linealidad procede de radiación, psicrometría, evaporación, flotación y coeficientes dependientes del estado. Un MPC lineal utiliza una aproximación local; uno no lineal conserva parte de esa dependencia. Las acciones discretas, como encendido y apagado, también modifican la naturaleza del problema de optimización.
+
+El estado completo no suele observarse directamente. Un estimador combina mediciones y dinámica para reconstruir temperaturas o humedad no medidas, y su incertidumbre influye en la predicción. La estabilidad y la factibilidad no se derivan únicamente de minimizar una función de costo: requieren condiciones sobre modelo, horizonte, restricciones y tratamiento terminal. Los resultados formales para MPC distinguen esas condiciones de un buen desempeño observado en escenarios particulares \cite{rawlings2017}.
+
+\subsection{Adaptación y control por modelo de referencia}
+
+La adaptación modifica parámetros o ganancias frente a información nueva sobre la planta. Se distingue de la programación de ganancias, que selecciona reglas preestablecidas según el régimen, y de un reentrenamiento que actualiza únicamente un predictor. La relación entre identificación, excitación y estabilidad es central en la teoría de control adaptativo \cite{astrom1995}.
+
+El control adaptativo por modelo de referencia, o MRAC, establece una dinámica deseada y ajusta la ley de control para aproximarla. Un ejemplo escalar idealizado ilustra su fundamento. Para
+\begin{equation}
+\dot x=-ax+bu,
+\qquad
+\dot x_m=-a_mx_m+b_mr,
+\label{eq:mrac_planta_referencia}
+\end{equation}
+con parámetros constantes, $a_m>0$ y signo conocido de $b\neq0$, se considera $u=\theta_xx+\theta_rr$. Los parámetros ideales satisfacen
+\begin{equation}
+b\theta_x^{*}=a-a_m,
+\qquad
+b\theta_r^{*}=b_m.
+\label{eq:mrac_matching}
+\end{equation}
+Si $e_m=x-x_m$ y $\widetilde\theta_j=\theta_j-\theta_j^{*}$, las leyes
+\begin{equation}
+\dot\theta_x=-\gamma_x\operatorname{sgn}(b)e_mx,
+\qquad
+\dot\theta_r=-\gamma_r\operatorname{sgn}(b)e_mr,
+\label{eq:mrac_adaptacion}
+\end{equation}
+con ganancias positivas permiten utilizar
+\begin{equation}
+V=\frac12e_m^2
++\frac{|b|}{2\gamma_x}\widetilde\theta_x^2
++\frac{|b|}{2\gamma_r}\widetilde\theta_r^2,
+\qquad
+\dot V=-a_me_m^2,
+\label{eq:mrac_lyapunov}
+\end{equation}
+bajo las hipótesis ideales. La cancelación de los términos cruzados muestra cómo una ley de adaptación puede construirse a partir de un argumento de estabilidad y no únicamente de reducción del error de ajuste.
+
+El ejemplo no demuestra estabilidad global de un secador no lineal. Saturación, ruido, retardos, perturbaciones sin compensar y variación de parámetros modifican sus hipótesis. Además, convergencia del seguimiento no implica necesariamente convergencia de cada parámetro sin excitación suficiente. Estas limitaciones justifican analizar la adaptación dentro de un dominio operativo y con restricciones compatibles con la planta.
+
+\subsection{Control mediante modelos híbridos}
+
+Un modelo híbrido puede incorporarse en el predictor de MPC, en un estimador o en una compensación de discrepancias. Su función consiste en aportar una representación de la respuesta con estructura física y costo compatible con la decisión. La política de control y el modelo predictivo son elementos distintos: aprender una transición de estados no especifica por sí solo la acción que debe aplicarse.
+
+El control requiere examinar trayectorias cerradas y respuestas a acciones nuevas. Una corrección estadística que mejora las temperaturas sobre trayectorias habituales puede deteriorar el balance de humedad o producir una sensibilidad inadecuada frente a la ventilación. La conservación estructural, el dominio de cobertura y la incertidumbre del predictor son parte del problema de control, además de su precisión.
+
+\begin{table}[htbp]
+\centering
+\small
+\caption{Fundamento y dependencia principal de las estrategias de control.}
+\label{tab:comparacion_estrategias_control}
+\begin{tabular}{p{0.17\linewidth}p{0.34\linewidth}p{0.35\linewidth}}
+\toprule
+Estrategia & Fundamento & Dependencia o limitación \\
+\midrule
+PID & Realimentación del error y de su memoria. & Sintonía, signo de actuación, retardos e interacción de canales. \\
+MPC & Optimización de una trayectoria predicha con restricciones. & Calidad del predictor, estimación de estados, factibilidad y costo de cálculo. \\
+Control adaptativo & Actualización de parámetros o ganancias vinculada al seguimiento. & Excitación, hipótesis de estabilidad y efecto de saturación e incertidumbre. \\
+Control con modelo híbrido & Predicción o estimación que integra balances y relaciones aprendidas. & Consistencia física, cobertura de acciones y desempeño en lazo cerrado. \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Integración del fundamento teórico}
+\label{sec:marco_conceptual}
+
+El secado solar de café se interpreta como la evolución acoplada de energía y agua en una planta abierta. La captación solar y las pérdidas externas determinan la energía disponible; la conducción y el intercambio superficial distribuyen esa energía; el flujo de aire transporta calor y vapor; y las propiedades higroscópicas y la cinética del producto determinan su respuesta. Temperatura, razón de humedad y contenido de agua del café describen aspectos complementarios del estado y no son sustitutos entre sí.
+
+Esta estructura permite relacionar modelos de distintas escalas sin asignarles funciones equivalentes. Los campos distribuidos explicitan heterogeneidad y mecanismos locales; la cavidad idealizada permite examinar relaciones de flotación e intercambio; la red termo-higrométrica conserva estados agregados y balances; y los modelos aprendidos o híbridos aproximan relaciones difíciles de cerrar o de evaluar repetidamente. La utilidad de cada representación depende de la información que conserva y de la evidencia disponible para su finalidad.
+
+La regulación de la planta requiere cerrar el vínculo entre observación, predicción y actuación. La identificación establece qué parámetros pueden inferirse; la incertidumbre limita la precisión atribuible a las predicciones; y la teoría de control relaciona acciones factibles con referencias, uniformidad y restricciones del producto. Sobre estos fundamentos puede establecerse una metodología que especifique geometría, instrumentación, cierres constitutivos, procedimientos numéricos y criterios de evaluación, manteniendo una distinción explícita entre formulación teórica y evidencia del sistema real.
