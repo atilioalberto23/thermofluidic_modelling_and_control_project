@@ -1,0 +1,151 @@
+% Desarrollo geométrico a partir del entregable técnico APY-NI-2024A-12.
+% La sección se integra en el marco teórico activo; figuras locales en PDF.
+\section{Geometría, superficie de intercambio y volumen del recinto}
+\label{sec:geometria_secadores}
+
+El análisis geométrico desarrollado en el primer entregable del proyecto distingue cuerpos de revolución, prismas de sección asimétrica y prismas obtenidos por reflexión de esa sección \cite{rodriguez2025reporte}. Esta clasificación permite relacionar dimensiones constructivas con áreas de intercambio y volumen de aire. Las Figuras~\ref{fig:fund_revolucion}--\ref{fig:fund_simetricas} conservan las ilustraciones originales de ese desarrollo. Aquí se explicitan las superficies contabilizadas y se deducen las expresiones mediante integración, de modo que una misma convención pueda utilizarse en balances, CAD y comparación entre diseños.
+
+Se distingue el área de envolvente sobre el suelo, $A_{\mathrm{env}}$, del área de base, $A_b$, y de la superficie geométrica cerrada, $S=A_{\mathrm{env}}+A_b$. Las áreas se expresan en $\mathrm{m^2}$ y el volumen $V$ en $\mathrm{m^3}$. Incluir la base en $S$ permite comparar cuerpos cerrados, pero no supone que reciba irradiancia ni que intercambie calor como la cubierta. Las aberturas se identifican por separado al establecer las condiciones de frontera.
+
+\subsection{Cuerpos de revolución: perfiles simples y compuestos}
+\label{subsec:geometrias_revolucion}
+
+Sea $a$ el radio de base, $h_0\geq0$ la altura de una pared cilíndrica y $z=h_0+f(r)$ el perfil del techo para $0\leq r\leq a$, con $f(a)=0$. El caso simple corresponde a $h_0=0$; el compuesto incorpora el cilindro sin contar la interfaz interior entre ambos cuerpos. La integración de anillos y superficies de revolución proporciona
+\begin{align}
+V&=\pi a^2h_0+2\pi\int_0^a r f(r)\,\mathrm dr,
+\label{eq:fund_volumen_revolucion}\\
+A_{\mathrm{env}}&=2\pi a h_0+2\pi\int_0^a r\sqrt{1+[f'(r)]^2}\,\mathrm dr,
+\qquad A_b=\pi a^2.
+\label{eq:fund_area_revolucion}
+\end{align}
+Los términos proporcionales a $h_0$ representan la pared cilíndrica y su volumen; el área de contacto con el techo queda excluida de la frontera exterior.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.96\textwidth]{\rutafigurasfundamentos/geometrias_revolucion.pdf}
+\caption[Geometrías de revolución simples y compuestas]{Geometrías de revolución: techo cónico, paraboloide y semiesférico, sin pared cilíndrica en la fila superior y con ella en la inferior. Se conserva la ilustración del primer entregable técnico del proyecto \cite{rodriguez2025reporte}.}
+\label{fig:fund_revolucion}
+\end{figure}
+
+La Tabla~\ref{tab:fund_revolucion} presenta las contribuciones del techo. Para los perfiles cónico y parabólico se utiliza $b=f(0)>0$ y $\eta=b/a$. En el semiesférico, $b=a$ y no constituye un parámetro independiente. La relación de altura total del reporte se expresa como $\sigma_{ba}=(h_0+b)/a$. En un cono, el ángulo del techo satisface $\tan\theta_r=b/a$; en un perfil curvo la inclinación es local y se obtiene de $f'(r)$. Se reserva $\phi$ para la humedad relativa.
+
+\begin{table}[htbp]
+\centering
+\small
+\caption{Área y volumen del techo para los cuerpos de revolución ilustrados.}
+\label{tab:fund_revolucion}
+\begingroup
+\renewcommand{\arraystretch}{1.65}
+\setlength{\tabcolsep}{4pt}
+\begin{tabularx}{\textwidth}{l>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X}
+\toprule
+Perfil & $f(r)$ & $A_{\mathrm{techo}}$ & $V_{\mathrm{techo}}$ \\
+\midrule
+Cónico & $b(1-r/a)$ & $\pi a\sqrt{a^2+b^2}$ & $\pi a^2b/3$ \\
+Paraboloide & $b[1-(r/a)^2]$ & $\dfrac{\pi a^2}{6\eta^2}\bigl[(1+4\eta^2)^{3/2}-1\bigr]$ & $\pi a^2b/2$ \\
+Semiesférico & $\sqrt{a^2-r^2}$ & $2\pi a^2$ & $2\pi a^3/3$ \\
+\bottomrule
+\end{tabularx}
+\endgroup
+\par\vspace{3pt}
+\begin{minipage}{0.98\textwidth}\footnotesize
+Para cada techo: $S=A_{\mathrm{techo}}+2\pi ah_0+\pi a^2$ y $V=V_{\mathrm{techo}}+\pi a^2h_0$. Las expresiones incluyen las variantes simples y compuestas con la misma definición de frontera.
+\end{minipage}
+\end{table}
+
+Por ejemplo, al sustituir $f(r)=b[1-(r/a)^2]$ en las Ecuaciones~\eqref{eq:fund_volumen_revolucion} y~\eqref{eq:fund_area_revolucion}, el volumen del techo es la mitad del cilindro de igual base y altura. Su área depende del cuadrado de $\eta$ en el denominador y del término $1+4\eta^2$ dentro de la potencia. Estos factores proceden de $f'(r)=-2br/a^2$. En el límite $b\rightarrow0$, el área del techo tiende a $\pi a^2$, como exige un disco plano.
+\FloatBarrier
+
+\subsection{Prismas asimétricos y secciones reflejadas}
+\label{subsec:geometrias_prismaticas}
+
+Una sección prismática asimétrica se define sobre $0\leq \xi\leq a$, con techo $z=h_0+f(\xi)$ y longitud de extrusión $l$. En este caso $a$ representa el ancho de la sección. Sean $b=f(0)$, $f(a)=0$, $A_1$ su área transversal y $\ell_r$ la longitud del arco del techo. Entonces
+\begin{align}
+A_1&=ah_0+\int_0^a f(\xi)\,\mathrm d\xi,
+\qquad \ell_r=\int_0^a\sqrt{1+[f'(\xi)]^2}\,\mathrm d\xi,
+\label{eq:fund_seccion_prisma}\\
+P_1&=a+2h_0+b+\ell_r,\qquad
+V_1=A_1l,\qquad S_1=2A_1+P_1l.
+\label{eq:fund_prisma_asimetrico}
+\end{align}
+$P_1$ incluye base, paredes verticales y techo; $2A_1$ corresponde a los dos extremos. Las formas de la Figura~\ref{fig:fund_prismaticas} se obtienen al variar el perfil y $h_0$.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.94\textwidth]{\rutafigurasfundamentos/geometrias_prismaticas.pdf}
+\caption[Geometrías prismáticas asimétricas]{Geometrías prismáticas de sección asimétrica triangular, parabólica y circular. La fila superior muestra las secciones simples y la inferior sus extensiones mediante paredes verticales. Ilustración original del primer entregable técnico \cite{rodriguez2025reporte}.}
+\label{fig:fund_prismaticas}
+\end{figure}
+
+Para el arco parabólico resulta útil definir
+\begin{equation}
+\mathcal L(a,b)=\frac{a}{2}\sqrt{1+4(b/a)^2}
++\frac{a^2}{4b}\operatorname{arsinh}\!\left(\frac{2b}{a}\right),
+\qquad b>0,
+\label{eq:fund_arco_parabolico}
+\end{equation}
+con $\operatorname{arsinh}(q)=\ln(q+\sqrt{1+q^2})$. La Tabla~\ref{tab:fund_prismas} reúne las integrales necesarias para los tres perfiles. El techo circular asimétrico es un cuarto de circunferencia; al reflejarlo se obtiene una sección semicircular.
+
+\begin{table}[htbp]
+\centering
+\small
+\caption{Integrales de sección y arco para las geometrías prismáticas.}
+\label{tab:fund_prismas}
+\begingroup
+\renewcommand{\arraystretch}{1.6}
+\begin{tabularx}{\textwidth}{l>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X}
+\toprule
+Perfil & $f(\xi)$ & $A_1-ah_0$ & $\ell_r$ \\
+\midrule
+Triangular & $b(1-\xi/a)$ & $ab/2$ & $\sqrt{a^2+b^2}$ \\
+Parabólico & $b[1-(\xi/a)^2]$ & $2ab/3$ & $\mathcal L(a,b)$ \\
+Circular & $\sqrt{a^2-\xi^2}$ & $\pi a^2/4$ & $\pi a/2$ \\
+\bottomrule
+\end{tabularx}
+\endgroup
+\par\vspace{3pt}
+\begin{minipage}{0.98\textwidth}\footnotesize
+En el perfil circular $b=a$. El área transversal tiene dimensión de longitud al cuadrado; el volumen se obtiene multiplicándola por $l$, conforme a la Ecuación~\eqref{eq:fund_prisma_asimetrico}.
+\end{minipage}
+\end{table}
+
+La reflexión respecto de la pared de altura $h_0+b$ produce una sección simétrica de ancho $2a$. Su área transversal se duplica, pero esa pared pasa a ser una interfaz interior. En consecuencia,
+\begin{align}
+A_2&=2A_1,\qquad P_2=2a+2h_0+2\ell_r,
+\qquad V_2=2A_1l,
+\label{eq:fund_prisma_simetrico}\\
+S_2&=4A_1+P_2l=2S_1-2(h_0+b)l.
+\label{eq:fund_superficie_reflejada}
+\end{align}
+La Ecuación~\eqref{eq:fund_superficie_reflejada} evita contar dos veces la superficie común. Por ejemplo, el prisma triangular simétrico simple tiene $V_2=abl$ y $S_2=2ab+2[a+\sqrt{a^2+b^2}]l$. El parabólico simétrico simple tiene $V_2=4abl/3$. Estos resultados se obtienen de las mismas integrales, sin introducir un factor adicional de volumen por la simetría.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.94\textwidth]{\rutafigurasfundamentos/geometrias_simetricas.pdf}
+\caption[Geometrías prismáticas obtenidas por reflexión]{Prismas de sección simétrica obtenidos por reflexión de los perfiles anteriores. Se interpreta la fila superior como configuraciones sin pared vertical adicional y la inferior como configuraciones con $h_0>0$. La interfaz de reflexión no integra la superficie exterior. Ilustración original del primer entregable técnico \cite{rodriguez2025reporte}.}
+\label{fig:fund_simetricas}
+\end{figure}
+\FloatBarrier
+
+\subsection{Escalamiento y relación entre superficie y volumen}
+\label{subsec:geometria_escalamiento}
+
+En una familia homotética, escalar todas las longitudes por $\lambda$ produce $S\propto\lambda^2$, $V\propto\lambda^3$ y $S/V\propto\lambda^{-1}$. En un prisma de sección fija, en cambio,
+\begin{equation}
+\frac{S}{V}=\frac{P}{A_{\perp}}+\frac{2}{l},
+\label{eq:fund_relacion_superficie_volumen}
+\end{equation}
+donde $A_{\perp}$ y $P$ representan el área y el perímetro transversal. Al aumentar $l$ se reduce la contribución de los extremos y la relación tiende a $P/A_{\perp}$. Esta distinción precisa qué dimensión cambia en una comparación y permite estudiar la modularidad longitudinal sin confundirla con un cambio homotético.
+
+La superficie total no equivale al área de captación solar. La potencia recibida depende de las normales, el sombreado y la trayectoria solar, mientras que las pérdidas dependen de materiales, temperaturas, viento y áreas de intercambio. Del mismo modo, $V$ determina la masa de aire a densidad dada, pero la inercia del secador incluye cubierta, base y producto cuando está presente. Una linealización térmica de un modo dominante ilustra esa relación:
+\begin{equation}
+\tau_T\simeq\frac{C_{\mathrm{eff}}}
+{G_{\mathrm{env}}+G_b+\rho_0c_{p,a}\dot V_{\mathrm{ext}}},
+\label{eq:fund_escala_termica_geometria}
+\end{equation}
+con conductancias efectivas congeladas en el punto de operación y $\dot V_{\mathrm{ext}}\geq0$ como renovación de aire. $C_{\mathrm{eff}}$ corresponde al modo térmico aproximado; no se identifica automáticamente con $\rho_0c_{p,a}V$. La Ecuación~\eqref{eq:fund_escala_termica_geometria} es una reducción local y no sustituye los balances acoplados del secador.
+
+Una comparación entre formas fija el servicio requerido, por ejemplo igual volumen útil o igual área de bandejas, y conserva meteorología, propiedades y criterios de actuación. La orientación se evalúa mediante la trayectoria solar local y las normales de cada superficie. La selección de materiales combina transmitancia solar, absortancia, emisividad infrarroja, conductividad, espesor y capacidad térmica, además de sus requisitos constructivos. Así se pueden separar el efecto de la forma y el de un cambio simultáneo de material o ventilación.
+
+Por tanto, las formas ilustradas constituyen un catálogo de parametrización y no una clasificación universal de eficiencia. La simetría geométrica tampoco garantiza simetría térmica ni ventilación cruzada: ambas dependen de irradiancia, aberturas, viento y actuación. Para Coffee Solutions, la Sección~\ref{met:caracterizacion} establece la geometría utilizada y las superficies observadas; las demás formas permiten analizar transferencia a otras configuraciones con sus parámetros y condiciones propios.
+\FloatBarrier

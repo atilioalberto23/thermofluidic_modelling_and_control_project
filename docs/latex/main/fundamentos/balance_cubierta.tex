@@ -1,0 +1,52 @@
+\subsection{Balance local y discretización de una cubierta semitransparente}
+\label{subsec:balance_cubierta}
+
+La Figura~\ref{fig:fund_transferencia_cubierta}, desarrollada en el primer entregable técnico \cite{rodriguez2025reporte}, relaciona absorción, transmisión, reflexión, conducción y convección en el recubrimiento. Las flechas indican mecanismos de intercambio; el signo de un flujo convectivo o radiativo neto depende de las temperaturas de sus participantes. La radiación transmitida atraviesa la cubierta y su absorción posterior corresponde a las superficies interiores que la reciben.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.60\textwidth,height=0.52\textheight,keepaspectratio]{\rutafigurasfundamentos/transferencia_cubierta.pdf}
+\caption[Intercambios térmicos en la cubierta del secador]{Intercambios en una sección del recubrimiento: exterior a la izquierda e interior a la derecha. La cota entre caras representa el espesor, denominado $d_c$ en el texto; se distingue de la emisividad infrarroja. Ilustración original del primer entregable técnico \cite{rodriguez2025reporte}.}
+\label{fig:fund_transferencia_cubierta}
+\end{figure}
+
+Si el gradiente a través del espesor es relevante, se utiliza la ecuación de conducción~\eqref{eq:heatdiffusion} y se acoplan ambas caras mediante sus condiciones térmicas. En el límite de temperatura prácticamente uniforme a través de $d_c$, se define la capacidad por unidad de área $C_c''=\rho_cc_cd_c$, con densidad $\rho_c$ y calor específico $c_c$. La integración normal proporciona
+\begin{equation}
+\begin{aligned}
+C_c''\frac{\partial T_c}{\partial t}={}&
+\alpha_{c,\mathrm{sw}}G_s+h_o(T_{\mathrm{amb}}-T_c)+h_i(T_a-T_c)\\
+&+q_{\mathrm{lw},o\rightarrow c}''+q_{\mathrm{lw},i\rightarrow c}''
++\nabla_s\cdot(k_cd_c\nabla_sT_c).
+\end{aligned}
+\label{eq:fund_balance_cubierta_local}
+\end{equation}
+Todos los términos tienen unidades de $\mathrm{W\,m^{-2}}$ y $C_c''$ se expresa en $\mathrm{J\,m^{-2}\,K^{-1}}$. Los subíndices $o$ e $i$ distinguen exterior e interior; los flujos radiativos se consideran positivos hacia la cubierta. $\nabla_s$ representa la conducción tangencial en la aproximación de capa delgada. El balance supone curvatura pequeña a la escala del espesor y no incluye condensación ni otra fuente de cambio de fase en la cubierta.
+
+En una aproximación infrarroja opaca y gris frente a entornos radiativos grandes,
+\begin{equation}
+q_{\mathrm{lw},o\rightarrow c}''=
+\varepsilon_{c,\mathrm{lw}}\sigma
+\sum_jF_{cj}(T_j^4-T_c^4),
+\label{eq:fund_radiacion_exterior_cubierta}
+\end{equation}
+donde los entornos pueden incluir cielo y terreno, con sus temperaturas radiativas y factores de vista. Esta forma exige que la irradiación de esos entornos pueda representarse mediante $\sigma T_j^4$; las superficies interiores que reflejan radiación se tratan mediante radiosidades, como se desarrolla a continuación. La temperatura ambiente del aire no sustituye automáticamente a la radiativa del cielo.
+
+Al dividir la cubierta en elementos de área $A_n$ y normal exterior $\mathbf n_n$, la irradiancia de onda corta puede expresarse como
+\begin{equation}
+G_{s,n}=\mathrm{DNI}\,\max(0,\mathbf n_n\cdot\mathbf s)
++G_{\mathrm{dif},n}+G_{\mathrm{refl},n},
+\label{eq:fund_irradiancia_faceta}
+\end{equation}
+con $\mathbf s$ dirigida hacia el Sol y visibilidad solar libre; el sombreado modifica la contribución directa. Los dos últimos términos son irradiancias sobre el elemento y ya incluyen la proyección correspondiente. La función máximo excluye incidencia directa por el reverso de una cara. Así se enlazan las geometrías de la Sección~\ref{sec:geometria_secadores} con la transposición solar de la Ecuación~\eqref{eq:globalirradiance}.
+
+En estado estacionario y despreciando intercambio por los bordes, sumar los balances locales produce
+\begin{equation}
+\begin{aligned}
+0=\sum_n A_n\bigl[&\alpha_{c,\mathrm{sw},n}G_{s,n}
++h_{o,n}(T_{\mathrm{amb},n}-T_{c,n})\\
+&+h_{i,n}(T_{a,n}-T_{c,n})
++q_{\mathrm{lw},o\rightarrow c,n}''+q_{\mathrm{lw},i\rightarrow c,n}''\bigr].
+\end{aligned}
+\label{eq:fund_balance_cubierta_discreto}
+\end{equation}
+La conducción entre elementos compartidos se cancela en la suma conservativa. Se retienen los pesos $A_n$, que solo pueden factorizarse si las áreas son iguales. La transmitancia no se suma a la absortancia como fuente de la cubierta: $\alpha_{c,\mathrm{sw}}G_s$ calienta el material, mientras que $\tau_{c,\mathrm{sw}}G_s$ ingresa al recinto. Esta separación preserva la asignación energética de la Ecuación~\eqref{eq:potencia_solar_cubierta} y su enlace con la red reducida.

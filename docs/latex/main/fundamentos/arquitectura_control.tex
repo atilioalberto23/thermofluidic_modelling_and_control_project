@@ -1,0 +1,23 @@
+\subsection{Lazo de regulación, perturbaciones y condiciones internas}
+\label{subsec:arquitectura_regulacion}
+
+El diagrama de la Figura~\ref{fig:fund_lazo_control}, elaborado en el primer entregable técnico \cite{rodriguez2025reporte}, organiza la relación entre referencia, error, controlador, planta y sensado. Las perturbaciones meteorológicas ingresan en la planta aunque la acción permanezca constante. Por su parte, geometría, propiedades y configuración de aberturas condicionan la respuesta; los estados iniciales determinan el punto de partida de cada episodio.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.93\textwidth]{\rutafigurasfundamentos/lazo_control.pdf}
+\caption[Arquitectura de regulación del secador solar]{Arquitectura conceptual de regulación con realimentación y perturbaciones exógenas. Las etiquetas $H$ de la ilustración representan humedad; la formulación de la tesis distingue humedad relativa $\phi$ y razón de humedad $W$. Ilustración original del primer entregable técnico \cite{rodriguez2025reporte}.}
+\label{fig:fund_lazo_control}
+\end{figure}
+
+Las referencias de temperatura y humedad de la figura se formalizan mediante $\mathbf r_k$, las variables reguladas mediante $\mathbf y_{c,k}$ y las acciones mediante $\mathbf u_k$. Cuando se regula temperatura y razón de humedad, $\mathbf y_c=[\bar T_a,\bar W]^{\mathsf T}$. El error y la política causal pueden expresarse como
+\begin{equation}
+\mathbf e_k=\mathbf r_k-\widehat{\mathbf y}_{c,k},
+\qquad
+\mathbf u_k=\kappa\!\left(\mathbf e_{0:k},\widehat{\mathbf x}_k,
+\widehat{\mathbf d}_{k:k+H_p},\mathbf c\right)\in\mathcal U(\mathbf c),
+\label{eq:fund_lazo_regulacion}
+\end{equation}
+donde $\widehat{\mathbf y}_{c,k}$ procede del sensado y la estimación, $\widehat{\mathbf d}$ contiene únicamente información disponible al decidir y $\mathbf c$ reúne la configuración del caso. La notación incluye políticas simples, que utilizan solo el error presente o acumulado, y políticas predictivas, que emplean además estado y pronósticos.
+
+El bloque de sensado contiene la relación entre magnitudes físicas y observaciones de la Sección~\ref{sec:observacion_validez}; por ello, la señal realimentada conserva soporte espacial, conversión psicrométrica y retardos. Si la referencia se establece en humedad relativa, su paso a $W$ requiere temperatura y presión compatibles. Esta arquitectura enlaza las deducciones de calor y flotación con la formulación de PID, MRAC y MPC de la Sección~\ref{met:control}, manteniendo diferenciadas perturbación, estado y acción manipulada.

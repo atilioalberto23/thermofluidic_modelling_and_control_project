@@ -1,0 +1,47 @@
+\subsection{Deducción vertical y estabilidad de la estratificación}
+\label{subsec:flotacion_estratificacion}
+
+El análisis de flotación del primer entregable técnico \cite{rodriguez2025reporte} puede conectarse con la Ecuación~\eqref{eq:movimiento_boussinesq} separando explícitamente presión hidrostática y presión dinámica. Con $z$ ascendente y $g>0$, un ambiente de referencia en reposo satisface
+\begin{equation}
+\frac{\mathrm dp_\infty}{\mathrm dz}=-\rho_\infty g,
+\qquad p=p_\infty+\pi.
+\label{eq:fund_hidrostatica_referencia}
+\end{equation}
+Al sustituir esta descomposición en el momento vertical, y utilizar densidad de referencia en los términos inerciales, se obtiene para la componente vertical $w$
+\begin{equation}
+\begin{aligned}
+\frac{\mathrm Dw}{\mathrm Dt}&=-\frac{1}{\rho_0}\frac{\partial\pi}{\partial z}
++\nu\nabla^2w+g\frac{\rho_\infty-\rho_a}{\rho_0}\\
+&\simeq-\frac{1}{\rho_0}\frac{\partial\pi}{\partial z}
++\nu\nabla^2w+g\beta_T(T_a-T_\infty),
+\end{aligned}
+\label{eq:fund_momento_vertical}
+\end{equation}
+para variaciones térmicas pequeñas y composición constante, con $\rho_0\simeq\rho_\infty$. El signo ascendente procede de la diferencia respecto de la densidad ambiente local. La flotación no se define por la diferencia entre la temperatura máxima y la media del recinto.
+
+En una capa límite laminar estacionaria junto a una pared vertical, con $y$ normal a ella, gradiente dinámico de presión despreciable y difusión viscosa longitudinal pequeña, la misma ecuación se reduce a
+\begin{equation}
+v_y\frac{\partial w}{\partial y}+w\frac{\partial w}{\partial z}
+=\nu\frac{\partial^2w}{\partial y^2}+g\beta_T(T_a-T_\infty).
+\label{eq:fund_capa_limite_natural}
+\end{equation}
+Se distingue la viscosidad cinemática $\nu$ de las componentes de velocidad. Esta reducción local no impone una capa límite independiente a todo el recinto: presión, retorno del flujo y aberturas deben satisfacer el problema global \cite{bergman2017}.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{\rutafigurasfundamentos/flotacion_estratificacion.pdf}
+\caption[Flotación y estratificación térmica vertical]{Configuraciones térmicas idealizadas del recinto. Con $\Delta T_v=T_{\mathrm{sup}}-T_{\mathrm{base}}$, el calentamiento desde abajo, a la izquierda, favorece inestabilidad térmica; el calentamiento desde arriba, a la derecha, favorece estratificación estable. La indicación de ausencia de circulación corresponde al límite térmico idealizado sin otras fuerzas impulsoras. Ilustración original del primer entregable técnico \cite{rodriguez2025reporte}.}
+\label{fig:fund_flotacion}
+\end{figure}
+
+Para precisar esta interpretación, considérese un perfil de referencia $\overline\rho(z)$ en la aproximación de Boussinesq. Un pequeño desplazamiento vertical $\zeta$ de una parcela sin intercambio térmico o de composición da lugar a
+\begin{equation}
+\frac{\mathrm d^2\zeta}{\mathrm dt^2}+N^2\zeta=0,
+\qquad
+N^2=-\frac{g}{\rho_0}\frac{\mathrm d\overline\rho}{\mathrm dz}
+\simeq g\beta_T\frac{\mathrm d\overline T}{\mathrm dz},
+\label{eq:fund_estabilidad_vertical}
+\end{equation}
+despreciando compresibilidad y gradientes de composición. $N^2>0$ describe una fuerza restauradora, mientras que $N^2<0$ describe una tendencia desestabilizadora. En un perfil térmico lineal de altura $H$, $N^2\simeq g\beta_T\Delta T_v/H$. Para cambios de humedad apreciables, el gradiente de densidad se evalúa con la composición o con la Ecuación~\eqref{eq:boussinesq_termohigrometrico}.
+
+La Figura~\ref{fig:fund_flotacion} representa estos dos mecanismos. El calentamiento desde abajo no garantiza convección vigorosa a cualquier diferencia de temperatura: viscosidad, difusión térmica, geometría y fronteras determinan su aparición. Análogamente, una estratificación térmica estable puede coexistir con flujo por viento, ventiladores, aberturas o calentamiento lateral. Por ello, el gradiente vertical constituye un indicador del mecanismo de flotación, y se interpreta junto con Rayleigh, Richardson y las condiciones de actuación.

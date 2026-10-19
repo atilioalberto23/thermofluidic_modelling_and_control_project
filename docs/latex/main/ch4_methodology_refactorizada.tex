@@ -95,11 +95,15 @@ con $L=5.55\,\mathrm m$ y $B=1.12\,\mathrm m$. La transformación incorpora un c
 
 La geometría del caso conserva cubierta, base, paredes, aperturas y obstáculos constructivos relevantes para el flujo. Las áreas y el volumen de aire se obtienen del CAD y se asocian a nombres estables. Los componentes del montaje presentes en el recinto se representan por su geometría o por un cierre equivalente de intercambio o pérdida de presión. La simplificación se registra junto con la magnitud de interés que se busca preservar.
 
+Las familias de las Figuras~\ref{fig:fund_revolucion}--\ref{fig:fund_simetricas} proporcionan una parametrización para construir y contrastar esas cantidades. En una sección simétrica de ancho $B$, $a=B/2$; la altura de pared $h_0$, el perfil y su elevación $b$ se registran por separado. Se verifica $V=A_{\perp}L$ y $S=2A_{\perp}+PL$ para una extrusión uniforme, mediante las Ecuaciones~\eqref{eq:fund_prisma_simetrico} y~\eqref{eq:fund_superficie_reflejada}. Cuando el CAD incorpora puertas, aberturas o detalles no prismáticos, sus superficies se contabilizan explícitamente. Las cotas de las superficies instrumentadas caracterizan su soporte y se complementan con el perfil constructivo para calcular el volumen completo.
+
 \subsection{Propiedades térmicas y ópticas de la envolvente}
 
 Para cada componente se organiza densidad, calor específico, conductividad, espesor, área y fuente de la propiedad. La capacidad térmica de un nodo sólido es $C_i=m_ic_i$; las conductancias dependen de la geometría de intercambio y de su ley constitutiva. Los valores de fabricante o literatura se distinguen de parámetros efectivos estimados mediante respuesta transitoria.
 
 El tratamiento óptico separa absorción y transmisión de onda corta de emisión e intercambio de onda larga. La potencia solar se asigna a cubierta y base mediante el plano de incidencia, orientación y distribución geométrica de la radiación. En las superficies opacas se considera la potencia absorbida; en la cubierta se distingue la fracción transmitida de la absorbida. Las propiedades infrarrojas se utilizan para el intercambio térmico entre superficies y con el cielo.
+
+El esquema de la Figura~\ref{fig:fund_transferencia_cubierta} fija los mecanismos y las dos caras del recubrimiento. La implementación utiliza la conducción resuelta o el límite de capa delgada de la Ecuación~\eqref{eq:fund_balance_cubierta_local}, según espesor y gradientes. La irradiancia se integra con área y normal de cada elemento, conforme a la Ecuación~\eqref{eq:fund_irradiancia_faceta}; los flujos entre caras o celdas compartidas se cancelan al sumar el balance. Se comprueba además que la potencia transmitida se asigne a los receptores interiores sin volver a depositarla como absorción en la cubierta.
 
 El ajuste de un coeficiente efectivo de captación representa la combinación observable de factores ópticos y geométricos. Su interpretación se mantiene en ese nivel cuando los datos no permiten identificar por separado transmitancia, absortancia y área efectiva. Esta parametrización vincula el modelo térmico con la respuesta del recinto sin multiplicar parámetros indistinguibles.
 \FloatBarrier
@@ -480,6 +484,8 @@ La densidad de una mezcla ideal se obtiene de
 La aproximación de Boussinesq se selecciona tras examinar variaciones relativas de densidad y el régimen térmico \cite{gray1976}. Si se utiliza, se registra el estado de referencia y el efecto de composición que se retiene. Una formulación de densidad variable mantiene continuidad, transporte de vapor y energía compatibles.
 
 La selección laminar o turbulenta utiliza Rayleigh, Reynolds, geometría y modos de actuación. El tratamiento de pared y los tamaños locales se ajustan a ese cierre; para un modelo turbulento se informa la distribución de $y^+$ y las constantes utilizadas \cite{launder1974,versteeg2007}. La sensibilidad al cierre se contrasta sobre las variables que intervienen en validación y control.
+
+La descomposición hidrostática de las Ecuaciones~\eqref{eq:fund_hidrostatica_referencia} y~\eqref{eq:fund_momento_vertical} proporciona una comprobación del signo de gravedad y flotación: una perturbación térmica positiva a composición fija produce aceleración ascendente respecto del ambiente. El indicador $N^2$ de la Ecuación~\eqref{eq:fund_estabilidad_vertical}, cuando puede evaluarse sobre perfiles del aire, caracteriza estratificación junto con las condiciones de viento y actuación. Las dos configuraciones de la Figura~\ref{fig:fund_flotacion} se utilizan para interpretar el mecanismo térmico; las fronteras abiertas y las fuentes mecánicas mantienen su contribución en el caso completo.
 
 \subsection{Campos iniciales y condiciones de frontera}
 
@@ -864,6 +870,8 @@ Las ablaciones distinguen entrenamiento con observaciones, enriquecimiento media
 
 \section{Diseño y evaluación de paradigmas de control}
 \label{met:control}
+
+La arquitectura de la Figura~\ref{fig:fund_lazo_control} relaciona referencias, sensado, perturbaciones y actuación. Cada política utiliza las mismas variables reguladas y el mismo conjunto de acciones admisibles. La implementación conserva por separado observación, estado estimado, pronóstico, comando solicitado y modo ejecutado, de acuerdo con la Ecuación~\eqref{eq:fund_lazo_regulacion}. Esta correspondencia permite vincular el diagrama físico con las comparaciones de PID, MRAC y MPC.
 
 \subsection{Salidas de regulación y referencias factibles}
 

@@ -1,12 +1,16 @@
 % ============================================================================
 % CAPÍTULO 2: MARCO TEÓRICO
 % Archivo de capítulo para incluir en el documento principal de la tesis.
-% Requiere: amsmath, amssymb y booktabs. No requiere imágenes externas.
+% Requiere: amsmath, amssymb, booktabs, tabularx, graphicx y placeins.
+% Deducciones e ilustraciones complementarias en main/fundamentos y
+% figuras_fundamentos, independientes del directorio temporal de origen.
 % Referencias centralizadas en tail/References.bib, declarado una sola vez
 % mediante biblatex en head/settings_custom.tex.
 % Convenciones: temperaturas termodinámicas en K; humedad relativa como fracción;
 % M en base seca; W por unidad de masa de aire seco; Y por masa de aire húmedo.
 % ============================================================================
+
+\providecommand{\rutafigurasfundamentos}{figuras_fundamentos}
 
 \clearpage
 \chapter{Marco teórico}
@@ -14,7 +18,7 @@
 
 El secado solar de café integra fenómenos de transporte que actúan sobre escalas diferentes. La radiación suministra energía a la cubierta, a las superficies internas y al producto; los intercambios térmicos modifican las temperaturas y la densidad del aire; el movimiento del fluido redistribuye calor y vapor; y la migración de agua en el café determina la evolución de su contenido de humedad. Estas interacciones conforman una dinámica no lineal, espacialmente heterogénea y sometida a perturbaciones meteorológicas. Su descripción requiere relacionar la termodinámica del aire húmedo, los mecanismos de transferencia, las ecuaciones de conservación y la teoría de sistemas dinámicos.
 
-Este capítulo desarrolla esa relación como fundamento del modelado termo-higrométrico y del control inteligente de secadores solares tipo invernadero. La exposición parte del producto y de las variables que caracterizan el secado, establece los mecanismos físicos que gobiernan su evolución y presenta las representaciones distribuidas, reducidas e híbridas que permiten analizarla. La teoría de observación, identificación y control completa el vínculo entre la descripción física y la regulación del proceso.
+Este capítulo desarrolla esa relación como fundamento del modelado térmico e higrométrico y del control inteligente de secadores solares tipo invernadero. La exposición parte del producto y de las variables que caracterizan el secado, relaciona geometría y mecanismos físicos y presenta las representaciones distribuidas, reducidas e híbridas que permiten analizarlos. La teoría de observación, identificación y control completa el vínculo entre la descripción física y la regulación del proceso.
 
 \section{Fundamentos del secado de café}
 \label{sec:fundamentos_secado}
@@ -81,6 +85,8 @@ La trayectoria previa también puede ser relevante. La adsorción y la desorció
 La finalidad del secado no se reduce a alcanzar una humedad final. La temperatura del producto, la duración de la exposición y la velocidad de pérdida de agua conforman una trayectoria que puede afectar sus propiedades fisiológicas y sensoriales. Alves et al. analizaron conjuntamente temperatura, caudal de aire y tipo de procesamiento, y encontraron respuestas diferentes para cafés naturales y despulpados bajo las condiciones estudiadas \cite{alves2017}. Esta evidencia justifica tratar la calidad como una restricción del proceso y evita asumir que una mayor temperatura o una menor duración implican necesariamente un mejor producto.
 
 La temperatura del aire tampoco identifica de manera unívoca la temperatura del café. La radiación directa puede calentar el producto, mientras que la evaporación extrae energía de su superficie. Una regulación basada únicamente en el aire puede omitir ambos efectos. Del mismo modo, una humedad relativa interior baja no demuestra que el grano haya alcanzado su humedad objetivo. La evaluación física del secado requiere distinguir las condiciones del agente secante del estado del material.
+
+\input{main/fundamentos/geometria_secadores}
 
 \section{Psicrometría y potencial termodinámico de secado}
 \label{sec:psicrometria}
@@ -337,6 +343,8 @@ La primera contribución calienta la cubierta; la segunda ingresa al recinto y s
 
 La emisividad infrarroja $\varepsilon_{\mathrm{lw}}$ caracteriza otra región espectral. La ley de Kirchhoff relaciona emisividad y absortancia bajo las mismas condiciones espectrales y direccionales, pero no permite identificar la emisividad de onda larga con la absortancia solar. Tampoco permite deducirla como $1-\tau_{\mathrm{sw}}$. Esta separación es necesaria para representar correctamente una cubierta que transmite radiación solar y participa de manera distinta en el intercambio térmico \cite{duffie2013,bergman2017}.
 
+\input{main/fundamentos/balance_cubierta}
+
 \subsection{Radiación térmica entre superficies}
 
 La emisión de una superficie gris se representa mediante
@@ -462,6 +470,8 @@ Al separar la presión hidrostática de referencia, la ecuación de movimiento a
 \label{eq:movimiento_boussinesq}
 \end{equation}
 $\mathbf g$ apunta hacia abajo. Por tanto, el signo negativo del término asociado a una temperatura superior a $T_0$ genera una aceleración ascendente. La aproximación incompresible y de vapor diluido que acompaña esta expresión también requiere que la incorporación de masa sea pequeña frente al transporte principal; fuera de ese límite deben conservarse los términos de la Ecuación~\eqref{eq:continuidad}.
+
+\input{main/fundamentos/flotacion_estratificacion}
 
 \subsection{Régimen de circulación y números adimensionales}
 
@@ -1083,6 +1093,8 @@ entendiendo la expresión como agrupación de variables escalares y componentes 
 La regulación persigue mantener condiciones compatibles con el secado y modificar su trayectoria mediante acciones disponibles. Una referencia debe ser alcanzable bajo la energía solar, la humedad exterior y la capacidad de los actuadores. Sin calentamiento auxiliar, la ventilación no permite imponer arbitrariamente una temperatura superior a la que sostiene el balance energético. La entrada de aire exterior tampoco garantiza deshumidificación si su razón de humedad es elevada respecto de la interior.
 
 La recirculación puede reducir gradientes y aumentar coeficientes de intercambio, pero no extrae vapor del volumen de control por sí sola. La extracción y la apertura de compuertas afectan masa y entalpía con el exterior. Por ello, dos actuadores de movimiento de aire pueden tener funciones físicas diferentes aun cuando ambos modifiquen la velocidad local.
+
+\input{main/fundamentos/arquitectura_control}
 
 \subsection{Observabilidad y controlabilidad local}
 
