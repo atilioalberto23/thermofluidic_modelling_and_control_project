@@ -1,0 +1,34 @@
+% Adaptación de «Balances térmicos, renovación y radiación» del HTML.
+\begin{table}[p]
+\centering
+\caption{Nomenclatura y signos de los balances del recinto sin carga.}
+\label{met:tabla_pinn_balances}
+\begingroup
+\small
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.12}
+\begin{tabularx}{\textwidth}{@{}>{\raggedright\arraybackslash}p{0.23\textwidth}>{\raggedright\arraybackslash}X>{\raggedright\arraybackslash}p{0.21\textwidth}@{}}
+\toprule
+Símbolo & Significado y convención de signo & Unidad \\
+\midrule
+$C_c,C_b,C_a(W)$ & Capacidades térmicas de cubierta, base y aire húmedo. & J/K \\
+$G_{ca},G_{ba}$ & Conductancias de intercambio cubierta--aire y base--aire; pueden depender del modo de ventilación. & W/K \\
+$Q_{\mathrm{sol},c},Q_{\mathrm{sol},b}$ & Potencias solares absorbidas; positivas hacia el nodo correspondiente. & W \\
+$Q_{c,\mathrm{ext}},Q_{b,\mathrm{ext}}$ & Pérdidas exteriores; positivas al salir de cubierta o base. & W \\
+$Q_{b\to c}^{\mathrm{rad}}$ & Intercambio radiativo neto; positivo desde la base hacia la cubierta. & W \\
+$F_{\mathrm{ext}}$ & Flujo exterior de aire seco con entrada y salida equilibradas en la reducción de inventario constante. & kg de aire seco/s \\
+$m_{da}$ & Inventario de aire seco, constante en las Ecuaciones~\ref{met:red_cubierta}--\ref{met:red_humedad}. & kg de aire seco \\
+$c_{da},c_{pv}$ & Calores específicos del aire seco y del vapor. & J/(kg\,K) \\
+$Q_{\mathrm{fan}}$ & Fracción de la potencia del equipo transferida al dominio modelado. & W \\
+$A_b,A_c$ & Áreas de base y cubierta utilizadas en el cierre radiativo. & m$^2$ \\
+$\epsilon_b,\epsilon_c;\ F_{bc}$ & Emisividades y factor de forma desde la base hacia la cubierta. & Adimensional \\
+$\sigma$ & Constante de Stefan--Boltzmann. & W/(m$^2$\,K$^4$) \\
+$\dot{(\,)};\ \partial/\partial s$ & Derivada temporal del balance y derivada de la red respecto del tiempo local, con condiciones del segmento fijas. & Estado por segundo \\
+\bottomrule
+\end{tabularx}
+\endgroup
+\par\smallskip
+\begin{minipage}{\textwidth}\footnotesize
+La irradiancia $G$ se expresa en W/m$^2$, mientras $G_{ca}$ y $G_{ba}$ son conductancias en W/K. El flujo másico $F_{\mathrm{ext}}$ y el factor de forma $F_{bc}$ representan magnitudes distintas. Los subíndices $c,b,a$ designan cubierta, base y aire; $\mathrm{amb}$ y $\mathrm{ext}$ designan ambiente e intercambio exterior.
+\end{minipage}
+\end{table}

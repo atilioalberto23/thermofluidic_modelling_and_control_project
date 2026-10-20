@@ -10,6 +10,7 @@
 
 \providecommand{\rutafigurasmetodologia}{figuras_metodologia}
 \providecommand{\rutacodigometodologia}{codigo_metodologia}
+\providecommand{\rutatablasmetodologia}{tablas_metodologia}
 
 \clearpage
 \chapter{Metodología}
@@ -65,6 +66,10 @@ El estado reducido, las perturbaciones y las acciones se definen como
 \label{met:estados_entradas}
 \end{equation}
 $G$ representa la irradiancia sobre el plano de referencia, $p$ la presión absoluta y $v_{w,x},v_{w,y}$ las componentes del viento en los ejes del recinto. La geometría, las propiedades y el estado de las aberturas integran una configuración $\mathbf c$. La precipitación se conserva como descriptor ambiental y de posibles cambios de configuración.
+
+La Tabla~\ref{met:tabla_pinn_variables} reúne los estados, las entradas y sus unidades. Esta notación se conserva en la red reducida y en el mapa de flujo de la PINN de la Sección~\ref{met:pinn}; las temperaturas termodinámicas se expresan en kelvin y $W$ mantiene como base la masa de aire seco.
+
+\input{\rutatablasmetodologia/pinn_estados_entradas}
 
 La ficha de episodio relaciona identificador, fechas, orientación, posiciones vigentes de los sensores, aberturas, modos de ventilación, eventos manuales y versiones de adquisición. Su función es reconstruir la planta que produjo las observaciones y la información que estaba disponible en cada instante de decisión. Las trayectorias simuladas conservan la misma estructura de identificación, añadiendo parámetros, malla y condiciones de frontera.
 
@@ -595,6 +600,10 @@ Q_{b\to c}^{\mathrm{rad}}=
 \end{equation}
 dentro de la reducción geométrica declarada. Una cubierta semitransparente en esa banda requiere incorporar transmisión en el balance radiativo. Si otras superficies participan de forma relevante, se utiliza su red de radiosidades o una conductancia efectiva identificada con esa configuración. La potencia solar y las pérdidas se calculan con sus áreas y propiedades, manteniendo la misma referencia que en CFD.
 
+La Tabla~\ref{met:tabla_pinn_balances} fija las unidades y las convenciones de signo de estas ecuaciones. El intercambio $Q_{b\to c}^{\mathrm{rad}}$ aparece con signos opuestos en cubierta y base; las pérdidas exteriores se definen positivas al abandonar cada nodo. Estas mismas convenciones se emplean al construir los residuales físicos de la PINN, representados en la Figura~\ref{met:fig_pinn_entrenamiento}.
+
+\input{\rutatablasmetodologia/pinn_balances_nomenclatura}
+
 La Figura~\ref{met:fig_red} presenta la estructura de conexiones. $W$ interviene en composición, capacidad del aire, humedad relativa y renovación. La recirculación altera las conductancias y la mezcla; el intercambio exterior determina el balance de vapor.
 
 \begin{figure}[htbp]
@@ -786,7 +795,7 @@ Las escalas y los pesos se fijan según la tarea. Las componentes se presentan s
 \subsection{PINN condicional de cuatro estados}
 \label{met:pinn}
 
-La PINN utiliza los cuatro balances del recinto y conserva sus condiciones de actuación \cite{raissi2019}. Se construye un mapa de flujo para segmentos de duración $\Delta t_c$:
+La PINN utiliza los cuatro balances del recinto y conserva sus condiciones de actuación \cite{raissi2019}. La Figura~\ref{met:fig_pinn_arquitectura} muestra el recorrido desde las condiciones del segmento hasta el estado predicho, y la Tabla~\ref{met:tabla_pinn_notacion} precisa la notación neuronal y de entrenamiento. Se construye un mapa de flujo para segmentos de duración $\Delta t_c$:
 \begin{equation}
 \widehat{\mathbf x}_\eta(s;\mathbf x_k,\mathbf u_k,\mathbf d_k)
 =\mathbf x_k+\frac{s}{\Delta t_c}\,
@@ -796,6 +805,15 @@ La PINN utiliza los cuatro balances del recinto y conserva sus condiciones de ac
 \label{met:flujo_pinn}
 \end{equation}
 La construcción impone $\widehat{\mathbf x}_\eta(0)=\mathbf x_k$. Las escalas $\mathbf s_x$ normalizan estados y las tildes representan entradas normalizadas. Los modos discretos se codifican explícitamente. Las perturbaciones son constantes por segmento o se representan mediante una trayectoria parametrizada incluida en las entradas.
+
+En la Figura~\ref{met:fig_pinn_arquitectura}, $\mathbf z$ abrevia la concatenación de tiempo normalizado, estado inicial, actuación y perturbaciones de la Ecuación~\ref{met:flujo_pinn}. La dimensión de entrada depende de la codificación de los modos: con un código escalar para cada ventilador se obtienen $1+4+2+6=13$ componentes. La salida tiene cuatro componentes; la profundidad y las anchuras ocultas se seleccionan en desarrollo. La condición inicial se incorpora en la reconstrucción del estado mediante el incremento $(s/\Delta t_c)\mathcal N_\eta(\mathbf z)\odot\mathbf s_x$.
+
+\begin{figure}[p]
+\centering
+\includegraphics[width=0.99\textwidth,height=0.78\textheight,keepaspectratio]{\rutafigurasmetodologia/pinn_01_arquitectura}
+\caption{Arquitectura del mapa de flujo condicional de cuatro estados del recinto sin carga. Las condiciones del segmento alimentan una red diferenciable cuya salida se transforma en un incremento físico y se suma al estado inicial. La condición inicial se cumple exactamente por construcción. Las capas ocultas se representan de forma genérica.}
+\label{met:fig_pinn_arquitectura}
+\end{figure}
 
 Con condiciones del segmento fijas, la diferenciación automática calcula
 \begin{equation}
@@ -816,7 +834,20 @@ La pérdida combina observaciones, balances y restricciones:
 \end{equation}
 Los datos se comparan mediante $\mathcal H_j$ y las restricciones incluyen capacidades positivas, $W\geq0$ y estados dentro del dominio termodinámico. La condición inicial estructural se distingue de las observaciones de entrenamiento. Los parámetros físicos se fijan mediante identificación o se ajustan en desarrollo con cotas e identificabilidad.
 
+La Figura~\ref{met:fig_pinn_entrenamiento} desarrolla la construcción de la pérdida: los balances de la Sección~\ref{met:red} producen $\mathbf f$, la diferenciación automática obtiene $\partial\widehat{\mathbf x}_\eta/\partial s$ y su diferencia define los cuatro residuales. El término físico conserva el promedio sobre $N_f$ puntos y la suma sobre componentes de la Ecuación~\ref{met:perdida_pinn}. Los términos de datos y restricciones se incorporan después mediante sus pesos declarados. La Tabla~\ref{met:tabla_pinn_notacion} distingue los parámetros neuronales $\eta$, los parámetros físicos $\boldsymbol\theta$, las escalas y los operadores de observación.
+
+\begin{figure}[p]
+\centering
+\includegraphics[width=0.99\textwidth,height=0.78\textheight,keepaspectratio]{\rutafigurasmetodologia/pinn_02_entrenamiento}
+\caption{Balances físicos y función de pérdida de la PINN condicional del recinto sin carga. La rama física utiliza las ecuaciones de inventario constante de aire seco y el cierre radiativo base--cubierta. Sus residuales se normalizan por $s_q/\Delta t_c$ y se combinan con observaciones y restricciones. La nomenclatura y los signos corresponden a las Tablas~\ref{met:tabla_pinn_balances} y~\ref{met:tabla_pinn_notacion}.}
+\label{met:fig_pinn_entrenamiento}
+\end{figure}
+
+\input{\rutatablasmetodologia/pinn_red_nomenclatura}
+
 La selección controla desequilibrio de gradientes entre pérdidas \cite{wang2021}, error sobre observaciones y estabilidad de propagación. Una PINN sobre ODE utiliza los balances reducidos; las condiciones espaciales de pared pertenecen al CFD. Su desempeño se informa por estado y horizonte, junto con residual físico, error inicial y acumulación de error en segmentos sucesivos.
+
+\FloatBarrier
 
 \subsection{Incertidumbre predictiva y costo de ejecución}
 

@@ -1,0 +1,33 @@
+% Adaptación de «Red, residuales y pérdidas» de arquitectura_pinn.html.
+\begin{table}[p]
+\centering
+\caption{Notación de la arquitectura y del entrenamiento de la PINN condicional.}
+\label{met:tabla_pinn_notacion}
+\begingroup
+\small
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.12}
+\begin{tabularx}{\textwidth}{@{}>{\raggedright\arraybackslash}p{0.20\textwidth}>{\raggedright\arraybackslash}X>{\raggedright\arraybackslash}p{0.28\textwidth}@{}}
+\toprule
+Símbolo & Significado & Convención \\
+\midrule
+$\eta;\ \mathcal N_\eta$ & Pesos y sesgos neuronales; red que produce el incremento normalizado. & Se ajustan mediante optimización. \\
+$\mathbf z;\ n_z$ & Entrada concatenada de la red en la Figura~\ref{met:fig_pinn_arquitectura} y su dimensión. & $n_z=1+4+\dim\widetilde{\mathbf u}+\dim\widetilde{\mathbf d}$. \\
+$L$ (capas) & Profundidad de la red en el esquema; se ilustran la primera y la última capa oculta. & Profundidad y anchuras sujetas a selección. \\
+Tilde $(\widetilde{\ \ })$ & Entrada normalizada mediante transformaciones estimadas en desarrollo. & La transformación se conserva en validación y prueba. \\
+$\mathbf s_x;\ s_q$ & Escalas físicas de los estados y de la componente $q$. & K para temperaturas; kg/kg para $W$. \\
+$\odot;\ \delta\mathbf x$ & Producto por componente e incremento del estado en unidades físicas. & $\delta\mathbf x=(s/\Delta t_c)\mathcal N_\eta(\mathbf z)\odot\mathbf s_x$. \\
+$\boldsymbol\theta;\ \mathbf f$ & Parámetros físicos y derivadas de estado obtenidas de los balances. & $\mathbf f=[\dot T_c,\dot T_b,\dot T_a,\dot W]^{\mathsf T}$. \\
+$q;\ r_q$ & Índice de componente y residual de su ecuación diferencial. & $q\in\{T_c,T_b,T_a,W\}$; residual en estado/s. \\
+$s_\ell;\ N_f$ & Tiempo del punto de colocación $\ell$ y número de puntos. & Dominio físicamente admitido. \\
+$\mathcal H_j;\ y_j$ & Operador de observación del sensor $j$ y observación disponible. & Magnitud, posición y soporte compatibles. \\
+$\mathcal L_D,\mathcal L_F,\mathcal L_R$ & Pérdidas de datos, física y restricciones. & Condición inicial impuesta por estructura. \\
+$\lambda_D,\lambda_F,\lambda_R$ & Pesos de las tres contribuciones de pérdida. & Se documentan con las escalas y la selección en desarrollo. \\
+\bottomrule
+\end{tabularx}
+\endgroup
+\par\smallskip
+\begin{minipage}{\textwidth}\footnotesize
+$\mathbf z$ y $L$ se emplean aquí como notación local del esquema de arquitectura: entrada normalizada y profundidad de la red. Los parámetros neuronales $\eta$ se distinguen de los parámetros físicos $\boldsymbol\theta$; estos últimos pueden fijarse por identificación o estimarse en desarrollo con cotas e identificabilidad.
+\end{minipage}
+\end{table}

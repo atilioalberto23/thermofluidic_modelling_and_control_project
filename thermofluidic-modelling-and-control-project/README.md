@@ -98,3 +98,11 @@ To automatically strip out all output cell contents before committing to `git`, 
 ## Package your Kedro project
 
 [Further information about building project documentation and packaging your project](https://docs.kedro.org/en/stable/tutorial/package_a_project.html)
+# Resultados con almacenamiento local
+
+El pipeline `measurement_results` analiza el Parquet local y exporta tablas,
+figuras y un manifiesto de calidad. Consulta [la guía de ejecución y entrega](docs/resultados_kedro.md)
+para comandos, reglas metodológicas, resultados verificados y requisitos pendientes.
+
+Los productores de LightGBM, XGBoost, red térmica, cavidad, PINN y OpenFOAM,
+con sus ejecuciones y límites, están en [la entrega de modelos](docs/modelos_resultados_entrega.md).

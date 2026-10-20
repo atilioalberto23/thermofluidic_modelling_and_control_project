@@ -1,0 +1,27 @@
+% Adaptación de «Correspondencia con la implementación disponible» del HTML.
+\begin{table}[p]
+\centering
+\caption{Correspondencia entre la formulación metodológica y la PINN de verificación disponible.}
+\label{res:tabla_pinn_correspondencia}
+\begingroup
+\small
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.12}
+\begin{tabularx}{\textwidth}{@{}>{\raggedright\arraybackslash}p{0.15\textwidth}>{\raggedright\arraybackslash}X>{\raggedright\arraybackslash}X@{}}
+\toprule
+Aspecto & Formulación del recinto sin carga & Código de verificación disponible \\
+\midrule
+Estado & Cuatro componentes: $T_c,T_b,T_a,W$. & Seis componentes: $T_c,T_b,T_p,T_a,W,M$. \\
+Arquitectura & Salida de dimensión cuatro; profundidad y anchuras sujetas a selección. & $13\to32\to32\to6$, activación Tanh, $1702$ parámetros y precisión \texttt{float64}. \\
+Entradas & Tiempo, estado inicial, actuación y perturbaciones normalizados. & \texttt{seconds}, \texttt{initial} y \texttt{boundary}; esta última contiene seis condiciones. \\
+Física & Cuatro balances del recinto y cierre radiativo base--cubierta. & Seis balances con producto, secado y evaporación en \texttt{thermal\_rhs}. \\
+Pérdida física & Promedio en los puntos y suma sobre cuatro componentes: factor $1/N_f$. & Promedio en puntos y seis componentes: factor $1/(6N_f)$. \\
+Configuración & Duración, pesos y arquitectura seleccionados y registrados en desarrollo. & Segmentos de $20$ s; pesos $(1,1,10)$; Adam con tasa $10^{-3}$; máximo de $300$ épocas y paciencia de $60$. \\
+\bottomrule
+\end{tabularx}
+\endgroup
+\par\smallskip
+\begin{minipage}{\textwidth}\footnotesize
+$T_p$ y $M$ representan temperatura y humedad del producto. La columna de código describe \texttt{ConditionalPINN}, \texttt{thermal\_rhs} y la configuración base exportada. Las Figuras~\ref{met:fig_pinn_arquitectura} y~\ref{met:fig_pinn_entrenamiento} documentan la formulación de cuatro estados; los resultados numéricos de seis estados no acreditan su adaptación ni su entrenamiento sobre el recinto sin carga.
+\end{minipage}
+\end{table}
