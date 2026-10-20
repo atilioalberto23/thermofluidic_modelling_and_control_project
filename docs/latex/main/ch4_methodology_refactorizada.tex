@@ -249,14 +249,16 @@ describe disponibilidad radiativa efectiva bajo una geometría de observación d
 \subsection{Arquitectura de adquisición y contrato de datos}
 \label{met:arquitectura}
 
-La arquitectura articula ESP32, API Gateway, una Lambda de recepción y validación, DynamoDB, una segunda Lambda de transferencia y Amazon S3. La infraestructura descrita mediante Terraform se vincula con su versión. La Figura~\ref{met:fig_arquitectura} distingue adquisición, persistencia y preparación del conjunto analítico, manteniendo una marca temporal por etapa.
+La Figura~\ref{met:fig_arquitectura} presenta la arquitectura de adquisición y almacenamiento en Amazon Web Services (AWS), cuya infraestructura se define y versiona como código mediante Terraform. El recorrido comienza en los nodos ESP32, que transmiten las observaciones mediante solicitudes HTTPS al recurso \texttt{POST /data} de API Gateway. Una función Lambda recibe los mensajes, valida su contenido y escribe los registros en DynamoDB. A continuación, DynamoDB Streams captura los cambios de la tabla y los entrega por lotes a una segunda función Lambda, encargada de replicarlos en Amazon S3. Esta secuencia vincula la recepción de las mediciones con su persistencia y archivo para el análisis posterior.
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=\textwidth]{\rutafigurasmetodologia/arquitectura_adquisicion.pdf}
-\caption{Arquitectura de adquisición y preparación de datos. La recepción conserva la observación original; las correcciones, agregaciones y variables derivadas pertenecen al procesamiento reproducible en Kedro.}
+\includegraphics[width=\textwidth,height=0.78\textheight,keepaspectratio]{\rutafigurasmetodologia/arquitectura}
+\caption[Arquitectura de adquisición y almacenamiento desplegada mediante Terraform.]{Arquitectura de adquisición y almacenamiento desplegada mediante Terraform en AWS. Las flechas continuas indican el recorrido de las observaciones desde el ESP32 hasta Amazon S3, incluida la captura de cambios mediante DynamoDB Streams. Los enlaces discontinuos relacionan las funciones con sus paquetes de código y sus permisos de acceso. Elaboración propia.}
 \label{met:fig_arquitectura}
 \end{figure}
+
+El esquema distingue los recursos de la infraestructura desplegada del nodo de campo y del repositorio S3 preexistente que suministra los paquetes de código de las funciones. Los roles de AWS Identity and Access Management (IAM) especifican los permisos de las etapas de ingesta y replicación. La versión de la configuración Terraform se conserva junto con la del código de las funciones para relacionar los registros con la configuración de adquisición correspondiente. Cada etapa mantiene su marca temporal; las correcciones, agregaciones y variables derivadas se realizan posteriormente en el procesamiento reproducible en Kedro, conservando las observaciones originales.
 
 El contrato separa identidad espacial, tiempo y magnitudes. La Tabla~\ref{met:tabla_contrato} relaciona las trece columnas del conjunto analítico empleado en el proyecto. El conjunto experimental de referencia sustenta los experimentos basados en datos y la validación del caso de estudio. Las trayectorias adicionales de simulación conservan su fuente, configuración y unidades como metadatos, junto con el identificador de episodio. El nombre del archivo y el tipo numérico de una columna se utilizan junto con esos metadatos para determinar su significado.
 
