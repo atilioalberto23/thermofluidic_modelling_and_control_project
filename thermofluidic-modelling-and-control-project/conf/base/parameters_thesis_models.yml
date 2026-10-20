@@ -1,0 +1,95 @@
+learning:
+  source_kind: synthetic
+  source_discrepancy: Current local file was produced by the repository generator in the previous execution; original experimental campaign file is required for experimental validation.
+  configuration_id: repository_synthetic_case
+  temperature_unit: input_temperature_scale_unconfirmed
+  episode_column: null
+  history_seconds: [20, 60, 300]
+  horizons_seconds: [20, 300, 1200]
+  origin_stride_seconds: 300
+  development_fraction: 0.5
+  rolling_origins: [0.5, 0.67, 0.83]
+  seed: 20260101
+  models: [persistence, tree, xgboost, lightgbm]
+  latency_repetitions: 10
+  search:
+    tree:
+      - {max_depth: 6, min_samples_leaf: 20, ccp_alpha: 0.0}
+      - {max_depth: 10, min_samples_leaf: 10, ccp_alpha: 0.001}
+    xgboost:
+      - {n_estimators: 80, max_depth: 4, learning_rate: 0.08, subsample: 0.9, colsample_bytree: 0.9, reg_lambda: 1.0}
+      - {n_estimators: 120, max_depth: 6, learning_rate: 0.05, subsample: 0.9, colsample_bytree: 0.9, reg_lambda: 2.0}
+    lightgbm:
+      - {n_estimators: 80, num_leaves: 15, learning_rate: 0.08, min_child_samples: 20, reg_lambda: 1.0}
+      - {n_estimators: 120, num_leaves: 31, learning_rate: 0.05, min_child_samples: 20, reg_lambda: 2.0}
+
+thermal_network:
+  solver:
+    method: Radau
+    rtol: 1.0e-7
+    atol: [1.0e-7, 1.0e-7, 1.0e-7, 1.0e-7, 1.0e-10, 1.0e-10]
+    max_step_seconds: 10
+    mass_reference_kg: 0.001
+    energy_reference_j: 100.0
+  fixture_duration_seconds: 1200
+  fixture_output_step_seconds: 10
+
+cavity:
+  Ra: [1000, 10000]
+  Pr: 0.71
+  grids: [17, 33, 65]
+  time_factors: [0.8, 0.4, 0.2]
+  minimum_dimensionless_time: 0.2
+  max_dimensionless_time: 2.0
+  max_steps: 250000
+  stationary_tolerance: 1.0e-5
+  radiation_fixture:
+    cold_temperature_k: 293.15
+    delta_temperature_k: 10
+    length_m: 0.1
+    conductivity_w_m_k: 0.026
+    emissivities: [0.1, 0.1, 0.1, 0.1]
+  benchmark_reference: null
+  benchmark_source: https://doi.org/10.1002/fld.1650030305
+
+pinn:
+  hidden_layers: [32, 32]
+  seed: 20260101
+  segment_seconds: 20
+  state_center: [300, 300, 300, 300, 0.01, 0.1]
+  state_scale: [10, 10, 10, 10, 0.01, 0.1]
+  boundary_center: [300, 0.01, 101325, 100, 0.01, 300]
+  boundary_scale: [10, 0.01, 10000, 100, 0.01, 10]
+  learning_rate: 0.001
+  epochs: 300
+  patience: 60
+  lambda_data: 1.0
+  lambda_physics: 1.0
+  lambda_restriction: 10.0
+  max_gradient_norm: 10
+
+thesis_comparison:
+  bootstrap_seed: 20260101
+  bootstrap_repetitions: 200
+  block_origins: 12
+  block_length_sensitivity: [6, 12, 24]
+  margins: null
+
+openfoam:
+  distribution: Ubuntu
+  installation: /opt/openfoam12
+  version: Foundation-12
+  case_directory: data/07_model_output/openfoam
+  timeout_seconds: 300
+  execute: false
+
+enrichment:
+  seed: 20260101
+  depths: [3, 6]
+  min_samples_leaf: 10
+  source_weight: 0.5
+
+nameplate:
+  - {equipment: APK25-5, mode: nominal, voltage_V: 110, frequency_Hz: 60, nominal_power_W: 40, rotation_rpm: 1300, diameter_mm: 250, airflow_m3_s: null, source_kind: documented_nameplate, source: ch4_methodology (1).tex}
+  - {equipment: Zeus 900, mode: low, voltage_V: 110-120, frequency_Hz: 60, nominal_current_A: 1.1, active_power_W: null, airflow_m3_s: null, source_kind: documented_nameplate, source: ch4_methodology (1).tex}
+  - {equipment: Zeus 900, mode: high, voltage_V: 110-120, frequency_Hz: 60, nominal_current_A: 1.8, active_power_W: null, airflow_m3_s: null, source_kind: documented_nameplate, source: ch4_methodology (1).tex}

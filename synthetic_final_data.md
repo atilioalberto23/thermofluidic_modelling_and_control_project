@@ -31,4 +31,6 @@ Las columnas `_ANT` se calculan agrupando por `SURFACE`, `NODE_ID` y `SENSOR_POS
 
 El Parquet guarda además el índice de pandas como `__index_level_0__`, de tipo `int64`. Este campo no es una variable de medición ni forma parte de las 13 columnas de datos.
 
-El catálogo de Kedro configura `synthetic_final_data` como `pandas.ParquetDataset`, con destino `s3://thermofluidic-modelling-and-control-project/synthetic_data/synthetic_dataset.parquet`. Los tipos documentados corresponden al archivo local inspeccionado.
+El catálogo de Kedro configura `synthetic_final_data` como `pandas.ParquetDataset`, con destino local `data/03_primary/synthetic_final_data.parquet`, relativo a la raíz Kedro. El almacenamiento S3 se retiró por instrucción del investigador.
+
+El pipeline `measurement_results` reconstruye antecedentes, incluyendo `BACK_WALL`, en un dataset derivado sin modificar esta entrada. El generador conserva el comportamiento original para que la auditoría pueda comparar las columnas `_ANT`. Consulta `thermofluidic-modelling-and-control-project/docs/resultados_kedro.md` para reglas, ejecución y requisitos pendientes.

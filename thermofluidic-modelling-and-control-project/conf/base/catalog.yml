@@ -71,4 +71,19 @@ measurement_figures:
     dpi: 180
     bbox_inches: tight
 
+# Optional inputs; not read by measurement_results or the default pipeline.
+model_predictions:
+  type: pandas.ParquetDataset
+  filepath: data/07_model_output/model_predictions.parquet
+
+model_references:
+  type: pandas.ParquetDataset
+  filepath: data/05_model_input/model_references.parquet
+
+model_metrics:
+  type: pandas.CSVDataset
+  filepath: data/08_reporting/measurement_results/model_metrics.csv
+  save_args:
+    index: false
+
 

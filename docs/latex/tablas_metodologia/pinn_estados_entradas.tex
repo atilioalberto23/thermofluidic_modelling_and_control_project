@@ -1,0 +1,25 @@
+% Adaptación de la tabla «Estados, entradas y tiempo» de arquitectura_pinn.html.
+\begin{table}[htbp]
+\centering
+\caption{Estados, entradas y soporte temporal del recinto sin carga.}
+\label{met:tabla_pinn_variables}
+\begingroup
+\small
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.12}
+\begin{tabularx}{\textwidth}{@{}>{\raggedright\arraybackslash}p{0.23\textwidth}>{\raggedright\arraybackslash}X>{\raggedright\arraybackslash}p{0.23\textwidth}@{}}
+\toprule
+Símbolo & Significado & Unidad o convención \\
+\midrule
+$T_c,T_b,T_a$ & Temperaturas de cubierta, base y aire interior. & K \\
+$W$ & Razón de humedad del aire. & kg de vapor por kg de aire seco \\
+$\mathbf x,\mathbf x_k,\widehat{\mathbf x}_\eta$ & Estado reducido, estado inicial del segmento y estado predicho. & Orden: $T_c,T_b,T_a,W$ \\
+$\mathbf u_k$ & Modos ejecutados o candidatos de los ventiladores APK y Zeus. & Codificación explícita del modo \\
+$\mathbf d_k$ & Perturbaciones: irradiancia, temperatura y humedad ambiente, presión y componentes del viento. & Orden de la Ecuación~\ref{met:estados_entradas} \\
+$G;\ p;\ v_{w,x},v_{w,y}$ & Irradiancia, presión absoluta y componentes del viento en los ejes del recinto. & W/m$^2$; Pa; m/s \\
+$\mathbf c$ & Configuración de geometría, propiedades y aberturas asociada al caso. & Metadatos del episodio \\
+$s;\ \Delta t_c;\ k$ & Tiempo local, duración e índice del segmento. & s; s; índice \\
+\bottomrule
+\end{tabularx}
+\endgroup
+\end{table}

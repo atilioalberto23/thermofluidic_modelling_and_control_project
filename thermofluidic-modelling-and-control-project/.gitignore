@@ -145,6 +145,7 @@ celerybeat-schedule
 # Environments
 .env
 .venv
+.mplconfig/
 env/
 venv/
 ENV/

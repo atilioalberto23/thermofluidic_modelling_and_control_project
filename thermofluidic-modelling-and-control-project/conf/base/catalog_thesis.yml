@@ -1,0 +1,110 @@
+learning_windows:
+  type: pandas.ParquetDataset
+  filepath: data/05_model_input/thesis/learning_windows.parquet
+
+trained_temporal_models:
+  type: thermofluidic_modelling_and_control_project.datasets.FileBundleDataset
+  filepath: data/06_models/data_driven
+
+temporal_predictions:
+  type: pandas.ParquetDataset
+  filepath: data/07_model_output/thesis/temporal_predictions.parquet
+
+temporal_search:
+  type: pandas.ParquetDataset
+  filepath: data/07_model_output/thesis/temporal_search.parquet
+
+temporal_costs:
+  type: pandas.ParquetDataset
+  filepath: data/07_model_output/thesis/temporal_costs.parquet
+
+plant_network_inputs:
+  type: thermofluidic_modelling_and_control_project.datasets.OptionalJSONDataset
+  filepath: data/01_raw/physics/network_case.json
+
+plant_network_artifacts:
+  type: thermofluidic_modelling_and_control_project.datasets.FileBundleDataset
+  filepath: data/07_model_output/thermal_network
+
+plant_network_status:
+  type: pandas.ParquetDataset
+  filepath: data/07_model_output/thesis/plant_network_status.parquet
+
+network_verification_artifacts:
+  type: thermofluidic_modelling_and_control_project.datasets.FileBundleDataset
+  filepath: data/07_model_output/network_verification
+
+network_verification_comparison:
+  type: pandas.ParquetDataset
+  filepath: data/07_model_output/thesis/network_verification_comparison.parquet
+
+cavity_artifacts:
+  type: thermofluidic_modelling_and_control_project.datasets.FileBundleDataset
+  filepath: data/07_model_output/cavity_2d
+
+cavity_summary:
+  type: pandas.ParquetDataset
+  filepath: data/07_model_output/thesis/cavity_summary.parquet
+
+cavity_refinement:
+  type: pandas.ParquetDataset
+  filepath: data/07_model_output/thesis/cavity_refinement.parquet
+
+pinn_checkpoint:
+  type: thermofluidic_modelling_and_control_project.datasets.FileBundleDataset
+  filepath: data/06_models/pinn_verification
+
+pinn_loss_history:
+  type: pandas.ParquetDataset
+  filepath: data/07_model_output/thesis/pinn_loss_history.parquet
+
+pinn_verification_predictions:
+  type: pandas.ParquetDataset
+  filepath: data/07_model_output/thesis/pinn_verification_predictions.parquet
+
+pinn_verification_metrics:
+  type: pandas.ParquetDataset
+  filepath: data/07_model_output/thesis/pinn_verification_metrics.parquet
+
+thesis_sensor_metrics:
+  type: pandas.ParquetDataset
+  filepath: data/07_model_output/thesis/sensor_metrics.parquet
+thesis_prediction_metrics:
+  type: pandas.ParquetDataset
+  filepath: data/07_model_output/thesis/prediction_metrics.parquet
+thesis_paired_intervals:
+  type: pandas.ParquetDataset
+  filepath: data/07_model_output/thesis/paired_intervals.parquet
+enrichment_inputs:
+  type: thermofluidic_modelling_and_control_project.datasets.OptionalJSONDataset
+  filepath: data/01_raw/physics/enrichment_case.json
+enrichment_artifacts:
+  type: thermofluidic_modelling_and_control_project.datasets.FileBundleDataset
+  filepath: data/06_models/enrichment
+enrichment_status:
+  type: pandas.ParquetDataset
+  filepath: data/07_model_output/thesis/enrichment_status.parquet
+plant_cfd_inputs:
+  type: thermofluidic_modelling_and_control_project.datasets.OptionalJSONDataset
+  filepath: data/01_raw/physics/cfd_case.json
+openfoam_cases:
+  type: thermofluidic_modelling_and_control_project.datasets.FileBundleDataset
+  filepath: data/07_model_output/openfoam
+openfoam_runs:
+  type: pandas.ParquetDataset
+  filepath: data/07_model_output/thesis/openfoam_runs.parquet
+openfoam_fields:
+  type: pandas.ParquetDataset
+  filepath: data/07_model_output/thesis/openfoam_fields.parquet
+thesis_results_bundle:
+  type: thermofluidic_modelling_and_control_project.datasets.FileBundleDataset
+  filepath: data/08_reporting/thesis_results
+plant_pinn_inputs:
+  type: thermofluidic_modelling_and_control_project.datasets.OptionalJSONDataset
+  filepath: data/01_raw/physics/pinn_case.json
+plant_pinn_artifacts:
+  type: thermofluidic_modelling_and_control_project.datasets.FileBundleDataset
+  filepath: data/06_models/conditional_pinn_plant
+plant_pinn_status:
+  type: pandas.ParquetDataset
+  filepath: data/07_model_output/thesis/plant_pinn_status.parquet

@@ -3,6 +3,7 @@
 % graphicx, placeins y natbib (o gestor de citas compatible con \cite).
 % Copiar resultados_recursos/ al directorio de compilación de la tesis.
 \providecommand{\rutafigurasresultados}{resultados_recursos/figures}
+\providecommand{\rutatablasmetodologia}{tablas_metodologia}
 
 \chapter{Resultados}
 \label{ch:resultados}
@@ -730,6 +731,10 @@ La persistencia registró medianas entre $0{,}286$ y $0{,}428$ ms. El árbol se 
 El número reducido de repeticiones limita la resolución de p95 y p99. Además, los tiempos no incluyen un ciclo de estimación, optimización y actuación. La exportación permite contrastar latencia de predictores bajo esas condiciones, sin establecer todavía factibilidad de un controlador.
 
 \subsection{PINN condicional de seis estados}
+
+La Tabla~\ref{res:tabla_pinn_correspondencia} delimita la relación entre la formulación del recinto sin carga de la Sección~\ref{met:pinn} y el código utilizado en esta prueba. Las Figuras~\ref{met:fig_pinn_arquitectura} y~\ref{met:fig_pinn_entrenamiento} describen cuatro estados del recinto; la verificación disponible conserva además la temperatura y la humedad del producto, $T_p$ y $M$. Por ello, los errores de esta subsección se interpretan como resultados del caso numérico de seis estados, con su arquitectura, entradas y normalización de pérdida propias.
+
+\input{\rutatablasmetodologia/pinn_correspondencia}
 
 La PINN se evaluó en una prueba numérica de la dinámica reducida. La configuración exportada dispone de dos capas ocultas de $32$ unidades, segmentos de $20$ s, tasa de aprendizaje $10^{-3}$, máximo de $300$ épocas y paciencia de $60$. Los pesos configurados fueron uno para datos, uno para física y diez para restricciones. Estos valores describen la configuración; el paquete no incluye la historia de pérdidas necesaria para reconstruir la detención efectiva.
 
